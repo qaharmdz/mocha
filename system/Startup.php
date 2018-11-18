@@ -10,6 +10,10 @@
 
 namespace Mocha\System;
 
+mb_internal_encoding('UTF-8');
+ini_set('display_errors', 1);
+
+
 // ========= Validate
 
 if (version_compare($php = PHP_VERSION, $req = '7.1.3', '<')) {
@@ -22,6 +26,7 @@ if (!is_file(ROOT . 'config.php')) {
     header('Location: install/');
     exit;
 }
+
 
 // ========= Base
 
@@ -41,15 +46,15 @@ $_protocol = $_SERVER['HTTPS'] ? 'https://' : 'http://';
 
 // === Defines
 
-$version            = '1.0.0-a.1';
-$config['url_site'] = rtrim($config['url_site'], '/.\\')  . '/';
-$config['url_base'] = rtrim($config['url_site'] . $config['app']['url_part'], '/.\\')  . '/';
+$config['system']['url_site'] = rtrim($config['system']['url_site'], '/.\\')  . '/';
+$config['system']['url_base'] = rtrim($config['system']['url_site'] . $config['app']['url_part'], '/.\\')  . '/';
 
 
 // ========= Framework
 
 $framework = new Framework();
 $framework->init($config);
+$framework->run();
 
-d($framework);
+// d($framework);
 d($framework->config->all());

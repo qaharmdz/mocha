@@ -18,6 +18,16 @@ use Symfony\Component\HttpFoundation\ParameterBag;
 class Config extends ParameterBag
 {
     /**
+     * Adds parameters.
+     *
+     * @param array $parameters An array of parameters
+     */
+    public function add(array $parameters = array())
+    {
+        $this->parameters = array_replace_recursive($this->parameters, $parameters);
+    }
+
+    /**
      * Returns a parameter by name (dot-notation).
      *
      * @param string $key     The key

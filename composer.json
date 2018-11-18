@@ -17,7 +17,9 @@
         "symfony/http-foundation": "^4.0",
         "symfony/http-kernel": "^4.0",
         "symfony/routing": "^4.0",
-        "symfony/finder": "^4.0"
+        "symfony/finder": "^4.0",
+        "joshcam/mysqli-database-class": "^2.9",
+        "twig/twig": "^2.5"
     },
     "require-dev": {
         "kint-php/kint": "^3.0",
@@ -31,7 +33,11 @@
             "Mocha\\System\\": "system",
             "Mocha\\Install\\": "install"
         },
-        "files": ["system/Functions.php"]
+        "files": [
+            "system/Functions.php",
+            "system/Engine/Controller.php",
+            "system/Engine/Abstractor.php"
+        ]
     },
     "autoload-dev" : {
         "psr-4": { "Mocha\\Tests\\" : "tests" }
@@ -43,8 +49,9 @@
         "cleanup": "composer install --no-dev"
     },
     "config": {
+        "vendor-dir": "system/vendor",
         "preferred-install": "dist",
-        "vendor-dir": "system/vendor"
+        "optimize-autoloader": true
     },
     "prefer-stable" : true
 }

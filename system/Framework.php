@@ -54,29 +54,41 @@ class Framework
         $this->config = $this->container['config'];
         $this->config->add(array_replace_recursive(
             [
-                'environment'   => 'live',              // live, dev, test
-                'locale'        => 'en',                // Default locale
-                'locales'       => ['en'],              // Avalaible languages
-                'session'       => [                    // Key at php.net/session.configuration, omit 'session.'
-                    'name'          => '_gubug'
+                'setting'       => [
+                    'environment'   => 'live',              // live, dev, test
+                    'locale'        => 'en',                // Default locale
+                    'locales'       => ['en'],              // Avalaible languages
+                    'timezone'      => 'UTC',
+                    'session'       => [                    // Key at php.net/session.configuration, omit 'session.'
+                        'name'      => '_mocha'
+                    ],
+                    'log_error'     => 'error.log',
                 ],
-                'namespace'     => [
-                    'component'     => '',
-                    'module'        => '',
-                    'plugin'        => '',
-                    'theme'         => '',
-                ],
-                'controller'    => [
-                    'main'          => '',              // PAC main agent
-                    'error'         => '',
-                    'default'       => ''               // Default component
-                ],
-                'path'          => [
-                    'log'           => ROOT . 'temp/log/error.log'
-                ],
-                'serviceProvider'   => [],
-                'routeCollection'   => [],
-                'eventSubscriber'   => [],
+                'system'        => [
+                    'version'       => '1.0.0-a.1',
+                    'namespace'     => [
+                        'component' => $config['app']['namespace'] . '\Component',
+                        'module'    => $config['app']['namespace'] . '\Module',
+                        'plugin'    => $config['app']['namespace'] . '\Plugin',
+                        'theme'     => $config['app']['namespace'] . '\Theme',
+                    ],
+                    'controller'    => [
+                        'main'      => $config['app']['namespace'] . '\Component\Main::index',
+                        'error'     => $config['app']['namespace'] . '\Component\Error::index',
+                        'default'   => 'Home' // 'Mocha\Front\Component\Home::index'
+                    ],
+                    'path'          => [
+                        'theme'         => $config['app']['path'] . 'Theme' . DS,
+                        'asset'         => ROOT . 'asset' . DS,
+                        'storage'       => ROOT . 'storage' . DS,
+                        'temp'          => ROOT . 'temp' . DS,
+                        'cache'         => ROOT . 'temp' . DS . 'cache' . DS,
+                        'log'           => ROOT . 'temp' . DS . 'log' . DS,
+                    ],
+                    'serviceProvider'   => [],
+                    'routeCollection'   => [],
+                    'eventSubscriber'   => [],
+                ]
             ],
             $config
         ));
@@ -85,18 +97,20 @@ class Framework
             $this->config->load($env, 'env');
         }
 
-        $this->config->set('debug', $this->config->getBoolean(
+        date_default_timezone_set($this->config->get('setting.timezone'));
+
+        $this->config->set('setting.debug', $this->config->getBoolean(
             'debug',
-            in_array($this->config->get('environment'), ['dev', 'test'])
+            in_array($this->config->get('setting.environment'), ['dev', 'test'])
         ));
     }
 
     public function initService()
     {
         // Setup
-        $this->container['log.output'] = $this->config->get('path.log');
+        $this->container['log.output'] = $this->config->get('system.path.log') . $this->config->get('setting.log_error');
         $this->container['router.context']->fromRequest($this->container['request']);
-        $this->container['resolver.controller']->param->set('namespace', $this->config->get('namespace'));
+        $this->container['resolver.controller']->param->set('namespace', $this->config->get('system.namespace'));
         $this->container['response']->prepare($this->container['request']);
 
         // Main
@@ -109,15 +123,19 @@ class Framework
         $this->event      = $this->container['event'];
         $this->log        = $this->container['log'];
 
+        if ($this->config->get('setting.debug')) {
+            Debug\Debug::enable(E_ALL, true);
+        }
+
         // Extra
-        foreach ($this->config->get('serviceProvider', []) as $provider) {
+        foreach ($this->config->get('system.serviceProvider', []) as $provider) {
             $this->container->register(new $provider());
         }
     }
 
     public function initSession()
     {
-        $this->session->setOptions($this->config->get('session'));
+        $this->session->setOptions($this->config->get('setting.session'));
         $this->session->start();
     }
 
@@ -134,17 +152,17 @@ class Framework
         $this->event->addSubscriber(
             new EventListener\LocaleListener(
                 $this->container['request.stack'],
-                $this->config->get('locale'),
+                $this->config->get('setting.locale'),
                 $this->container['router.generator']
             )
         );
 
-        if ($this->config->get('controller.error')) {
+        if ($this->config->get('system.controller.error')) {
             $this->event->addSubscriber(
                 new EventListener\ExceptionListener(
-                    $this->config->get('controller.error'),
+                    $this->config->get('system.controller.error'),
                     $this->log,
-                    $this->config->get('debug')
+                    $this->config->get('setting.debug')
                 )
             );
         }
@@ -152,33 +170,34 @@ class Framework
 
     public function initRouter()
     {
-        $this->router->param->set('routeDefaults', ['_locale' => $this->config->get('locale')]);
-        $this->router->param->set('routeRequirements', ['_locale' => implode('|', $this->config->get('locales'))]);
+        $this->router->param->set('routeDefaults', ['_locale' => $this->config->get('setting.locale')]);
+        $this->router->param->set('routeRequirements', ['_locale' => implode('|', $this->config->get('setting.locales'))]);
 
         // Base
-        $this->router->addRoute('base', '/', ['_controller' => $this->config->get('controller.default')]);
-        if (count($this->config->get('locales')) > 1) {
-            $this->router->addRoute('base_locale', '/{_locale}/', ['_controller' => $this->config->get('controller.default')]);
+        $this->router->addRoute('base', '/', ['_controller' => $this->config->get('system.controller.default')]);
+        if (count($this->config->get('setting.locales')) > 1) {
+            $this->router->addRoute('base_locale', '/{_locale}/', ['_controller' => $this->config->get('system.controller.default')]);
         }
 
         // Register routes
-        foreach ($this->config->get('routeCollection', []) as $route) {
+        foreach ($this->config->get('system.routeCollection', []) as $route) {
             $this->router->addRoute(...$route);
         }
 
         // Dynamic fallback
-        if (count($this->config->get('locales')) > 1) {
-            $this->router->addRoute('dynamic_locale', '/{_locale}/{_controller}', ['_controller' => $this->config->get('controller.default')], ['_controller' => '.*']);
+        if (count($this->config->get('setting.locales')) > 1) {
+            $this->router->addRoute('dynamic_locale', '/{_locale}/{_controller}', ['_controller' => $this->config->get('system.controller.default')], ['_controller' => '.*']);
         }
-        $this->router->addRoute('dynamic', '/{_controller}', ['_controller' => $this->config->get('controller.default')], ['_controller' => '.*']);
+        $this->router->addRoute('dynamic', '/{_controller}', ['_controller' => $this->config->get('system.controller.default')], ['_controller' => '.*']);
     }
 
     public function run()
     {
-        ServiceContainer::setStorage($this->container);
+        Engine\ServiceContainer::setStorage($this->container);
 
-        if ($this->config->get('controller.main')) {
-            list($class, $method) = explode('::', $this->config->get('controller.main'), 2);
+        if ($this->config->get('system.controller.main')) {
+            list($class, $method) = explode('::', $this->config->get('system.controller.main'), 2);
+
             $this->response = call_user_func([new $class, $method]);
         } else {
             $this->response->setContent('Oops! looks like your app is not configured properly.');

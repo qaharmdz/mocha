@@ -1,16 +1,19 @@
 <?php
 return [
-    'version'           => '404',                   // version mask
-    'url_site'          => 'localhost/mocha/',      // no protocol
-    'database'          => [
-        'host'          => 'localhost',
-        'db'            => 'mocha',
-        'username'      => 'root',
-        'password'      => 'password',
-        'prefix'        => 'mc_',
+    'setting'   => [
+        'environment'       => 'dev',
+        'timezone'          => 'Asia/Jakarta'
     ],
-    'segment_prefix'    => 'MC',
-    'public_key'        => 'd1e427b786de'
+    'system'    => [
+        'version'           => '404',                   // version mask
+        'url_site'          => 'localhost/mocha/',      // no protocol
+        'database'          => [
+            'host'          => 'localhost',
+            'db'            => 'mocha',
+            'username'      => 'root',
+            'password'      => 'password',
+            'prefix'        => 'mc_',
+        ],
+        'public_key'        => 'd1e427b786de'
+    ]
 ];
-
-// @todo Timezone setting
