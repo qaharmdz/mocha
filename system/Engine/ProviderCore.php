@@ -85,5 +85,9 @@ class ProviderCore implements ServiceProviderInterface
         $container['log'] = function ($c) {
             return new HttpKernel\Log\Logger(\Psr\Log\LogLevel::DEBUG, $c['log.output']);
         };
+
+        $container['presenter'] = function ($c) {
+            return new Presenter($c['paramBag']);
+        };
     }
 }

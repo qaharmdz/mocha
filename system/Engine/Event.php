@@ -15,18 +15,18 @@ use Symfony\Component\EventDispatcher\EventDispatcher;
 class Event extends EventDispatcher
 {
     /**
-     * Shortcut for dispatchHook action
+     * Shortcut for trigger action event
      *
      * @param  string $eventName
      * @param  array  $args
      */
     public function action(string $eventName, array $args = [])
     {
-        $this->dispatchHook($eventName, $args, 'action');
+        $this->trigger($eventName, $args, 'action');
     }
 
     /**
-     * Shortcut for dispatchHook filter
+     * Shortcut for trigger filter event
      *
      * @param  string $eventName
      * @param  array  $args
@@ -35,19 +35,19 @@ class Event extends EventDispatcher
      */
     public function filter(string $eventName, array $args = [])
     {
-        return $this->dispatchHook($eventName, $args, 'filter');
+        return $this->trigger($eventName, $args, 'filter');
     }
 
     /**
-     * Dispatch event \Gubug\Event\Hook to all registered listeners
+     * Trigger event to all registered listeners
      *
      * @param  string $eventName
      * @param  array  $args
      * @param  string $type
      *
-     * @return \Gubug\Event\Hook
+     * @return Mocha\System\Engine\EventBag
      */
-    public function dispatchHook(string $eventName, array $args = [], string $type = 'action')
+    public function trigger(string $eventName, array $args = [], string $type = 'action')
     {
         return $this->dispatch(
             $type . '.' . $eventName,

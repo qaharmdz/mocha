@@ -61,30 +61,6 @@ class Response extends HttpFoundation\Response
     }
 
     /**
-     * Insert content before current response content.
-     *
-     * @param  string $content
-     *
-     * @return $this
-     */
-    public function prependContent(string $content)
-    {
-        return $this->setContent($content . $this->content);
-    }
-
-    /**
-     * Insert content after current response content.
-     *
-     * @param  string $content
-     *
-     * @return $this
-     */
-    public function appendContent(string $content)
-    {
-        return $this->setContent($this->content . $content);
-    }
-
-    /**
      * Redirects to another URL.
      *
      * 301 Permanently redirect from old url to new url
@@ -128,7 +104,11 @@ class Response extends HttpFoundation\Response
     {
         $response = new HttpFoundation\BinaryFileResponse($file, 200, $headers, true);
         if ($mask) {
-            $response->setContentDisposition('attachment', $mask);
+            // $response->setContentDisposition('attachment', $mask);
+            $response->setContentDisposition(
+                HTTPFoundation\ResponseHeaderBag::DISPOSITION_ATTACHMENT,
+                $mask
+            );
         }
 
         return $this->setOutput($response);
@@ -148,27 +128,5 @@ class Response extends HttpFoundation\Response
         $message = $message ?: parent::$statusTexts[$statusCode] ?? null;
 
         throw new HttpException($statusCode, $message, null, $headers);
-    }
-
-    /**
-     * Template render
-     *
-     * @param  string $template  Full Path to template file
-     * @param  array  $variables Variables passed to template
-     *
-     * @return \Symfony\Component\HttpFoundation\Response
-     */
-    public function render(string $template, array $variables)
-    {
-        if (is_file($template)) {
-            extract($variables, EXTR_SKIP);
-
-            ob_start();
-            require $template;
-
-            return $this->setContent(ob_get_clean());
-        }
-
-        throw new \RuntimeException(sprintf('Template "%s" not found.', $template));
     }
 }

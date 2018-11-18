@@ -1,9 +1,5 @@
 <?php
 return [
-    'setting'   => [
-        'environment'       => 'dev',
-        'timezone'          => 'Asia/Jakarta'
-    ],
     'system'    => [
         'version'           => '404',                   // version mask
         'url_site'          => 'localhost/mocha/',      // no protocol
