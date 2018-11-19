@@ -11,7 +11,7 @@
         }
     ],
     "require": {
-        "php": "^7.1.3",
+        "php": "^7.1.8",
         "pimple/pimple": "^3.2",
         "symfony/event-dispatcher": "^4.0",
         "symfony/http-foundation": "^4.0",
@@ -19,6 +19,7 @@
         "symfony/routing": "^4.0",
         "symfony/finder": "^4.0",
         "joshcam/mysqli-database-class": "^2.9",
+        "nesbot/carbon": "^2.5",
         "twig/twig": "^2.5"
     },
     "require-dev": {
@@ -44,8 +45,8 @@
     },
     "scripts": {
         "test": "phpunit --stderr",
-        "check-style": ".\\system\\vendor\\bin\\phpcs -p --standard=PSR2 --runtime-set ignore_errors_on_exit 1 --runtime-set ignore_warnings_on_exit 1 src",
-        "fix-style": ".\\system\\vendor\\bin\\phpcbf -p --standard=PSR2 --runtime-set ignore_errors_on_exit 1 --runtime-set ignore_warnings_on_exit 1 src",
+        "sniff": ".\\system\\vendor\\bin\\phpcs -p --standard=PSR2 --runtime-set ignore_errors_on_exit 1 --runtime-set ignore_warnings_on_exit 1 --ignore=*/index.php,/system/vendor/,/tests/,/temp/ --exclude=Generic.Files.LineLength .\\",
+        "sniff-fix": ".\\system\\vendor\\bin\\phpcbf -p --standard=PSR2 --runtime-set ignore_errors_on_exit 1 --runtime-set ignore_warnings_on_exit 1 --ignore=*/index.php,/system/vendor/,/tests/,/temp/ --exclude=Generic.Files.LineLength .\\",
         "cleanup": "composer install --no-dev"
     },
     "config": {

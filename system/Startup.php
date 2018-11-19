@@ -16,7 +16,7 @@ ini_set('display_errors', 1);
 
 // ========= Validate
 
-if (version_compare($php = PHP_VERSION, $req = '7.1.3', '<')) {
+if (version_compare($php = PHP_VERSION, $req = '7.1.8', '<')) {
     exit(sprintf('You are running PHP %s, Mocha require at least <b>PHP %s</b> to run.', $php, $req));
 }
 if (is_file(ROOT . '.maintenance')) {
@@ -32,7 +32,7 @@ if (!is_file(ROOT . 'config.php')) {
 
 require_once ROOT . '/system/vendor/' . DS . 'autoload.php';
 
-// Kint::$enabled_mode = false;
+// \Kint::$enabled_mode = false;
 
 // Protocols
 $_https = false;

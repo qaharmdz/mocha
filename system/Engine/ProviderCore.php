@@ -66,7 +66,10 @@ class ProviderCore implements ServiceProviderInterface
 
         // Response
         $container['response'] = $container->factory(function ($c) {
-            return new Response();
+            $response = new Response();
+            $response->prepare($c['request']);
+
+            return $response;
         });
 
         // Misc

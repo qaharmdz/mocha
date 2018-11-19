@@ -9,7 +9,8 @@
  */
 
 if (!function_exists('sanitize_char')) {
-    function sanitize_char($string, $glue='-', $trim='_-.') {
+    function sanitize_char($string, $glue = '-', $trim = '_-.')
+    {
         // [1]<>+=_`~ !–@#$;"\'\%   ^&*(\{)?}/2=\ -,./../*:|3    result: 1-_-2-3
         return trim(preg_replace('/[\>\<\+\?\&\"\'\`\/\\\:\;\s\–\-\,\.\{\}\(\)\[\]\~\!\@\^\*\|\$\#\%\=\r\n\t]+/', $glue, $string), $trim);
     }

@@ -21,6 +21,11 @@ class Framework
     public $container;
 
     /**
+     * @var \Mocha\System\Engine\Response
+     */
+    public $response;
+
+    /**
      * @var \Mocha\System\Engine\Config
      */
     public $config;
@@ -56,7 +61,7 @@ class Framework
             [
                 'setting'       => [
                     'local'     => [
-                        'timezone'      => 'UTC',
+                        'timezone'      => 'UTC',               // Timezone on display
                         'language'      => 'en',
                         'languages'     => ['en' => []],
                     ],
@@ -123,6 +128,7 @@ class Framework
         // Adjustment
         $this->config->set('system.url_base', $this->config->get('setting.force_schema', $this->container['request']->getScheme()) . '://' . rtrim($this->config->get('system.url_site') . $this->config->get('app.url_part'), '/.\\')  . '/');
         $this->config->set('system.url_site', $this->config->get('setting.force_schema', $this->container['request']->getScheme()) . '://' . rtrim($this->config->get('system.url_site'), '/.\\')  . '/');
+
         $this->config->set('setting.local.language', $this->config->get('setting.local.language_' . $this->config->get('app.folder')));
         $this->config->set('setting.site.theme', $this->config->get('setting.site.theme_' . $this->config->get('app.folder')));
         $this->config->set('setting.server.debug', $this->config->getBoolean(
@@ -134,7 +140,9 @@ class Framework
             $this->config->load($env, 'env');
         }
 
-        date_default_timezone_set($this->config->get('setting.local.timezone'));
+        // Standarize php and database timezone to UTC
+        date_default_timezone_set('UTC');
+        $this->db->rawQuery('SET time_zone="+00:00";');
     }
 
     public function initService()
@@ -142,20 +150,6 @@ class Framework
         $this->container['log.output'] = $this->config->get('system.path.temp') . 'log' . DS . $this->config->get('setting.server.log_error');
         $this->container['router.context']->fromRequest($this->container['request']);
         $this->container['resolver.controller']->param->set('namespace', $this->config->get('system.namespace'));
-        $this->container['response']->prepare($this->container['request']);
-
-        $this->request    = $this->container['request'];
-        $this->router     = $this->container['router'];
-        $this->dispatcher = $this->container['dispatcher'];
-        $this->response   = $this->container['response'];
-
-        $this->session    = $this->container['session'];
-        $this->event      = $this->container['event'];
-        $this->log        = $this->container['log'];
-
-        if ($this->config->get('setting.server.debug')) {
-            Debug\Debug::enable(E_ALL, true);
-        }
 
         $this->container['presenter']->param->add([
             'debug'     => $this->config->get('setting.server.debug'),
@@ -170,6 +164,10 @@ class Framework
             ]
         ]);
 
+        if ($this->config->get('setting.server.debug')) {
+            Debug\Debug::enable(E_ALL, true);
+        }
+
         // Extra
         foreach ($this->config->get('system.serviceProvider', []) as $provider) {
             $this->container->register(new $provider());
@@ -178,21 +176,21 @@ class Framework
 
     public function initSession()
     {
-        $this->session->setOptions($this->config->get('setting.server.session'));
-        $this->session->start();
+        $this->container['session']->setOptions($this->config->get('setting.server.session'));
+        $this->container['session']->start();
     }
 
     public function initEvent()
     {
-        $this->event->addSubscriber(
+        $this->container['event']->addSubscriber(
             new EventListener\RouterListener(
-                $this->router->urlMatcher,
+                $this->container['router']->urlMatcher,
                 $this->container['request.stack'],
                 $this->container['router.context']
             )
         );
 
-        $this->event->addSubscriber(
+        $this->container['event']->addSubscriber(
             new EventListener\LocaleListener(
                 $this->container['request.stack'],
                 $this->config->get('setting.local.language'),
@@ -201,10 +199,10 @@ class Framework
         );
 
         if ($this->config->get('system.controller.error')) {
-            $this->event->addSubscriber(
+            $this->container['event']->addSubscriber(
                 new EventListener\ExceptionListener(
                     $this->config->get('system.controller.error'),
-                    $this->log,
+                    $this->container['log'],
                     $this->config->get('setting.server.debug')
                 )
             );
@@ -212,35 +210,37 @@ class Framework
 
         foreach ($this->config->get('system.eventSubscriber') as $subscriber) {
             $controller = $this->container['resolver.controller']->resolve($subscriber, [], 'Plugin');
-            $this->event->addSubscriber(new $controller['class']());
+            $this->container['event']->addSubscriber(new $controller['class']());
         }
     }
 
     public function initRouter()
     {
-        $this->router->param->set('routeDefaults', ['_locale' => $this->config->get('setting.local.language')]);
-        $this->router->param->set('routeRequirements', ['_locale' => implode('|', array_keys($this->config->get('setting.local.languages')))]);
+        $this->container['router']->param->set('routeDefaults', ['_locale' => $this->config->get('setting.local.language')]);
+        $this->container['router']->param->set('routeRequirements', ['_locale' => implode('|', array_keys($this->config->get('setting.local.languages')))]);
 
         // Base
-        $this->router->addRoute('base', '/', ['_controller' => $this->config->get('system.controller.default')]);
+        $this->container['router']->addRoute('base', '/', ['_controller' => $this->config->get('system.controller.default')]);
         if (count($this->config->get('setting.local.languages')) > 1) {
-            $this->router->addRoute('base_locale', '/{_locale}/', ['_controller' => $this->config->get('system.controller.default')]);
+            $this->container['router']->addRoute('base_locale', '/{_locale}/', ['_controller' => $this->config->get('system.controller.default')]);
         }
 
         // Register routes
         foreach ($this->config->get('system.routeCollection', []) as $route) {
-            $this->router->addRoute(...$route);
+            $this->container['router']->addRoute(...$route);
         }
 
         // Dynamic fallback
         if (count($this->config->get('setting.local.languages')) > 1) {
-            $this->router->addRoute('dynamic_locale', '/{_locale}/{_controller}', ['_controller' => $this->config->get('system.controller.default')], ['_controller' => '.*']);
+            $this->container['router']->addRoute('dynamic_locale', '/{_locale}/{_controller}', ['_controller' => $this->config->get('system.controller.default')], ['_controller' => '.*']);
         }
-        $this->router->addRoute('dynamic', '/{_controller}', ['_controller' => $this->config->get('system.controller.default')], ['_controller' => '.*']);
+        $this->container['router']->addRoute('dynamic', '/{_controller}', ['_controller' => $this->config->get('system.controller.default')], ['_controller' => '.*']);
     }
 
     public function run()
     {
+        $this->response = $this->container['response'];
+
         Engine\ServiceContainer::setStorage($this->container);
 
         if ($this->config->get('system.controller.main')) {
@@ -253,6 +253,6 @@ class Framework
 
         $this->response->send();
 
-        $this->dispatcher->terminate($this->request, $this->response);
+        $this->container['dispatcher']->terminate($this->container['request'], $this->response);
     }
 }
