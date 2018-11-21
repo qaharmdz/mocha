@@ -105,7 +105,9 @@ class Framework
                         'system'        => ROOT . 'system' . DS,
                         'temp'          => ROOT . 'temp' . DS,
                     ],
-                    'serviceProvider'   => [],
+                    'serviceProvider'   => [
+                        '\Mocha\System\Tool\ProviderTool' // @todo: move to each app folder \Mocha\Front\ProviderTool
+                    ],
                     'eventSubscriber'   => [],
                     'routeCollection'   => [],
                 ]
@@ -115,14 +117,12 @@ class Framework
 
         // Setting from database
         $this->container['database.param'] = $this->config->get('system.database');
-        $this->db = $this->container['database'];
 
-        foreach ($this->db->get('setting') as $item) {
-            $value = $item['serialized'] ? json_decode($item['value'], true) : $item['value'];
-
-            if (!in_array($item['group'], ['app', 'system'])) {
-                $this->config->set(implode('.', [$item['group'], $item['type'], $item['key']]), $value);
-            }
+        foreach ($this->container['database']->where('`group`', 'setting')->get('setting') as $item) {
+            $this->config->set(
+                implode('.', [$item['group'], $item['type'], $item['key']]),
+                $item['serialized'] ? json_decode($item['value'], true) : $item['value']
+            );
         }
 
         // Adjustment
@@ -142,7 +142,7 @@ class Framework
 
         // Standarize php and database timezone to UTC
         date_default_timezone_set('UTC');
-        $this->db->rawQuery('SET time_zone="+00:00";');
+        $this->container['database']->rawQuery('SET time_zone="+00:00";');
     }
 
     public function initService()
@@ -239,9 +239,9 @@ class Framework
 
     public function run()
     {
-        $this->response = $this->container['response'];
+        Engine\ServiceContainer::storage($this->container);
 
-        Engine\ServiceContainer::setStorage($this->container);
+        $this->response = $this->container['response'];
 
         if ($this->config->get('system.controller.main')) {
             list($class, $method) = explode('::', $this->config->get('system.controller.main'), 2);

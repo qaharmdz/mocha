@@ -12,6 +12,7 @@ namespace Mocha\System\Engine;
 
 use Pimple\Container;
 use Pimple\ServiceProviderInterface;
+use Mocha\System\Library;
 
 class ProviderLibrary implements ServiceProviderInterface
 {
@@ -26,10 +27,18 @@ class ProviderLibrary implements ServiceProviderInterface
             try {
                 $db->mysqli();
             } catch (Exception $e) {
-                throw new \InvalidArgumentException('Could not connect to database.');
+                throw new \RuntimeException('Could not connect to database.');
             }
 
             return \MysqliDb::getInstance();
+        };
+
+        $container['document'] = function ($c) {
+            return new Library\Document();
+        };
+
+        $container['language'] = function ($c) {
+            return new Library\Language();
         };
     }
 }

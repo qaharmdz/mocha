@@ -20,9 +20,9 @@ abstract class ServiceContainer
      * @param Container $storage
      * @param bool      $override
      */
-    public static function setStorage(Container $storage, bool $override = true)
+    public static function storage(Container $storage)
     {
-        if (self::$storage === null || $override) {
+        if (self::$storage === null) {
             self::$storage = $storage;
         }
     }
