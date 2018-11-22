@@ -61,7 +61,7 @@ class Framework
             [
                 'setting'       => [
                     'local'     => [
-                        'timezone'      => 'UTC',               // Timezone on display
+                        'timezone'      => 'UTC', // Timezone on display
                         'language'      => 'en',
                         'languages'     => ['en' => []],
                     ],
@@ -70,8 +70,8 @@ class Framework
                     ],
                     'server'    => [
                         'environment'   => 'live',
-                        'session'       => [                    // Key at php.net/session.configuration, omit 'session.'
-                            'name'      => '_mocha'
+                        'session'       => [ // Key at php.net/session.configuration, omit 'session.'
+                            'name'      => 'mocha'
                         ],
                         'log_error'     => 'error.log',
                     ]
@@ -94,6 +94,7 @@ class Framework
                         'default'   => 'Home' // 'Mocha\Front\Component\Home::index'
                     ],
                     'path'          => [
+                        'root'          => ROOT,
                         'app'           => $config['app']['path'],
                         'component'     => $config['app']['path'] . 'Component' . DS,
                         'module'        => $config['app']['path'] . 'Module' . DS,
@@ -117,6 +118,7 @@ class Framework
 
         // Setting from database
         $this->container['database.param'] = $this->config->get('system.database');
+        $this->config->remove('system.database');
 
         foreach ($this->container['database']->where('`group`', 'setting')->get('setting') as $item) {
             $this->config->set(
@@ -126,8 +128,8 @@ class Framework
         }
 
         // Adjustment
-        $this->config->set('system.url_base', $this->config->get('setting.force_schema', $this->container['request']->getScheme()) . '://' . rtrim($this->config->get('system.url_site') . $this->config->get('app.url_part'), '/.\\')  . '/');
-        $this->config->set('system.url_site', $this->config->get('setting.force_schema', $this->container['request']->getScheme()) . '://' . rtrim($this->config->get('system.url_site'), '/.\\')  . '/');
+        $this->config->set('setting.url_base', $this->config->get('setting.force_schema', $this->container['request']->getScheme()) . '://' . rtrim($this->config->get('setting.url_site') . $this->config->get('app.url_part'), '/.\\')  . '/');
+        $this->config->set('setting.url_site', $this->config->get('setting.force_schema', $this->container['request']->getScheme()) . '://' . rtrim($this->config->get('setting.url_site'), '/.\\')  . '/');
 
         $this->config->set('setting.local.language', $this->config->get('setting.local.language_' . $this->config->get('app.folder')));
         $this->config->set('setting.site.theme', $this->config->get('setting.site.theme_' . $this->config->get('app.folder')));

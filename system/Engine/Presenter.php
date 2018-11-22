@@ -17,9 +17,9 @@ class Presenter
      */
     public $param;
 
-    public function __construct(\Symfony\Component\HttpFoundation\ParameterBag $param)
+    public function __construct(\Symfony\Component\HttpFoundation\ParameterBag $bag)
     {
-        $this->param = $param;
+        $this->param = $bag;
 
         $this->param->add([
             'debug'     => false,
@@ -82,7 +82,7 @@ class Presenter
             $twig->addExtension(new \Twig_Extension_Debug());       // {{ dump(...) }}
         }
 
-        $twig->addGlobal('app', $this->param->get('global'));       // available in all templates and macros
+        $twig->addGlobal('mocha', $this->param->get('global'));       // available in all templates and macros
 
         return $twig->render($template, $vars);
     }

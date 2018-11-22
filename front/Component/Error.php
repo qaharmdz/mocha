@@ -10,29 +10,26 @@ class Error extends \Mocha\Controller
 
     protected function notFound($exception)
     {
-        $this->session->flash->set('document_meta', [
-            'title'      => '404 Not Found!',
-            'body_class' => 'page-error page-404',
-            'layout'     => 'blank'
-        ]);
+        $this->document->setTitle('404 Not Found!');
+        $this->document->addNode('class_body', ['page-error page-404']);
+
         return $this->response
             ->setStatusCode($exception->getStatusCode())
-            ->setContent($this->presenter->render('error', ['content' => '<h1>404 Not Found!</h1> <p>' . $exception->getMessage() . '</p>']));
+            ->setContent($this->presenter->render('error', [
+                'title'    => '404 Not Found!',
+                'subtitle' => $exception->getMessage(),
+                'content'  => 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Labore adipisci quam voluptatem rerum veniam. Facilis tempora, id libero minima rem vel aliquam doloremque atque, eveniet nostrum perferendis hic, vero nulla.'
+            ]));
     }
 
     protected function serviceError($exception)
     {
-        $this->session->flash->set('document_meta', [
-            'title'      => $exception->getStatusCode() . ' Oops!',
-            'body_class' => 'page-error page-500',
-            'layout'     => 'blank'
-        ]);
+        $this->document->setTitle($exception->getStatusCode() . ' Oops!');
+        $this->document->addNode('class_body', ['page-error page-500']);
 
         return $this->response
             ->setStatusCode($exception->getStatusCode())
-            ->setContent(
-                '<h1>Oops, bad thing happen!</h1><p>Message: <i>' . $exception->getMessage() . '</i></p>'
-            )
+            ->setContent('<h1>Oops, bad thing happen!</h1><p>Message: <i>' . $exception->getMessage() . '</i></p>')
             ->setOutput();
     }
 }

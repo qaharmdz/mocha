@@ -45,13 +45,13 @@ class Router
      */
     public $param;
 
-    public function __construct(RouteCollection $collection, $route, UrlMatcher $urlMatcher, UrlGenerator $urlGenerator, ParameterBag $param)
+    public function __construct(RouteCollection $collection, $route, UrlMatcher $urlMatcher, UrlGenerator $urlGenerator, ParameterBag $bag)
     {
         $this->collection   = $collection;
         $this->route        = $route;
         $this->urlMatcher   = $urlMatcher;
         $this->urlGenerator = $urlGenerator;
-        $this->param        = $param;
+        $this->param        = $bag;
 
         $this->param->add([
             'routeDefaults'     => ['_locale' => 'en'], // Default addRoute
@@ -100,22 +100,6 @@ class Router
     public function newRoute(...$params)
     {
         return call_user_func($this->route, ...$params);
-    }
-
-    /**
-     * Match URL path with a route in collection then extract their attribute.
-     *
-     * @return \Symfony\Component\Routing\Matcher\UrlMatcher
-     *
-     * @throws \RuntimeException  If routing collection or resource not found
-     */
-    public function extract($path)
-    {
-        if (!$this->collection->count()) {
-            throw new \RuntimeException('No routes in collection.');
-        }
-
-        return $this->urlMatcher->match($path);
     }
 
     /**

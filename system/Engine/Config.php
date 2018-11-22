@@ -69,7 +69,7 @@ class Config extends ParameterBag
      *
      * @return array
      */
-    public function getArray($key, $default = [])
+    public function getArray(string $key, $default = [])
     {
         return (array)$this->get($key, $default);
     }
@@ -82,7 +82,7 @@ class Config extends ParameterBag
      *
      * @return mixed
      */
-    public function getDot($key, $default = null)
+    public function getDot(string $key, $default = null)
     {
         $items = $this->parameters;
 
@@ -103,7 +103,7 @@ class Config extends ParameterBag
      * @param string $keys  Key in dot-notation
      * @param mixed  $value The value
      */
-    public function setDot($keys, $value)
+    public function setDot(string $keys, $value)
     {
         $items = &$this->parameters;
 
@@ -123,7 +123,7 @@ class Config extends ParameterBag
      *
      * @param  string $keys String key in dot-notation
      */
-    public function removeDot($keys)
+    public function removeDot(string $keys)
     {
         if (isset($this->parameters[$keys])) {
             unset($this->parameters[$keys]);
@@ -142,7 +142,7 @@ class Config extends ParameterBag
         }
     }
 
-    public function load(string $file, $type = 'array')
+    public function load(string $file, string $type = 'array')
     {
         if (!is_file($file)) {
             throw new \RuntimeException(sprintf('File "%s" not found.', $file));

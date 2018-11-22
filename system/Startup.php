@@ -14,7 +14,7 @@ mb_internal_encoding('UTF-8');
 ini_set('display_errors', 1);
 
 
-// ========= Validate
+// ====== Validate
 
 if (version_compare($php = PHP_VERSION, $req = '7.1.8', '<')) {
     exit(sprintf('You are running PHP %s, Mocha require at least <b>PHP %s</b> to run.', $php, $req));
@@ -28,7 +28,7 @@ if (!is_file(ROOT . 'config.php')) {
 }
 
 
-// ========= Base
+// ====== Base
 
 require_once ROOT . '/system/vendor/' . DS . 'autoload.php';
 
@@ -44,15 +44,15 @@ if (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on' || !empty($_SERVER['H
 $_SERVER['HTTPS'] = $_https;
 $_protocol = $_SERVER['HTTPS'] ? 'https://' : 'http://';
 
-$config['system']['url_site'] = rtrim($config['system']['url_site'], '/.\\')  . '/';
-$config['system']['url_base'] = rtrim($config['system']['url_site'] . $config['app']['url_part'], '/.\\')  . '/';
+$config['setting']['url_site']    = rtrim($config['setting']['url_site'], '/.\\')  . '/';
+$config['setting']['url_base']    = rtrim($config['setting']['url_site'] . $config['app']['url_part'], '/.\\')  . '/';
 
 
-// ========= Framework
+// ====== Framework
 
 $framework = new Framework();
 $framework->init($config);
 $framework->run();
 
 // d($framework);
-d($framework->config->all());
+// d($framework->config->all());

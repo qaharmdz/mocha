@@ -1,8 +1,9 @@
 <?php
 return [
-    'system'    => [
-        'version'           => '404',                   // version mask
+    'setting'   => [
         'url_site'          => 'localhost/mocha/',      // no protocol
+    ],
+    'system'    => [
         'database'          => [
             'host'          => 'localhost',
             'db'            => 'mocha',

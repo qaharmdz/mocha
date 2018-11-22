@@ -14,6 +14,11 @@ class Document
 {
     protected $data = [];
 
+    public function all()
+    {
+        return $this->data;
+    }
+
     public function setTitle(string $text, string $operate = '')
     {
         switch ($operate) {
@@ -33,7 +38,7 @@ class Document
 
     public function getTitle()
     {
-        return $this->data['title'] ?: '';
+        return $this->data['title'] ?? '';
     }
 
     public function setMeta(string $attribute, string $value, string $content)
@@ -47,7 +52,7 @@ class Document
 
     public function getMeta()
     {
-        return $this->data['meta'] ?: [];
+        return $this->data['meta'] ?? [];
     }
 
     public function setLink(string $rel, string $href, string $hreflang = '', string $type = '', string $media = '')
@@ -63,10 +68,10 @@ class Document
 
     public function getLink()
     {
-        return $this->data['link'] ?: [];
+        return $this->data['link'] ?? [];
     }
 
-    public function setStyle($href, $media = 'all')
+    public function setStyle(string $href, $media = 'all')
     {
         $this->data['style'][$href] = [
             'href'  => $href,
@@ -76,25 +81,25 @@ class Document
 
     public function getStyle()
     {
-        return $this->data['style'];
+        return $this->data['style'] ?? [];
     }
 
-    public function setScript($href)
+    public function setScript(string $href)
     {
         $this->data['script'][$href] = $href;
     }
 
     public function getScript()
     {
-        return $this->data['script'];
+        return $this->data['script'] ?? [];
     }
 
-    public function setAsset($name, array $asset)
+    public function setAsset(string $name, array $asset)
     {
         $this->data['asset'][$name] = $asset;
     }
 
-    public function getAsset($name)
+    public function getAsset(string $name)
     {
         if (!empty($this->data['asset'][$name])) {
             foreach ($this->data['asset'][$name] as $type => $assets) {
@@ -112,13 +117,24 @@ class Document
         }
     }
 
-    public function setNode($name, $value)
+    /**
+     * Node is general purpose storage
+     */
+    public function addNode(string $name, array $value)
     {
-        $this->nodes[$name][] = $value;
+        $this->data['node'][$name] = array_merge(
+            $this->data['node'][$name] ?? [],
+            $value
+        );
     }
 
-    public function getNodes($name)
+    public function setNode(string $name, $value)
     {
-        return $this->nodes[$name] ?? [];
+        $this->data['node'][$name] = $value;
+    }
+
+    public function getNode(string $name, $default = null)
+    {
+        return $this->data['node'][$name] ?? $default;
     }
 }

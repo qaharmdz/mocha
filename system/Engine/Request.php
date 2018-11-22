@@ -16,8 +16,6 @@ class Request extends HttpFoundation\Request
 {
     /**
      * Alias of parent::request ($_POST) properties.
-     *
-     * @var \Symfony\Component\HttpFoundation\ParameterBag
      */
     public $post;
 

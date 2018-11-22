@@ -41,7 +41,7 @@ class Language
         $this->data['vars']['i18n_' . $key] = $value;
     }
 
-    public function get($key)
+    public function get(string $key)
     {
         return $this->data['vars'][$key] ?? $key;
     }

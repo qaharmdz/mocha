@@ -27,12 +27,12 @@ class ResolverController extends ControllerResolver
      */
     public $param;
 
-    public function __construct(LoggerInterface $logger, ParameterBag $param)
+    public function __construct(LoggerInterface $logger, ParameterBag $bag)
     {
         parent::__construct($logger);
 
         $this->log   = $logger;
-        $this->param = $param;
+        $this->param = $bag;
     }
 
     /**
