@@ -4,8 +4,8 @@
  *
  * (c) Mudzakkir <qaharmdz@gmail.com>
  *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
+ * License GPL v3 or any later version.
+ * Full copyright and license see the LICENSE file.
  */
 
 namespace Mocha\System\Library;
@@ -41,7 +41,7 @@ class Document
         return $this->data['title'] ?? '';
     }
 
-    public function setMeta(string $attribute, string $value, string $content)
+    public function addMeta(string $attribute, string $value, string $content)
     {
         $this->data['meta'][] = [
             'attribute' => $attribute,
@@ -55,23 +55,7 @@ class Document
         return $this->data['meta'] ?? [];
     }
 
-    public function setLink(string $rel, string $href, string $hreflang = '', string $type = '', string $media = '')
-    {
-        $this->data['link'][] = [
-            'rel'       => $rel,
-            'href'      => $href,
-            'hreflang'  => $hreflang,
-            'type'      => $type,
-            'media'     => $media
-        ];
-    }
-
-    public function getLink()
-    {
-        return $this->data['link'] ?? [];
-    }
-
-    public function setStyle(string $href, $media = 'all')
+    public function addStyle(string $href, $media = 'all')
     {
         $this->data['style'][$href] = [
             'href'  => $href,
@@ -84,7 +68,7 @@ class Document
         return $this->data['style'] ?? [];
     }
 
-    public function setScript(string $href)
+    public function addScript(string $href)
     {
         $this->data['script'][$href] = $href;
     }
@@ -94,12 +78,17 @@ class Document
         return $this->data['script'] ?? [];
     }
 
-    public function setAsset(string $name, array $asset)
+    public function addAsset(string $name, array $asset)
     {
         $this->data['asset'][$name] = $asset;
     }
 
     public function getAsset(string $name)
+    {
+        return $this->data['asset'][$name] ?? [];
+    }
+
+    public function applyAsset(string $name)
     {
         if (!empty($this->data['asset'][$name])) {
             foreach ($this->data['asset'][$name] as $type => $assets) {
@@ -117,15 +106,35 @@ class Document
         }
     }
 
+    public function addLink(string $rel, string $href, string $hreflang = '', string $type = '', string $media = '')
+    {
+        $this->data['link'][] = [
+            'rel'       => $rel,
+            'href'      => $href,
+            'hreflang'  => $hreflang,
+            'type'      => $type,
+            'media'     => $media
+        ];
+    }
+
+    public function getLink()
+    {
+        return $this->data['link'] ?? [];
+    }
+
     /**
      * Node is general purpose storage
      */
     public function addNode(string $name, array $value)
     {
-        $this->data['node'][$name] = array_merge(
-            $this->data['node'][$name] ?? [],
-            $value
-        );
+        $node = $this->data['node'][$name] ?? [];
+
+        if (is_array($node)) {
+            $this->data['node'][$name] = array_merge(
+                $this->data['node'][$name] ?? [],
+                $value
+            );
+        }
     }
 
     public function setNode(string $name, $value)

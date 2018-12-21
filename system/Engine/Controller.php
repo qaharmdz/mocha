@@ -12,6 +12,13 @@ namespace Mocha;
 
 class Controller extends System\Engine\ServiceContainer
 {
+    /**
+     * Fallback inaccessible properties to ServiceContainer
+     *
+     * @param  string $service
+     *
+     * @return object
+     */
     public function __get(string $service)
     {
         return $this->use($service);

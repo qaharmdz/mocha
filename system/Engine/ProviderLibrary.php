@@ -33,12 +33,12 @@ class ProviderLibrary implements ServiceProviderInterface
             return \MysqliDb::getInstance();
         };
 
-        $container['document'] = function ($c) {
-            return new Library\Document();
-        };
-
         $container['language'] = function ($c) {
             return new Library\Language();
+        };
+
+        $container['document'] = function ($c) {
+            return new Library\Document();
         };
     }
 }

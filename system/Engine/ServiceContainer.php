@@ -10,8 +10,6 @@
 
 namespace Mocha\System\Engine;
 
-use Pimple\Container;
-
 abstract class ServiceContainer
 {
     private static $storage;
@@ -20,21 +18,11 @@ abstract class ServiceContainer
      * @param Container $storage
      * @param bool      $override
      */
-    public static function storage(Container $storage)
+    public static function storage(\ArrayAccess $storage)
     {
         if (self::$storage === null) {
             self::$storage = $storage;
         }
-    }
-
-    /**
-     * Full access to container
-     *
-     * @return \Pimple\Container
-     */
-    protected function container()
-    {
-        return self::$storage;
     }
 
     /**
@@ -46,6 +34,16 @@ abstract class ServiceContainer
      */
     protected function use(string $identifier)
     {
-        return self::$storage[$identifier];
+        return self::$storage[$identifier] ?? null;
+    }
+
+    /**
+     * Full access to container
+     *
+     * @return \Pimple\Container
+     */
+    protected function container()
+    {
+        return self::$storage;
     }
 }

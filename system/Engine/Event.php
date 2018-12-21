@@ -12,10 +12,13 @@ namespace Mocha\System\Engine;
 
 use Symfony\Component\EventDispatcher\EventDispatcher;
 
+/**
+ * Inspired by WordPress hook: action and filter
+ */
 class Event extends EventDispatcher
 {
     /**
-     * Shortcut for trigger action event
+     * Trigger a response/ reaction of an activity
      *
      * @param  string $eventName
      * @param  array  $args
@@ -26,7 +29,7 @@ class Event extends EventDispatcher
     }
 
     /**
-     * Shortcut for trigger filter event
+     * An action to modify activity data
      *
      * @param  string $eventName
      * @param  array  $args

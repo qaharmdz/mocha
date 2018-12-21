@@ -13,7 +13,9 @@ namespace Mocha\System\Engine;
 use Symfony\Component\HttpFoundation\ParameterBag;
 
 /**
- * Extra dot-notation to HttpFoundation\ParameterBag
+ * Extra dot-notation to \ParameterBag
+ *
+ * @see https://github.com/adbario/php-dot-notation
  */
 class Config extends ParameterBag
 {
@@ -186,7 +188,7 @@ class Config extends ParameterBag
     }
 
     /**
-     * Load .env file content to config, $_ENV and $_SERVER
+     * Load and add .env content config, $_ENV and $_SERVER
      *
      * @param  string $file
      *

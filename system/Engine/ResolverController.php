@@ -15,6 +15,9 @@ use Symfony\Component\HttpFoundation\ParameterBag;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Controller\ControllerResolver;
 
+/**
+ * Opiniated controller resolver
+ */
 class ResolverController extends ControllerResolver
 {
     /**
@@ -76,7 +79,7 @@ class ResolverController extends ControllerResolver
 
         try {
             $class     = $this->resolveClass($path, $namespace, $segments);
-            $method    = $this->resolveMethod($segments);
+            $method    = $this->resolveMethod($class, $segments);
             $arguments = $this->resolveArguments($params, $segments);
 
             return [
@@ -119,16 +122,20 @@ class ResolverController extends ControllerResolver
      *
      * @return string
      */
-    protected function resolveMethod(&$segments)
+    protected function resolveMethod($class, &$segments)
     {
+        $method    = 'index';
         $blacklist = ['setStorage'];
 
-        if (count($segments) % 2 === 1 && !is_numeric($segments[0][0])
-            && strncmp($segments[0], '__', 2) !== 0 && !in_array($segments[0], $blacklist)) {
-            return array_shift($segments);
+        if (!empty($segments[0])
+          && !in_array($segments[0], $blacklist)
+          && !is_numeric($segments[0][0])
+          && strncmp($segments[0], '__', 2) !== 0
+          && is_callable([$class, $segments[0]])) {
+            $method = array_shift($segments);
         }
 
-        return 'index';
+        return $method;
     }
 
     /**
@@ -139,10 +146,11 @@ class ResolverController extends ControllerResolver
      */
     protected function resolveArguments($params, &$segments)
     {
+
         if (!empty($segments[0])) {
             $_params = [];
             foreach (array_chunk($segments, 2) as $pair) {
-                $_params[$pair[0]] = $pair[1];
+                $_params[$pair[0]] = $pair[1] ?? '';
             }
 
             $params = array_replace($_params, $params);

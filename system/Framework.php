@@ -63,7 +63,9 @@ class Framework
                     'local'     => [
                         'timezone'      => 'UTC', // Timezone on display
                         'language'      => 'en',
-                        'languages'     => ['en' => []],
+                        'languages'     => ['en' => [
+                            'id'    => 1
+                        ]],
                     ],
                     'site'    => [
                         'theme'         => 'base'
@@ -132,6 +134,7 @@ class Framework
         $this->config->set('setting.url_site', $this->config->get('setting.force_schema', $this->container['request']->getScheme()) . '://' . rtrim($this->config->get('setting.url_site'), '/.\\')  . '/');
 
         $this->config->set('setting.local.language', $this->config->get('setting.local.language_' . $this->config->get('app.folder')));
+        $this->config->set('setting.local.language_id', $this->config->get('setting.local.languages')[$this->config->get('setting.local.language')]['id']);
         $this->config->set('setting.site.theme', $this->config->get('setting.site.theme_' . $this->config->get('app.folder')));
         $this->config->set('setting.server.debug', $this->config->getBoolean(
             'debug',
@@ -152,7 +155,6 @@ class Framework
         $this->container['log.output'] = $this->config->get('system.path.temp') . 'log' . DS . $this->config->get('setting.server.log_error');
         $this->container['router.context']->fromRequest($this->container['request']);
         $this->container['resolver.controller']->param->set('namespace', $this->config->get('system.namespace'));
-
         $this->container['presenter']->param->add([
             'debug'     => $this->config->get('setting.server.debug'),
             'timezone'  => $this->config->get('setting.local.timezone'),
@@ -164,6 +166,10 @@ class Framework
                 'theme'     => $this->config->get('system.path.theme'),
                 'cache'     => $this->config->get('system.path.temp') . 'twigs' . DS
             ]
+        ]);
+        $this->container['language']->param([
+            'active'    => $this->config->get('setting.local.language'),
+            'path'      => $this->config->get('system.path')
         ]);
 
         if ($this->config->get('setting.server.debug')) {
@@ -222,7 +228,7 @@ class Framework
         $this->container['router']->param->set('routeRequirements', ['_locale' => implode('|', array_keys($this->config->get('setting.local.languages')))]);
 
         // Base
-        $this->container['router']->addRoute('base', '/', ['_controller' => $this->config->get('system.controller.default')]);
+        $this->container['router']->addRoute('_base', '/', ['_controller' => $this->config->get('system.controller.default')]);
         if (count($this->config->get('setting.local.languages')) > 1) {
             $this->container['router']->addRoute('base_locale', '/{_locale}/', ['_controller' => $this->config->get('system.controller.default')]);
         }
@@ -236,7 +242,7 @@ class Framework
         if (count($this->config->get('setting.local.languages')) > 1) {
             $this->container['router']->addRoute('dynamic_locale', '/{_locale}/{_controller}', ['_controller' => $this->config->get('system.controller.default')], ['_controller' => '.*']);
         }
-        $this->container['router']->addRoute('dynamic', '/{_controller}', ['_controller' => $this->config->get('system.controller.default')], ['_controller' => '.*']);
+        $this->container['router']->addRoute('_dynamic', '/{_controller}', ['_controller' => $this->config->get('system.controller.default')], ['_controller' => '.*']);
     }
 
     public function run()

@@ -61,7 +61,7 @@ class EventBag extends EventDispatcher\Event
     }
 
     /**
-     * Get all changed data by event listener.
+     * Get all changed data
      *
      * @return array
      */

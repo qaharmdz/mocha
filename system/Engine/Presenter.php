@@ -53,19 +53,18 @@ class Presenter
         }
 
         $template_path  = array_unique([
-            $this->param->get('path.theme') . $this->param->get('theme.active') . DS,
-            $this->param->get('path.theme') . $this->param->get('theme.default') . DS,
+            $this->param->get('path.theme') . $this->param->get('theme.active') . DS . 'template' . DS,
+            $this->param->get('path.theme') . $this->param->get('theme.default') . DS . 'template' . DS,
             $this->param->get('path.app'),
             ROOT
         ]);
 
         if (!is_dir($template_path[0])) {
             unset($template_path[0]);
-
             throw new \InvalidArgumentException(sprintf('Theme "%s" is not available, fallback to theme "%s"', $this->param->get('theme.active'), $this->param->get('theme.default')));
         }
 
-        $template   = $this->templateMap($template);
+        $template   = str_replace('/\\', DS, $template . $this->param->get('file_ext'));
         $loader     = new \Twig_Loader_Filesystem($template_path);
         $twig       = new \Twig_Environment($loader, [
             'charset'           => 'utf-8',
@@ -77,35 +76,14 @@ class Presenter
         ]);
 
         $twig->getExtension('Twig_Extension_Core')->setTimezone($this->param->get('timezone'));
-        $twig->addExtension(new \Twig_Extension_StringLoader());    // {{ include(template_from_string("Hello {{ name }}")) }}
+        $twig->addExtension(new \Twig_Extension_StringLoader());        // {{ include(template_from_string("Hello {{ name }}")) }}
         if ($this->param->get('debug')) {
-            $twig->addExtension(new \Twig_Extension_Debug());       // {{ dump(...) }}
+            $twig->addExtension(new \Twig_Extension_Debug());           // {{ dump(...) }}
         }
 
-        $twig->addGlobal('mocha', $this->param->get('global'));       // available in all templates and macros
+        $twig->addGlobal('mocha', $this->param->get('global'));         // available in all templates and macros
 
         return $twig->render($template, $vars);
-    }
-
-    public function templateMap($template)
-    {
-        if (is_array($template) && !empty($template['default'])) {
-            $file = $template['default'];
-
-            if (!empty($template['active'])) {
-                $file = $this->templateMap($template['active']);
-            }
-
-            if (!is_file($this->param->get('path.theme') . $this->param->get('theme.active') . DS . $file)
-                && !is_file($this->param->get('path.theme') . $this->param->get('theme.default') . DS . $file)
-            ) {
-                $file = $this->templateMap($template['default']);
-            }
-
-            return $file;
-        }
-
-        return str_replace('/', DS, 'template/' . $template . $this->param->get('file_ext'));
     }
 
     /**

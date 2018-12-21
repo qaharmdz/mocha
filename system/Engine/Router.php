@@ -16,7 +16,7 @@ use Symfony\Component\Routing\Generator\UrlGenerator;
 use Symfony\Component\HttpFoundation\ParameterBag;
 
 /**
- * Wrap Symfony routing in one file
+ * Wrap Symfony routing in one class
  */
 class Router
 {
@@ -118,7 +118,7 @@ class Router
         // Check to avoid exception error
         if ($this->collection->get($name)) {
             $name = $this->param->get('buildLocale') ? preg_replace('/_locale$/', '', $name) . '_locale' : $name;
-            $parameters = $extraParam ? array_replace($parameters, $this->param->get('buildParameters')) : $parameters;
+            $parameters = $extraParam ? array_replace($this->param->get('buildParameters'), $parameters) : $parameters;
 
             $result = $this->urlGenerator->generate($name, $parameters, UrlGenerator::ABSOLUTE_URL);
         }
@@ -138,14 +138,14 @@ class Router
     public function urlGenerate(string $path = '', array $parameters = [], bool $extraParam = true)
     {
         if (!$path) {
-            return $this->urlBuild('base', $parameters, $extraParam);
+            return $this->urlBuild('_base', $parameters, $extraParam);
         }
         if ($this->collection->get($path)) {
             return $this->urlBuild($path, $parameters, $extraParam);
         }
 
-        $parameters['_path'] = $path;
+        $parameters['_controller'] = $path;
 
-        return $this->urlBuild('dynamic', $parameters, $extraParam);
+        return $this->urlBuild('_dynamic', $parameters, $extraParam);
     }
 }

@@ -14,6 +14,9 @@ use Symfony\Component\HttpFoundation;
 use Symfony\Component\HttpKernel\HttpKernel;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 
+/**
+ * An alias
+ */
 class Dispatcher extends HttpKernel
 {
     public function __construct($event, $controllerResolver, $requestStack, $argumentResolver)
