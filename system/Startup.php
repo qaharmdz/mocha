@@ -44,7 +44,6 @@ if (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on' || !empty($_SERVER['H
     $_https = true;
 }
 $_SERVER['HTTPS'] = $_https;
-$_protocol = $_SERVER['HTTPS'] ? 'https://' : 'http://';
 
 $config['setting']['url_site']    = rtrim($config['setting']['url_site'], '/.\\')  . '/';
 $config['setting']['url_base']    = rtrim($config['setting']['url_site'] . $config['app']['url_part'], '/.\\')  . '/';

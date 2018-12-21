@@ -41,6 +41,7 @@ class Main extends \Mocha\Controller
             'config'    => $this->config,
             'request'   => [
                 'method'    => $this->request->getRealMethod(),
+                'secure'    => $this->request->isSecure(),
                 'post'      => $this->request->post,
                 'query'     => $this->request->query, // $_GET
                 'cookies'   => $this->request->cookies
@@ -49,8 +50,8 @@ class Main extends \Mocha\Controller
             'document'  => $this->document,
         ]]);
 
-d($this->event);
         // d($data);
+        // d($this->event);
         // d($this->presenter->param->get('global'));
         // d(
         //     $this->router->urlGenerate(),

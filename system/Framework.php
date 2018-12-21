@@ -120,7 +120,7 @@ class Framework
             $config
         ));
 
-        // Setting from database
+        // Load setting from database
         $this->container['database.param'] = $this->config->get('system.database');
         $this->config->remove('system.database');
 
@@ -132,14 +132,18 @@ class Framework
         }
 
         // Adjustment
-        $this->config->set('setting.url_base', $this->config->get('setting.force_schema', $this->container['request']->getScheme()) . '://' . rtrim($this->config->get('setting.url_site') . $this->config->get('app.url_part'), '/.\\')  . '/');
-        $this->config->set('setting.url_site', $this->config->get('setting.force_schema', $this->container['request']->getScheme()) . '://' . rtrim($this->config->get('setting.url_site'), '/.\\')  . '/');
+        if ($this->config->get('setting.server.secure')) {
+            $this->container['request']->server->set('HTTPS', true);
+        }
+
+        $this->config->set('setting.url_base', $this->container['request']->getScheme() . '://' . rtrim($this->config->get('setting.url_site') . $this->config->get('app.url_part'), '/.\\')  . '/');
+        $this->config->set('setting.url_site', $this->container['request']->getScheme() . '://' . rtrim($this->config->get('setting.url_site'), '/.\\')  . '/');
 
         $this->config->set('setting.local.language', $this->config->get('setting.local.language_' . $this->config->get('app.folder')));
         $this->config->set('setting.local.language_id', $this->config->get('setting.local.languages')[$this->config->get('setting.local.language')]['id']);
         $this->config->set('setting.site.theme', $this->config->get('setting.site.theme_' . $this->config->get('app.folder')));
         $this->config->set('setting.server.debug', $this->config->getBoolean(
-            'debug',
+            'setting.server.debug',
             in_array($this->config->get('setting.server.environment'), ['dev', 'test'])
         ));
 
