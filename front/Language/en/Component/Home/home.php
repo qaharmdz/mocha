@@ -1,11 +1,13 @@
 <?php
 /*
- * This file is part of the Mocha package.
+ * This file is part of Mocha package.
  *
- * (c) Mudzakkir <qaharmdz@gmail.com>
+ * This program is a "free software" which mean freedom to use, modify and redistribute.
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
+ * Released under GPL version 3 or any later version.
+ * Full copyright and license see LICENSE file or visit https://www.gnu.org/licenses/gpl-3.0.en.html.
  */
 
 return [];
