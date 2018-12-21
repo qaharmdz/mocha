@@ -47,7 +47,8 @@
         "test": "phpunit --stderr",
         "sniff": ".\\system\\vendor\\bin\\phpcs -p --standard=PSR2 --runtime-set ignore_errors_on_exit 1 --runtime-set ignore_warnings_on_exit 1 --ignore=*/index.php,/system/vendor/,/tests/,/temp/ --exclude=Generic.Files.LineLength .\\",
         "sniff-fix": ".\\system\\vendor\\bin\\phpcbf -p --standard=PSR2 --runtime-set ignore_errors_on_exit 1 --runtime-set ignore_warnings_on_exit 1 --ignore=*/index.php,/system/vendor/,/tests/,/temp/ --exclude=Generic.Files.LineLength .\\",
-        "cleanup": "composer install --no-dev"
+        "vendor-cleanup": "composer install --no-dev",
+        "vendor-check": "composer outdated --direct"
     },
     "config": {
         "vendor-dir": "system/vendor",
