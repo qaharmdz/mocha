@@ -1,4 +1,13 @@
 <?php
+/*
+ * This file is part of the Mocha package.
+ *
+ * (c) Mudzakkir <qaharmdz@gmail.com>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace Mocha\Front\Component;
 
 class Error extends \Mocha\Controller
@@ -18,7 +27,7 @@ class Error extends \Mocha\Controller
             ->setContent($this->presenter->render('error', [
                 'title'    => '404 Not Found!',
                 'subtitle' => $exception->getMessage(),
-                'content'  => 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Labore adipisci quam voluptatem rerum veniam. Facilis tempora, id libero minima rem vel aliquam doloremque atque, eveniet nostrum perferendis hic, vero nulla.'
+                'content'  => 'Lorem ipsum dolor sit amet, consectetur adipisicing elit.'
             ]));
     }
 

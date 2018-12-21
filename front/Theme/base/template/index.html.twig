@@ -1,17 +1,36 @@
 <!DOCTYPE html>
-<html lang="{{ mocha.config.get('setting.local.language') }}" class="{{ mocha.document.getNode('class_html')|join(' ') }}">
+<html lang="{{ i18n_lang_code }}" dir="{{ i18n_lang_dir }}" class="{{ mocha.document.getNode('class_html')|join(' ') }}">
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+{% if mocha.config.get('setting.secure') %}
+    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+{% endif %}
 
     <title>{{ mocha.document.getTitle }}</title>
+
+{% for meta in mocha.document.getMeta %}
+    <meta {{ meta.attribute }}="{{ meta.value }}" content="{{ meta.content }}">
+{% endfor %}
+{% for link in mocha.document.getLink %}
+    <link rel="{{ link.rel }}" href="{{ link.href }}" {{ link.hreflang ? 'hreflang="' ~ link.hreflang ~ '"' }} {{ link.type ? 'type="' ~ link.type ~ '"' }} {{ link.media ? 'type="' ~ link.media ~ '"' }}>
+{% endfor %}
+{% for style in mocha.document.getStyle %}
+    <link rel="stylesheet" href="{{ style.href }}" media="{{ style.media }}">
+{% endfor %}
+{% for script in mocha.document.getScript %}
+    <script src="{{ script }}"></script>
+{% endfor %}
 </head>
 
 <body class="{{ mocha.document.getNode('class_body')|join(' ') }}">
 
-    <div style="background:#d9edf7;padding:40px 20px;">{{ component }}</div>
-    <div style="background:#d9edf7;padding:20px 20px;margin-top:20px">block position</div>
+<div style="background:#d9edf7;padding:40px 20px;">{{ component }}</div>
+<div style="background:#d9edf7;padding:20px 20px;margin-top:20px">block position</div>
 
+<div style="margin-top:100px;">
+    {{ mocha.router.urlGenerate('blog/post', {'id':2, 'ref':'home'}) }}
+</div>
 </body>
 </html>
