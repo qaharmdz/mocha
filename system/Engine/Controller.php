@@ -24,4 +24,23 @@ class Controller extends System\Engine\ServiceContainer
     {
         return $this->use($service);
     }
+
+    /**
+     * Load metadata file
+     *
+     * @param  string $extension
+     * @param  string $name
+     *
+     * @return array
+     */
+    public function meta(string $extension, string $name)
+    {
+        $file = $this->config->get('system.path.' . $extension) . $name . DS . 'metadata.php';
+
+        if (is_file($file)) {
+            return include $file;
+        }
+
+        return [];
+    }
 }

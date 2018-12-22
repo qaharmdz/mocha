@@ -33,6 +33,11 @@ class Session extends HttpFoundation\Session\Session
         $this->flash = $this->getFlashBag();
     }
 
+    /**
+     * Set session configuration
+     *
+     * @param array $options Key at php.net/session.configuration, omit 'session.'
+     */
     public function setOptions(array $options)
     {
         if ($this->storage instanceof NativeSessionStorage) {

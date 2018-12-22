@@ -145,6 +145,13 @@ class Config extends ParameterBag
         }
     }
 
+    /**
+     * Configuration loader
+     *
+     * @param  string $file
+     *
+     * @return array
+     */
     public function load(string $file, string $type = 'array')
     {
         if (!is_file($file)) {
@@ -170,6 +177,13 @@ class Config extends ParameterBag
         }
     }
 
+    /**
+     * Load array file configuration
+     *
+     * @param  string $file
+     *
+     * @return array
+     */
     protected function loadArray(string $file)
     {
         $bags = include $file;
@@ -179,6 +193,13 @@ class Config extends ParameterBag
         return $bags;
     }
 
+    /**
+     * Load json file configuration
+     *
+     * @param  string $file
+     *
+     * @return array
+     */
     protected function loadJson(string $file)
     {
         $bags = json_decode(file_get_contents($file), true);
@@ -189,7 +210,7 @@ class Config extends ParameterBag
     }
 
     /**
-     * Load and add .env content config, $_ENV and $_SERVER
+     * Load and add .env content to $bags, $_ENV and $_SERVER
      *
      * @param  string $file
      *
