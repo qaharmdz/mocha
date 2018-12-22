@@ -2,7 +2,6 @@
 /*
  * This file is part of Mocha package.
  *
- * This program is a "free software" which mean freedom to use, modify and redistribute.
  * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
  * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  *
@@ -111,7 +110,7 @@ class Framework
                         'temp'          => ROOT . 'temp' . DS,
                     ],
                     'serviceProvider'   => [
-                        '\Mocha\System\Tool\ProviderTool' // @todo: move to each app folder \Mocha\Front\ProviderTool
+                        '\Mocha\System\Tool\ProviderTool' // @todo: move to each app folder \Mocha\ucfirst($config['app']['folder'])\ProviderTool
                     ],
                     'eventSubscriber'   => [],
                     'routeCollection'   => [],
@@ -226,6 +225,8 @@ class Framework
             $controller = $this->container['resolver.controller']->resolve($subscriber, [], 'Plugin');
             $this->container['event']->addSubscriber(new $controller['class']());
         }
+
+        // @todo: load listed plugin from database?
     }
 
     public function initRouter()

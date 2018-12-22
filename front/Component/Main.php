@@ -2,7 +2,6 @@
 /*
  * This file is part of Mocha package.
  *
- * This program is a "free software" which mean freedom to use, modify and redistribute.
  * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
  * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  *
@@ -23,22 +22,39 @@ class Main extends \Mocha\Controller
 
         $data = array_replace_recursive($data, $this->language->all());
 
-        // ====== Component
+        // ====== Content
 
+        // === Theme
+
+        d($this->config->get('system.path.theme') . $this->config->get('setting.site.theme_front') . DS . 'metadata.php');
+        if (is_file($this->config->get('system.path.theme') . $this->config->get('setting.site.theme_front') . DS . 'metadata.php')) {
+            d($this->config->all());
+        }
+
+        // === Component
+
+        /**
+         * Components wrapped by kernel events, details see:
+         * - \Symfony\Component\HttpKernel\KernelEvents
+         * - \Symfony\Component\HttpKernel\HttpKernel::handleRaw
+         */
         $component = $this->dispatcher->handle($this->request);
 
         if ($component->hasOutput()) {
             return $component->getOutput();
         }
 
-        $data['component'] = $component->hasContent() ? $component->getContent() : 'No component content';
+        $data['component'] = $component->hasContent() ? $component->getContent() : 'Content isn\'t available.';
 
+        // === Block Layouts
         // Module Positions
 
         // ====== Presenter
 
         $this->presenter->param->add(['global' => [
             'config'    => $this->config,
+            'router'    => $this->router,
+            'document'  => $this->document,
             'request'   => [
                 'method'    => $this->request->getRealMethod(),
                 'secure'    => $this->request->isSecure(),
@@ -46,8 +62,6 @@ class Main extends \Mocha\Controller
                 'query'     => $this->request->query, // $_GET
                 'cookies'   => $this->request->cookies
             ],
-            'router'    => $this->router,
-            'document'  => $this->document,
         ]]);
 
         // d($data);

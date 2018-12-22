@@ -2,7 +2,6 @@
 /*
  * This file is part of Mocha package.
  *
- * This program is a "free software" which mean freedom to use, modify and redistribute.
  * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
  * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  *
@@ -10,4 +9,6 @@
  * Full copyright and license see LICENSE file or visit https://www.gnu.org/licenses/gpl-3.0.en.html.
  */
 
-return [];
+return [
+    'message'       => 'Component Home 2'
+];
