@@ -10,5 +10,6 @@
  */
 
 return [
-
+    'name'      => 'Base Theme',
+    'version'   => $this->config->get('system.version')
 ];

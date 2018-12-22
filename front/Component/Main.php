@@ -24,11 +24,6 @@ class Main extends \Mocha\Controller
 
         // === Theme
 
-        // d($this->config->get('system.path.theme') . $this->config->get('setting.site.theme_front') . DS . 'metadata.php');
-        if (is_file($this->config->get('system.path.theme') . $this->config->get('setting.site.theme_front') . DS . 'metadata.php')) {
-            // Register style
-        }
-
         // === Component
 
         /**
@@ -53,6 +48,7 @@ class Main extends \Mocha\Controller
         // ========= Presenter
 
         $this->presenter->param->add(['global' => [
+            'theme'     => $this->meta('theme', $this->config->get('setting.site.theme_front')),
             'config'    => $this->config,
             'router'    => $this->router,
             'document'  => $this->document,

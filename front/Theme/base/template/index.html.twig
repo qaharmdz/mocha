@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
 {% if mocha.request.secure %}
     <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
 {% endif %}
@@ -17,13 +17,15 @@
     <link rel="{{ link.rel }}" href="{{ link.href }}" {{ link.hreflang ? 'hreflang="' ~ link.hreflang ~ '"' }} {{ link.type ? 'type="' ~ link.type ~ '"' }} {{ link.media ? 'type="' ~ link.media ~ '"' }}>
 {% endfor %}
 
-    <link rel="stylesheet" href="{{ mocha.config.get('setting.url_site') }}asset/style/uikit.sketsa{{ i18n_lang_dir == 'rtl' ? '-rtl' }}.min.css" media="all">
+    <link rel="stylesheet" href="{{ mocha.config.get('setting.url_site') }}asset/style/uikit.sketsa{{ i18n_lang_dir == 'rtl' ? '-rtl' }}.min.css?v=1.0.0-rc.25" media="all">
     <link rel="stylesheet" href="{{ mocha.config.get('setting.url_site') ~ mocha.config.get('app.folder') }}/Theme/base/style/dummy.min.css" media="all">
 {% for style in mocha.document.getStyle %}
     <link rel="stylesheet" href="{{ style.href }}" media="{{ style.media }}">
 {% endfor %}
 
-    <script src="{{ mocha.config.get('setting.url_site') }}asset/script/jquery-3.2.1.min.js"></script>
+    <script src="{{ mocha.config.get('setting.url_site') }}asset/script/jquery-3.3.1.min.js"></script>
+    <script src="{{ mocha.config.get('setting.url_site') }}asset/script/uikit.min.js?v=1.0.0-rc.25"></script>
+    <script src="{{ mocha.config.get('setting.url_site') }}asset/script/uikit-icons.min.js?v=1.0.0-rc.25"></script>
 {% for script in mocha.document.getScript %}
     <script src="{{ script }}"></script>
 {% endfor %}
@@ -32,11 +34,57 @@
 
 <body class="{{ mocha.document.getNode('class_body')|join(' ') }}">
 
-<div style="background:#d9edf7;padding:40px 20px;">{{ component }}</div>
-<div style="background:#d9edf7;padding:20px 20px;margin-top:20px">block position</div>
-
-<div style="margin-top:100px;">
-    {{ mocha.router.urlGenerate('blog/post', {'id':2, 'ref':'home'}) }}
+<div class="uk-container">
+    <div class="uk-grid" uk-grid>
+        <div class="uk-width-expand">
+            <div class="uk-card uk-card-default uk-card-body uk-box-shadow-small">
+                {{ component }}
+            </div>
+        </div>
+        <div class="uk-width-1-4">
+            <div class="uk-card uk-card-default uk-card-body uk-box-shadow-small">
+                Block position
+            </div>
+        </div>
+    </div>
+    <div class="uk-grid" uk-grid>
+        <div class="uk-width-expand">
+            <table class="uk-table uk-table-striped uk-table-hover uk-table-middle">
+                <thead>
+                    <tr>
+                        <th class="uk-width-1-6">Table Heading</th>
+                        <th>Table Heading</th>
+                        <th class="uk-width-1-6 uk-text-center">Table Heading</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Table Data</td>
+                        <td>Table Data</td>
+                        <td class="uk-text-center">Table Data</td>
+                    </tr>
+                    <tr>
+                        <td>Table Data</td>
+                        <td>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</td>
+                        <td class="uk-text-center">Table Data</td>
+                    </tr>
+                    <tr>
+                        <td>Table Data</td>
+                        <td>Table Data</td>
+                        <td class="uk-text-center">Table Data</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="uk-grid" uk-grid>
+        <div class="uk-width-expand">
+            <ul class="uk-list">
+                <li>{{ mocha.router.urlGenerate('blog/post', {'id':2, 'ref':'home'}) }}</li>
+            </ul>
+        </div>
+    </div>
 </div>
+
 </body>
 </html>
