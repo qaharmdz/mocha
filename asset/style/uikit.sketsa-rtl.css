@@ -12,7 +12,7 @@
 html {
   /* 1 */
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-  font-size: 15px;
+  font-size: 14.5px;
   font-weight: normal;
   line-height: 1.6;
   /* 2 */
@@ -287,7 +287,7 @@ h4,
 }
 h5,
 .uk-h5 {
-  font-size: 15px;
+  font-size: 14.5px;
   line-height: 1.4;
 }
 h6,
@@ -1803,7 +1803,7 @@ td .uk-checkbox {
  ========================================================================== */
 .uk-form-label {
   color: #444;
-  font-size: 15px;
+  font-size: 14.5px;
   line-height: 1.4;
 }
 /* Layout
@@ -1964,7 +1964,7 @@ td .uk-checkbox {
   box-sizing: border-box;
   padding: 0 22px;
   vertical-align: middle;
-  font-size: 15px;
+  font-size: 14.5px;
   /* 7 */
   line-height: 36px;
   /* 8 */
@@ -3906,7 +3906,7 @@ td .uk-checkbox {
  */
 ul.uk-nav-sub {
   padding: 3px 15px 3px 0;
-  font-size: 0.9rem;
+  font-size: 0.96rem;
 }
 /*
  * Level 3 and deeper
@@ -3952,7 +3952,7 @@ ul.uk-nav-sub {
 /* Default modifier
  ========================================================================== */
 .uk-nav-default {
-  font-size: 0.96rem;
+  font-size: 1rem;
 }
 /*
  * Items
@@ -4172,7 +4172,7 @@ ul.uk-nav-sub {
   min-height: 80px;
   padding: 0 15px;
   /* 3 */
-  font-size: 0.96rem;
+  font-size: 1rem;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
   /* 4 */
   text-decoration: none;
@@ -4325,7 +4325,7 @@ ul.uk-nav-sub {
  * Adopts `uk-nav`
  ========================================================================== */
 .uk-navbar-dropdown-nav {
-  font-size: 0.9rem;
+  font-size: 0.96rem;
 }
 /*
  * Items
@@ -5103,7 +5103,7 @@ ul.uk-nav-sub {
  ========================================================================== */
 .uk-dropdown-nav {
   white-space: nowrap;
-  font-size: 0.96rem;
+  font-size: 1rem;
   line-height: 1.5;
 }
 /*

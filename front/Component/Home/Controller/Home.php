@@ -15,12 +15,11 @@ class Home extends \Mocha\Controller
 {
     public function index()
     {
-        $this->language->load('Component/Home/home');
+        $data = $this->language->load('Component/Home/home');
 
         $this->document->setTitle($this->language->get('i18n_page_title'));
         $this->document->addNode('class_body', ['page-home']);
 
-        $data = $this->language->all();
         $data['content'] = $this->language->get('i18n_message');
 
         return $this->response->setContent($this->presenter->render(

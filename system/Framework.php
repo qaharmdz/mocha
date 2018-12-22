@@ -130,13 +130,19 @@ class Framework
             );
         }
 
+        // Load plugin to update $config['system']
+        /*
+        Use `key` to store plugin_id and check if plugin is enabled
+        d($this->container['database']->where('`group`', 'system')->get('setting'));
+         */
+
         // Adjustment
         if ($this->config->get('setting.server.secure')) {
             $this->container['request']->server->set('HTTPS', true);
         }
 
-        $this->config->set('setting.url_base', $this->container['request']->getScheme() . '://' . rtrim($this->config->get('setting.url_site') . $this->config->get('app.url_part'), '/.\\')  . '/');
         $this->config->set('setting.url_site', $this->container['request']->getScheme() . '://' . rtrim($this->config->get('setting.url_site'), '/.\\')  . '/');
+        $this->config->set('setting.url_base', rtrim($this->config->get('setting.url_site') . $this->config->get('app.url_part'), '/.\\')  . '/');
 
         $this->config->set('setting.local.language', $this->config->get('setting.local.language_' . $this->config->get('app.folder')));
         $this->config->set('setting.local.language_id', $this->config->get('setting.local.languages')[$this->config->get('setting.local.language')]['id']);
@@ -160,6 +166,7 @@ class Framework
         $this->container['log.output'] = $this->config->get('system.path.temp') . 'log' . DS . $this->config->get('setting.server.log_error');
         $this->container['router.context']->fromRequest($this->container['request']);
         $this->container['resolver.controller']->param->set('namespace', $this->config->get('system.namespace'));
+        $this->container['controller'] = $this->container['resolver.controller']; // alias
         $this->container['presenter']->param->add([
             'debug'     => $this->config->get('setting.server.debug'),
             'timezone'  => $this->config->get('setting.local.timezone'),

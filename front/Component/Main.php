@@ -13,28 +13,26 @@ namespace Mocha\Front\Component;
 
 class Main extends \Mocha\Controller
 {
-    public function index(array $data = [])
+    public function index()
     {
-        $this->language->load('general');
+        $data = $this->language->load('general');
 
         $this->document->setTitle('Mocha - Pragmatic Content Management');
         $this->document->addNode('class_html', ['theme-' . $this->config->get('setting.site.theme_front')]);
 
-        $data = array_replace_recursive($data, $this->language->all());
-
-        // ====== Content
+        // ========= Content
 
         // === Theme
 
-        d($this->config->get('system.path.theme') . $this->config->get('setting.site.theme_front') . DS . 'metadata.php');
+        // d($this->config->get('system.path.theme') . $this->config->get('setting.site.theme_front') . DS . 'metadata.php');
         if (is_file($this->config->get('system.path.theme') . $this->config->get('setting.site.theme_front') . DS . 'metadata.php')) {
-            d($this->config->all());
+            // Register style
         }
 
         // === Component
 
         /**
-         * Components wrapped by kernel events, details see:
+         * Component wrapped in middleware events, details see:
          * - \Symfony\Component\HttpKernel\KernelEvents
          * - \Symfony\Component\HttpKernel\HttpKernel::handleRaw
          */
@@ -44,12 +42,15 @@ class Main extends \Mocha\Controller
             return $component->getOutput();
         }
 
-        $data['component'] = $component->hasContent() ? $component->getContent() : 'Content isn\'t available.';
+        $data['component'] = $component->hasContent() ? $component->getContent() : 'Content is not available.';
+
+        // Direct access controller, without event middleware
+        // d($this->controller->resolve('home', []));
+        // d($this->controller->resolve('cool/app', [], 'module'));
 
         // === Block Layouts
-        // Module Positions
 
-        // ====== Presenter
+        // ========= Presenter
 
         $this->presenter->param->add(['global' => [
             'config'    => $this->config,
@@ -66,6 +67,7 @@ class Main extends \Mocha\Controller
 
         // d($data);
         // d($this->event);
+        // d($this->config->all());
         // d($this->presenter->param->get('global'));
         // d(
         //     $this->router->urlGenerate(),

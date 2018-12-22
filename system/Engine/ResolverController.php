@@ -50,7 +50,7 @@ class ResolverController extends ControllerResolver
     public function getController(Request $request)
     {
         if (!is_callable($request->attributes->get('_controller'))) {
-            if (false !== $controller = $this->resolve($request->attributes->get('_controller'), $request->attributes->get('_route_params'), $this->param->get('namespace.component'))) {
+            if (false !== $controller = $this->resolve($request->attributes->get('_controller'), $request->attributes->get('_route_params'))) {
                 $request->attributes->set('_controller', [new $controller['class'], $controller['method']]);
                 $request->query->add($controller['arguments']);
             } else {
@@ -70,9 +70,10 @@ class ResolverController extends ControllerResolver
      *
      * @return array|false
      */
-    public function resolve(string $path, array $params = [], string $namespace = '')
+    public function resolve(string $path, array $params = [], string $namespace = 'component')
     {
-        $segments = explode('/', trim($path, '/'));
+        $namespace = $this->param->get('namespace.' . $namespace);
+        $segments  = explode('/', trim($path, '/'));
 
         if (empty($segments[0])) {
             throw new \InvalidArgumentException(sprintf('Unable to resolve path "%s"', $path));
