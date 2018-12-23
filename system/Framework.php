@@ -92,7 +92,7 @@ class Framework
                         'theme'     => $config['app']['namespace'] . '\Theme'
                     ],
                     'controller'    => [
-                        'main'      => $config['app']['namespace'] . '\Component\Main::index',
+                        'init'      => $config['app']['namespace'] . '\Component\Init::index',
                         'error'     => $config['app']['namespace'] . '\Component\Error::index',
                         'default'   => 'Home' // 'Mocha\Front\Component\Home::index'
                     ],
@@ -119,7 +119,7 @@ class Framework
             $config
         ));
 
-        // Load setting from database
+        // Update setting from database
         $this->container['database.param'] = $this->config->get('system.database');
         $this->config->remove('system.database');
 
@@ -130,11 +130,13 @@ class Framework
             );
         }
 
-        // Load plugin to update $config['system']
+        // Update serviceProvider, eventSubscriber, routeCollection with plugins
         /*
         Use `key` to store plugin_id and check if plugin is enabled
         d($this->container['database']->where('`group`', 'system')->get('setting'));
          */
+
+        // Update languages
 
         // Adjustment
         if ($this->config->get('setting.server.secure')) {
@@ -159,6 +161,8 @@ class Framework
         // Standarize php and database timezone to UTC
         date_default_timezone_set('UTC');
         $this->container['database']->rawQuery('SET time_zone="+00:00";');
+
+        return $this;
     }
 
     public function initService()
@@ -192,12 +196,16 @@ class Framework
         foreach ($this->config->get('system.serviceProvider', []) as $provider) {
             $this->container->register(new $provider());
         }
+
+        return $this;
     }
 
     public function initSession()
     {
         $this->container['session']->setOptions($this->config->get('setting.server.session'));
         $this->container['session']->start();
+
+        return $this;
     }
 
     public function initEvent()
@@ -233,7 +241,7 @@ class Framework
             $this->container['event']->addSubscriber(new $controller['class']());
         }
 
-        // @todo: load listed plugin from database?
+        return $this;
     }
 
     public function initRouter()
@@ -257,6 +265,8 @@ class Framework
             $this->container['router']->addRoute('dynamic_locale', '/{_locale}/{_controller}', ['_controller' => $this->config->get('system.controller.default')], ['_controller' => '.*']);
         }
         $this->container['router']->addRoute('_dynamic', '/{_controller}', ['_controller' => $this->config->get('system.controller.default')], ['_controller' => '.*']);
+
+        return $this;
     }
 
     public function run()
@@ -265,8 +275,8 @@ class Framework
 
         $this->response = $this->container['response'];
 
-        if ($this->config->get('system.controller.main')) {
-            list($class, $method) = explode('::', $this->config->get('system.controller.main'), 2);
+        if ($this->config->get('system.controller.init')) {
+            list($class, $method) = explode('::', $this->config->get('system.controller.init'), 2);
 
             $this->response = call_user_func([new $class, $method]);
         } else {

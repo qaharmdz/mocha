@@ -53,6 +53,7 @@ class ResolverController extends ControllerResolver
             if (false !== $controller = $this->resolve($request->attributes->get('_controller'), $request->attributes->get('_route_params'))) {
                 $request->attributes->set('_controller', [new $controller['class'], $controller['method']]);
                 $request->query->add($controller['arguments']);
+                $request->query->set('_route', $controller['path']);
             } else {
                 return false;
             }
@@ -80,11 +81,12 @@ class ResolverController extends ControllerResolver
         }
 
         try {
-            $class     = $this->resolveClass($path, $namespace, $segments);
-            $method    = $this->resolveMethod($class, $segments);
-            $arguments = $this->resolveArguments($params, $segments);
+            list($class, $path) = $this->resolveClass($path, $namespace, $segments);
+            $method             = $this->resolveMethod($class, $segments);
+            $arguments          = $this->resolveArguments($params, $segments);
 
             return [
+                'path'      => strtolower($path . '/' . $method),
                 'class'     => $class,
                 'method'    => $method,
                 'arguments' => $arguments
@@ -105,18 +107,30 @@ class ResolverController extends ControllerResolver
      */
     protected function resolveClass($path, $namespace, &$segments)
     {
-        $folder = $class = ucwords(array_shift($segments));
-        if (!empty($segments[0])) {
-            $class = ucwords(array_shift($segments));
+        $folder  = $class  = ucwords(array_shift($segments));
+        $parts   = $_parts = [rtrim($namespace, '\\'), $folder, 'Controller', $class];
+        $segment = !empty($segments[0]) ? $segments[0] : '';
+        $path    = $folder . '/' . $class;
+
+        if ($segment) {
+            $_parts[3] = ucwords($segment);
+            $path      = $folder . '/' . $_parts[3];
         }
 
-        $class = implode('\\', [rtrim($namespace, '\\'), $folder, 'Controller', $class]);
+        $class = implode('\\', $_parts);
 
-        if (!class_exists($class)) {
-            throw new \InvalidArgumentException(sprintf('Cannot locate expected controller "%s" for path "%s"', $class, $path));
+        if (class_exists($class)) {
+            array_shift($segments);
+        } else {
+            $class = implode('\\', $parts);
+            $path  = $folder . '/' . $parts[3];
+
+            if (!class_exists($class)) {
+                throw new \InvalidArgumentException(sprintf('Cannot locate expected controller "%s" for path "%s"', $class, $path));
+            }
         }
 
-        return $class;
+        return [$class, $path];
     }
 
     /**

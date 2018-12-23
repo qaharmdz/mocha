@@ -25,15 +25,27 @@ class Abstractor extends System\Engine\ServiceContainer
         return $this->use($service);
     }
 
-    // Wrap method access with event
-    public function __call($method, $arguments)
+    /**
+     * Load metadata file
+     * Info: can access $this inside metadata
+     *
+     * @param  string $extension
+     * @param  string $name
+     *
+     * @return array
+     */
+    protected function meta(string $extension, string $name)
     {
-        if (method_exists($this, $method)) {
-            $this->test1();
-            $response = call_user_func_array([$this, $method], $arguments);
-            $this->test2();
+        $data = [];
+        $file = $this->config->get('system.path.' . $extension) . $name . DS . 'metadata.php';
 
-            return $response;
+        if (is_file($file)) {
+            $data[$extension][$name] = include $file;
+            $this->config->add($data);
+
+            return $data[$extension][$name];
         }
+
+        return $data;
     }
 }

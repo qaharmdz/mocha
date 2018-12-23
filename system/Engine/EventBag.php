@@ -12,7 +12,11 @@
 namespace Mocha\System\Engine;
 
 use Symfony\Component\EventDispatcher;
+use Symfony\Component\HttpFoundation;
 
+/**
+ * General purpose EventDispatcher\Event
+ */
 class EventBag extends EventDispatcher\Event
 {
     /**
@@ -21,23 +25,32 @@ class EventBag extends EventDispatcher\Event
     protected $name;
 
     /**
+     * @var array Readonly initial data passed to event
+     */
+    protected $defaultParam;
+
+    /**
      * @var \Symfony\Component\HttpFoundation\ParameterBag
      */
     public $data;
 
     /**
-     * @var array Readonly initial data passed to event
+     * @var string
      */
-    protected $defaultData;
+    public $output;
 
-    public function __construct(string $eventName, array $data = [])
+    public function __construct(string $eventName, array $param = [], $output = '')
     {
-        $this->name = $eventName;
-        $this->data = new Config($data);
+        $this->name   = $eventName;
+        $this->data   = new Config($param);
+        $this->output = $output;
 
         // All event have chance to access initial data
-        if ($this->defaultData === null) {
-            $this->defaultData = $this->data->all();
+        if ($this->defaultParam === null) {
+            $this->defaultParam = array_merge(
+                $this->data->all(),
+                ['_output' => $this->output]
+            );
         }
     }
 
@@ -58,26 +71,36 @@ class EventBag extends EventDispatcher\Event
      */
     public function getDefault()
     {
-        return $this->defaultData;
+        return $this->defaultParam;
     }
 
     /**
-     * Get all changed data
+     * Shortcut to update data
      *
      * @return array
      */
-    public function getAllData()
+    public function editData(array $data)
+    {
+        $this->data->add($data);
+    }
+
+    /**
+     * Shortcut to get data
+     *
+     * @return array
+     */
+    public function getData()
     {
         return $this->data->all();
     }
 
     /**
-     * Special data key "_content"
+     * Get initial data
      *
-     * @return string
+     * @return array
      */
-    public function getContent()
+    public function getOutput()
     {
-        return $this->data->get('_content');
+        return $this->output;
     }
 }

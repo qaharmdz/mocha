@@ -11,36 +11,25 @@
 
 namespace Mocha;
 
-class Controller extends System\Engine\ServiceContainer
+class Controller extends Abstractor
 {
     /**
-     * Fallback inaccessible properties to ServiceContainer
+     * [render description]
      *
-     * @param  string $service
+     * @param  string $template
+     * @param  array  $vars
+     * @param  string $eventName
      *
-     * @return object
+     * @return string
      */
-    public function __get(string $service)
+    protected function render(string $template, array $vars = [], string $eventName = '')
     {
-        return $this->use($service);
-    }
+        $eventName = $eventName ?: $template . '/presenter';
 
-    /**
-     * Load metadata file
-     *
-     * @param  string $extension
-     * @param  string $name
-     *
-     * @return array
-     */
-    public function meta(string $extension, string $name)
-    {
-        $file = $this->config->get('system.path.' . $extension) . $name . DS . 'metadata.php';
+        // Event to manipulate twig variables
+        $data = $this->event->trigger($eventName . '_data', $vars)->getData();
 
-        if (is_file($file)) {
-            return include $file;
-        }
-
-        return [];
+        // Event to manipulate render result
+        return $this->event->trigger($eventName . '_output', [], $this->presenter->render($template, $data))->getOutput();
     }
 }

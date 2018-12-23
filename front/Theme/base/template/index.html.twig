@@ -34,8 +34,13 @@
 
 <body class="{{ mocha.document.getNode('class_body')|join(' ') }}">
 
-<div class="uk-container">
+<div class="uk-container uk-margin-medium-top">
     <div class="uk-grid" uk-grid>
+        <div class="uk-width-1-5 uk-hidden">
+            <div class="uk-card uk-card-default uk-card-body uk-box-shadow-small">
+                Block position
+            </div>
+        </div>
         <div class="uk-width-expand">
             <div class="uk-card uk-card-default uk-card-body uk-box-shadow-small">
                 {{ component }}
@@ -43,7 +48,7 @@
         </div>
         <div class="uk-width-1-4">
             <div class="uk-card uk-card-default uk-card-body uk-box-shadow-small">
-                Block position
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
             </div>
         </div>
     </div>
@@ -80,11 +85,33 @@
     <div class="uk-grid" uk-grid>
         <div class="uk-width-expand">
             <ul class="uk-list">
-                <li>{{ mocha.router.urlGenerate('blog/post', {'id':2, 'ref':'home'}) }}</li>
+                <li>{{ mocha.router.urlGenerate() }}</li>
+                <li>{{ mocha.router.urlGenerate('home') }}</li>
+                <li>{{ mocha.router.urlGenerate('blog/category/cid/1234') }}</li>
+                <li>{{ mocha.router.urlGenerate('blog/post', {'pid':2, 'cid':'12_13'}) }}</li>
             </ul>
         </div>
     </div>
 </div>
-
+{#
+<script>
+$.ajax({
+    url  : "{{ mocha.router.urlGenerate('home/ping', {'id':2, 'ref':'home'}) }}",
+    type : 'GET',
+    data : {
+        'foo' : 'bar',
+        'baz' : 101
+    },
+    dataType:'json',
+    success : function(data) {
+        console.log('Data: ' + data);
+    },
+    error : function(request,error)
+    {
+        console.log('Request: ' + JSON.stringify(request));
+    }
+});
+ #}
+</script>
 </body>
 </html>

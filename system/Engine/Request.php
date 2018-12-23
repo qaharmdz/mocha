@@ -38,6 +38,16 @@ class Request extends HttpFoundation\Request
     }
 
     /**
+     * Set pathinfo
+     *
+     * @return string The raw path (not urldecoded)
+     */
+    public function setPathInfo(string $path)
+    {
+        $this->pathInfo = $path;
+    }
+
+    /**
      * Get base URI for the Request.
      *
      * @return string Base URI

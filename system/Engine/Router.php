@@ -107,22 +107,33 @@ class Router
      * Generate url by route name
      *
      * @param  string $name       Route name
-     * @param  array  $parameters Route parameter
+     * @param  array  $params     Route parameter
      * @param  bool   $extraParam Should extra parameter appended, mostly url token
      *
      * @return string
      */
-    public function urlBuild(string $name, array $parameters = [], bool $extraParam = true)
+    public function urlBuild(string $name, array $params = [], bool $extraParam = true)
     {
         $result = '';
 
         // Check to avoid exception error
         if ($this->collection->get($name)) {
             $name = $this->param->get('buildLocale') ? preg_replace('/_locale$/', '', $name) . '_locale' : $name;
-            $parameters = $extraParam ? array_replace($this->param->get('buildParameters'), $parameters) : $parameters;
+            $params = $extraParam ? array_replace($this->param->get('buildParameters'), $params) : $params;
 
-            $result = $this->urlGenerator->generate($name, $parameters, UrlGenerator::ABSOLUTE_URL);
+            $result = $this->urlGenerator->generate($name, $params, UrlGenerator::ABSOLUTE_URL);
         }
+
+        if ($result) {
+            $parts = explode('?', $result);
+
+            if (!empty($parts[1])) {
+                $result = $parts[0] . '/' . implode('/', explode('=', str_replace('&', '=', $parts[1])));
+            }
+        }
+
+        // @todo: plugin event to use url alias from database
+        // @todo: for reverse, use event "init.start" to manipulate request->pathinfo
 
         return $result;
     }
@@ -131,22 +142,22 @@ class Router
      * Helper to automatically check route $name in urlBuild
      *
      * @param  string $path       Route path
-     * @param  array  $parameters Route parameter
+     * @param  array  $params     Route parameter
      * @param  bool   $extraParam Append extra parameter?
      *
      * @return string
      */
-    public function urlGenerate(string $path = '', array $parameters = [], bool $extraParam = true)
+    public function urlGenerate(string $path = '', array $params = [], bool $extraParam = true)
     {
         if (!$path) {
-            return $this->urlBuild('_base', $parameters, $extraParam);
+            return $this->urlBuild('_base', $params, $extraParam);
         }
         if ($this->collection->get($path)) {
-            return $this->urlBuild($path, $parameters, $extraParam);
+            return $this->urlBuild($path, $params, $extraParam);
         }
 
-        $parameters['_controller'] = $path;
+        $params['_controller'] = $path;
 
-        return $this->urlBuild('_dynamic', $parameters, $extraParam);
+        return $this->urlBuild('_dynamic', $params, $extraParam);
     }
 }

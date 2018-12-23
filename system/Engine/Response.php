@@ -87,7 +87,7 @@ class Response extends HttpFoundation\Response
      *
      * @return $this
      */
-    public function jsonOutput($data = [], $status = 200, array $headers = [])
+    public function jsonOutput($data = [], int $status = 200, array $headers = [])
     {
         return $this->setOutput(new HttpFoundation\JsonResponse($data, $status, $headers));
     }
@@ -104,8 +104,8 @@ class Response extends HttpFoundation\Response
     public function fileOutput(string $file, string $mask = '', array $headers = [])
     {
         $response = new HttpFoundation\BinaryFileResponse($file, 200, $headers, true);
+
         if ($mask) {
-            // $response->setContentDisposition('attachment', $mask);
             $response->setContentDisposition(
                 HTTPFoundation\ResponseHeaderBag::DISPOSITION_ATTACHMENT,
                 $mask

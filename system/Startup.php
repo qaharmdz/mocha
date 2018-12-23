@@ -24,7 +24,7 @@ if (is_file(ROOT . '.maintenance')) {
     exit('<h1>Maintenance</h1><p>Website under maintenance. Please visit again later.</p>');
 }
 if (!is_file(ROOT . 'config.php')) {
-    header('Location: install/');
+    header('Location: setup/');
     exit;
 }
 
@@ -51,8 +51,4 @@ $config['setting']['url_base'] = $config['setting']['url_site'] . $config['app']
 // ====== Framework
 
 $framework = new Framework();
-$framework->init($config);
-$framework->run();
-
-// d($framework);
-// d($framework->config->all());
+$framework->init($config)->run();

@@ -32,12 +32,12 @@
             "Mocha\\Admin\\": "admin",
             "Mocha\\Front\\": "front",
             "Mocha\\System\\": "system",
-            "Mocha\\Install\\": "install"
+            "Mocha\\Setup\\": "setup"
         },
         "files": [
             "system/Functions.php",
-            "system/Engine/Controller.php",
-            "system/Engine/Abstractor.php"
+            "system/Engine/Abstractor.php",
+            "system/Engine/Controller.php"
         ]
     },
     "autoload-dev" : {

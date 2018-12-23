@@ -11,6 +11,8 @@
 
 namespace Mocha\System\Engine;
 
+use Symfony\Component\HttpFoundation\ParameterBag;
+
 class Presenter
 {
     /**
@@ -18,7 +20,7 @@ class Presenter
      */
     public $param;
 
-    public function __construct(\Symfony\Component\HttpFoundation\ParameterBag $bag)
+    public function __construct(ParameterBag $bag)
     {
         $this->param = $bag;
 

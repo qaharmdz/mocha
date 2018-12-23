@@ -22,8 +22,23 @@ class Home extends \Mocha\Controller
 
         $data['content'] = $this->language->get('i18n_message');
 
-        return $this->response->setContent($this->presenter->render(
+        return $this->response->setContent($this->render(
             'Component/Home/home',
+            $data
+        ));
+    }
+
+    public function test()
+    {
+        $data = $this->language->load('Component/Home/home');
+
+        $this->document->setTitle($this->language->get('i18n_page_title'));
+        $this->document->addNode('class_body', ['page-home']);
+
+        $data['content'] = 'Method test';
+
+        return $this->response->setContent($this->render(
+            'Component/Home/test',
             $data
         ));
     }
