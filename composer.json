@@ -17,10 +17,11 @@
         "symfony/http-foundation": "^4.0",
         "symfony/http-kernel": "^4.0",
         "symfony/routing": "^4.0",
-        "symfony/finder": "^4.0",
-        "joshcam/mysqli-database-class": "^2.9",
+        "twig/twig": "^2.5",
         "nesbot/carbon": "^2.5",
-        "twig/twig": "^2.5"
+        "claviska/simpleimage": "^3.3",
+        "phpFastCache/phpFastCache": "^7.0",
+        "joshcam/mysqli-database-class": "^2.9"
     },
     "require-dev": {
         "kint-php/kint": "^3.0",

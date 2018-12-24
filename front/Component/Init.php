@@ -34,7 +34,10 @@ class Init extends \Mocha\Controller
         $component = $this->event->trigger('init.component', [], $this->dispatcher->handle($this->request))->getOutput();
 
         if ($component->hasOutput()) {
-            return $component->getOutput();
+            /**
+             * @return \Mocha\System\Engine\Response $component
+             */
+            return $this->event->trigger('init.component.output', [], $component->getOutput());
         }
 
         $data['component'] = $component->hasContent() ? $component->getContent() : 'Content is not available.';
@@ -69,26 +72,19 @@ class Init extends \Mocha\Controller
         // d($data);
         // d($this->event);
         // d($this->config->all());
-        // d($this->request->attributes->all());
-        // d($this->request->query->all());
+        // d($this->session->all());
+        // $this->session->set('foo', 'bar');
+        // d(
+        //     $this->request->attributes->all(),
+        //     $this->request->query->all()
+        // );
+        // d();
         // d($this->presenter->param->get('global'));
 
-        /*
-        $output = $this->event->trigger(
-            'init.presenter_render',
-            $data,
-            $this->presenter->render(
-                $this->document->getNode('template_base', 'index'),
-                $data
-            )
-        )->getOutput();
-
-        // d($this->event->getEmitters());
-
-        return $this->response
-            ->setStatusCode($component->getStatusCode())
-            ->setContent($output);
-         */
+        // d(
+        //     $this->user->login('admin@example.com', 'password'),
+        //     $this->user->all()
+        // );
 
         // d($this->event->getEmitters());
 
@@ -100,20 +96,11 @@ class Init extends \Mocha\Controller
                 'init.presenter'
             ));
 
-        // ============================
-
-        return $this->response
-            ->setStatusCode($component->getStatusCode())
-            ->setContent($this->presenter->render(
-                $this->document->getNode('template_base', 'index'),
-                $data
-            ));
+        /*
+        template_base
+        - index   : Header, Footer, Block Layout
+        - minimum : Header, Footer, no Block Layout
+        - blank   : No Header, no Footer, no Block Layout
+         */
     }
 }
-
-/*
-Layout
-- Blank   : No header, no footer, white canvas
-- Minimum : Header, Footer
-- index   : default
- */

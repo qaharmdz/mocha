@@ -74,8 +74,12 @@ class ProviderCore implements ServiceProviderInterface
         });
 
         // Misc
+        $container['session.options'] = [];
+        $container['session.storage'] = function ($c) {
+            return new HttpFoundation\Session\Storage\NativeSessionStorage($c['session.options']);
+        };
         $container['session'] = function ($c) {
-            return new Session();
+            return new Session($c['session.storage']);
         };
 
         $container['paramBag'] = $container->factory(function ($c) {

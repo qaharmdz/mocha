@@ -18,15 +18,9 @@ class Secure
     /**
      * @param   hash_type
      */
-    public function __construct(array $param)
+    public function __construct(array $param = [])
     {
-        $this->setParam($param);
-    }
-
-    public function setParam(array $param)
-    {
-        $this->param = array_replace_recursive($this->param, $param);
-        $this->setHashType($param['hash_type']);
+        $this->param = array_merge(['hash_type' => 'sha256'], $param);
     }
 
     public function password(string $password)
@@ -44,7 +38,7 @@ class Secure
         return password_needs_rehash($hash, PASSWORD_DEFAULT);
     }
 
-    public function setHashType($type)
+    public function setHash($type)
     {
         $this->param['hash_type'] = in_array($type, hash_algos()) ? $type : 'sha256';
     }

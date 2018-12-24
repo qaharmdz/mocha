@@ -53,7 +53,7 @@ class ResolverController extends ControllerResolver
             if (false !== $controller = $this->resolve($request->attributes->get('_controller'), $request->attributes->get('_route_params'))) {
                 $request->attributes->set('_controller', [new $controller['class'], $controller['method']]);
                 $request->query->add($controller['arguments']);
-                $request->query->set('_route', $controller['path']);
+                $request->query->set('_route_path', $controller['path']);
             } else {
                 return false;
             }

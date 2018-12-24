@@ -73,9 +73,6 @@ class Framework
                     ],
                     'server'    => [
                         'environment'   => 'live',
-                        'session'       => [ // Key at php.net/session.configuration, omit 'session.'
-                            'name'      => 'mocha'
-                        ],
                         'log_error'     => 'error.log',
                     ]
                 ],
@@ -96,24 +93,33 @@ class Framework
                         'error'     => $config['app']['namespace'] . '\Component\Error::index',
                         'default'   => 'Home' // 'Mocha\Front\Component\Home::index'
                     ],
-                    'path'          => [
-                        'root'          => ROOT,
-                        'app'           => $config['app']['path'],
-                        'component'     => $config['app']['path'] . 'Component' . DS,
-                        'module'        => $config['app']['path'] . 'Module' . DS,
-                        'plugin'        => $config['app']['path'] . 'Plugin' . DS,
-                        'language'      => $config['app']['path'] . 'Language' . DS,
-                        'theme'         => $config['app']['path'] . 'Theme' . DS,
-                        'asset'         => ROOT . 'asset' . DS,
-                        'storage'       => ROOT . 'storage' . DS,
-                        'system'        => ROOT . 'system' . DS,
-                        'temp'          => ROOT . 'temp' . DS,
+                    'session'       => [ // Key at php.net/session.configuration, omit 'session.'
+                        'name'              => 'mocha',
+                        'use_cookies'       => 1,
+                        'use_only_cookies'  => 1,
+                        'use_strict_mode'   => 1,
+                        'cookie_httponly'   => 1,
+                        'use_trans_sid'     => 0,
+                        'sid_length'        => rand(48, 64)
                     ],
-                    'serviceProvider'   => [
+                    'path'          => [
+                        'root'              => ROOT,
+                        'app'               => $config['app']['path'],
+                        'component'         => $config['app']['path'] . 'Component' . DS,
+                        'module'            => $config['app']['path'] . 'Module' . DS,
+                        'plugin'            => $config['app']['path'] . 'Plugin' . DS,
+                        'language'          => $config['app']['path'] . 'Language' . DS,
+                        'theme'             => $config['app']['path'] . 'Theme' . DS,
+                        'asset'             => ROOT . 'asset' . DS,
+                        'storage'           => ROOT . 'storage' . DS,
+                        'system'            => ROOT . 'system' . DS,
+                        'temp'              => ROOT . 'temp' . DS,
+                    ],
+                    'serviceProvider'       => [
                         '\Mocha\System\Tool\ProviderTool' // @todo: move to each app folder \Mocha\ucfirst($config['app']['folder'])\ProviderTool
                     ],
-                    'eventSubscriber'   => [],
-                    'routeCollection'   => [],
+                    'eventSubscriber'       => [],
+                    'routeCollection'       => [],
                 ]
             ],
             $config
@@ -130,13 +136,13 @@ class Framework
             );
         }
 
-        // Update serviceProvider, eventSubscriber, routeCollection with plugins
+        // @todo: Update serviceProvider, eventSubscriber, routeCollection with plugins
         /*
         Use `key` to store plugin_id and check if plugin is enabled
         d($this->container['database']->where('`group`', 'system')->get('setting'));
          */
 
-        // Update languages
+        // @todo: Update languages
 
         // Adjustment
         if ($this->config->get('setting.server.secure')) {
@@ -202,7 +208,7 @@ class Framework
 
     public function initSession()
     {
-        $this->container['session']->setOptions($this->config->get('setting.server.session'));
+        $this->container['session.options'] = $this->config->get('system.session');
         $this->container['session']->start();
 
         return $this;

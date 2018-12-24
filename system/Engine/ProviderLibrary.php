@@ -34,6 +34,14 @@ class ProviderLibrary implements ServiceProviderInterface
             return \MysqliDb::getInstance();
         };
 
+        $container['secure'] = function ($c) {
+            return new Library\Secure();
+        };
+
+        $container['user'] = function ($c) {
+            return new Library\User($c['database'], $c['secure'], $c['session']);
+        };
+
         $container['language'] = function ($c) {
             return new Library\Language();
         };

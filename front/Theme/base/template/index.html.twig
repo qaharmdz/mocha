@@ -26,10 +26,6 @@
     <script src="{{ mocha.config.get('setting.url_site') }}asset/script/jquery-3.3.1.min.js"></script>
     <script src="{{ mocha.config.get('setting.url_site') }}asset/script/uikit.min.js?v=1.0.0-rc.25"></script>
     <script src="{{ mocha.config.get('setting.url_site') }}asset/script/uikit-icons.min.js?v=1.0.0-rc.25"></script>
-{% for script in mocha.document.getScript %}
-    <script src="{{ script }}"></script>
-{% endfor %}
-    <script src="{{ mocha.config.get('setting.url_site') ~ mocha.config.get('app.folder') }}/Theme/base/script/dummy.min.js"></script>
 </head>
 
 <body class="{{ mocha.document.getNode('class_body')|join(' ') }}">
@@ -46,7 +42,7 @@
                 {{ component }}
             </div>
         </div>
-        <div class="uk-width-1-4">
+        <div class="uk-width-1-4 uk-visible@m">
             <div class="uk-card uk-card-default uk-card-body uk-box-shadow-small">
                 Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
             </div>
@@ -93,6 +89,12 @@
         </div>
     </div>
 </div>
+
+{% for script in mocha.document.getScript %}
+<script src="{{ script }}"></script>
+{% endfor %}
+<script src="{{ mocha.config.get('setting.url_site') ~ mocha.config.get('app.folder') }}/Theme/base/script/dummy.min.js"></script>
+
 {#
 <script>
 $.ajax({

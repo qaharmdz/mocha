@@ -124,6 +124,7 @@ class Router
             $result = $this->urlGenerator->generate($name, $params, UrlGenerator::ABSOLUTE_URL);
         }
 
+        // Flatten
         if ($result) {
             $parts = explode('?', $result);
 

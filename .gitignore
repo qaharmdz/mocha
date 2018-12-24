@@ -2,6 +2,7 @@
 _dev/
 temp/
 vendor/
+_vendor/
 
 phpunit.xml
 *.log
