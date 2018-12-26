@@ -10,5 +10,5 @@
  */
 
 return [
-    'message'       => 'Component Home lang\en'
+'message'       => 'Component Home lang\en'
 ];

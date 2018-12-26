@@ -11,8 +11,8 @@
 
 namespace Mocha\System\Engine;
 
-use Symfony\Component\EventDispatcher;
 // use Symfony\Component\HttpFoundation;
+use Symfony\Component\EventDispatcher;
 
 /**
  * General purpose EventDispatcher\Event

@@ -15,14 +15,14 @@ class Init extends \Mocha\Controller
 {
     public function index()
     {
-        $data = $this->event->trigger('init.start', $this->language->load('general'))->getData();
+        $data = $this->event->trigger('init.start', $this->language->all())->getData();
+        // TODO: plugin from url alias to route $this->request->setPathInfo('/home/test'); // sample to manipulate requested component
 
         $this->document->addNode('class_html', ['theme-' . $this->config->get('setting.site.theme_front')]);
 
         // ========= Content
 
         // === Component
-        // @todo plugin from url alias to route $this->request->setPathInfo('/home/test'); // sample to manipulate requested component
 
         /**
          * Component event middleware, see:
@@ -35,7 +35,7 @@ class Init extends \Mocha\Controller
 
         if ($component->hasOutput()) {
             /**
-             * @return \Mocha\System\Engine\Response $component
+             * @return \Mocha\System\Engine\Response
              */
             return $this->event->trigger('init.component.output', [], $component->getOutput());
         }
@@ -45,8 +45,15 @@ class Init extends \Mocha\Controller
         // === Block Layouts
 
         // Direct access controller, without event middleware
-        // d($this->controller->resolve('home', []));
-        // d($this->controller->resolve('cool/app', [], 'module'));
+        /*
+        TODO: at parent controller
+            - $this->controller() load controller
+            - $this->model(name, object) register model
+            - $this->model(name, method) call model method wrapped in event
+
+        d($this->controllerResolver->resolve('home', []));
+        d($this->controllerResolver->resolve('cool/app', [], 'module'));
+         */
 
         // ========= Presenter
 
@@ -69,24 +76,7 @@ class Init extends \Mocha\Controller
             )->getData()
         );
 
-        // d($data);
-        // d($this->event);
-        // d($this->config->all());
-        // d($this->session->all());
-        // $this->session->set('foo', 'bar');
-        // d(
-        //     $this->request->attributes->all(),
-        //     $this->request->query->all()
-        // );
-        // d();
-        // d($this->presenter->param->get('global'));
-
-        // d(
-        //     $this->user->login('admin@example.com', 'password'),
-        //     $this->user->all()
-        // );
-
-        // d($this->event->getEmitters());
+        $this->test($data);
 
         return $this->response
             ->setStatusCode($component->getStatusCode())
@@ -102,5 +92,52 @@ class Init extends \Mocha\Controller
         - minimum : Header, Footer, no Block Layout
         - blank   : No Header, no Footer, no Block Layout
          */
+    }
+
+    protected function test($data = [])
+    {
+        // d(MOCHA);
+        // d($data);
+
+        // d($this->event);
+        // d($this->config->all());
+        // d($this->session->all());
+        // $this->session->set('foo', 'bar');
+        // d($this->presenter->param->get('global'));
+
+        // d(
+        //     $this->request->attributes->all(),
+        //     $this->request->query->all()
+        // );
+        // d();
+
+        // d(
+        //     $this->user->login('admin@example.com', 'password'),
+        //     $this->user->all()
+        // );
+
+        // d(
+            // $this->date->param->all(),
+            // $this->date->carbon->getSettings(),
+            // $this->date->carbon
+            // ''
+        // );
+        // !d([
+        //     ['info' => 'now UTC f-dts', 'carbon' => $nowUTC = $this->date->now('dts', 'utc')],
+        //     ['info' => 'now user f-dtf', 'carbon' => $nowUser = $this->date->now()],
+        //     ['info' => 'now user f-atom', 'carbon' => $this->date->now(DATE_ATOM)],
+        //     ['info' => 'now user +7d', 'carbon' => $this->date->now('dtf', null, '+7 days 3 hours')],
+        //     ['info' => 'now user -1w', 'carbon' => $this->date->now('dtf', null, '-1 weeks')],
+        //     ['info' => 'now user -1w', 'carbon' => $this->date->now('dtf', null, '-1 weeks')],
+        //     ['info' => 'shift utc to user', 'carbon' => $this->date->shift($nowUTC)],
+        //     ['info' => 'shift utc to user', 'carbon' => $this->date->shift($nowUTC, ['diffHuman' => true])],
+        //     ['info' => 'shift user to utc', 'carbon' => $this->date->shift($nowUser, ['from_tz' => 'user', 'from_format' => 'dtf', 'to_tz' => 'utc', 'to_format' => 'dts'])],
+        //     ['info' => 'shift user to utc', 'carbon' => $this->date->shift($nowUser, ['from_tz' => 'user', 'from_format' => 'dtf', 'to_tz' => 'utc', 'to_format' => 'dts', 'diffHuman' => true])],
+        //     ['info' => 'shiftUsertoUTC()', 'carbon' => $this->date->shiftUsertoUTC($nowUser)],
+        //     ['info' => 'gmtOffset()', 'carbon' => $this->date->gmtOffset()],
+        //     ['info' => 'gmtOffset()', 'carbon' => $this->date->gmtOffset('America/New_York')],
+        //     ['info' => 'toSqlFormat()', 'carbon' => $this->date->toSqlFormat()],
+        //     ['info' => 'tojQueryUIFormat()', 'carbon' => $this->date->tojQueryUIFormat()],
+        // ]);
     }
 }

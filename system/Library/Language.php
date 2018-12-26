@@ -63,49 +63,51 @@ class Language
 
     public function load(string $filename, string $group = '')
     {
-        if (!in_array($filename, $this->data['loaded'])) {
-            $files = [];
-            $parts = explode('/', $filename);
-
-            $file     = $filename;
-            $filepart = '';
-            if (count($parts) > 1) {
-                $file     = array_pop($parts);
-                $filepart = implode(DS, $parts) . DS;
-            }
-
-            $files = array_unique([
-                $this->data['param']['path']['app'] . $filepart . 'Language' . DS .$this->data['param']['default'] . DS . $file . '.php',
-                $this->data['param']['path']['language'] . $this->data['param']['default'] . DS . $filepart . $file . '.php',
-                $this->data['param']['path']['app'] . $filepart . 'Language' . DS .$this->data['param']['active'] . DS . $file . '.php',
-                $this->data['param']['path']['language'] . $this->data['param']['active'] . DS . $filepart . $file . '.php'
-            ]);
-
-
-            // Load file
-            $variables = [];
-            foreach ($files as $item) {
-                if (is_file($item)) {
-                    $variables = array_merge($variables, (array)require($item));
-                }
-            }
-
-            if (!$variables) {
-                throw new \RuntimeException(sprintf('Language "%s" is not available', $filename));
-            }
-
-            $vars = [];
-            foreach ($variables as $key => $value) {
-                $vars['i18n_' . $key] = $value;
-            }
-
-            $this->data['loaded'][] = $filename;
-            $this->data['vars']     = array_merge(
-                $this->data['vars'],
-                $group ? [$group => $vars] : $vars
-            );
-
-            return $vars;
+        if (array_key_exists($filename, $this->data['loaded'])) {
+            return $this->data['loaded'][$filename];
         }
+
+        $files = [];
+        $parts = explode('/', $filename);
+
+        $file     = $filename;
+        $filepart = '';
+        if (count($parts) > 1) {
+            $file     = array_pop($parts);
+            $filepart = implode(DS, $parts) . DS;
+        }
+
+        $files = array_unique([
+            $this->data['param']['path']['app'] . $filepart . 'Language' . DS .$this->data['param']['default'] . DS . $file . '.php',
+            $this->data['param']['path']['language'] . $this->data['param']['default'] . DS . $filepart . $file . '.php',
+            $this->data['param']['path']['app'] . $filepart . 'Language' . DS .$this->data['param']['active'] . DS . $file . '.php',
+            $this->data['param']['path']['language'] . $this->data['param']['active'] . DS . $filepart . $file . '.php'
+        ]);
+
+
+        // Load file
+        $variables = [];
+        foreach ($files as $item) {
+            if (is_file($item)) {
+                $variables = array_merge($variables, (array)require($item));
+            }
+        }
+
+        if (!$variables) {
+            throw new \RuntimeException(sprintf('Language "%s" is not available', $filename));
+        }
+
+        $vars = [];
+        foreach ($variables as $key => $value) {
+            $vars['i18n_' . $key] = $value;
+        }
+
+        $this->data['loaded'][$filename] = $vars;
+        $this->data['vars']     = array_merge(
+            $this->data['vars'],
+            $group ? [$group => $vars] : $vars
+        );
+
+        return $vars;
     }
 }

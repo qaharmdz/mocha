@@ -49,5 +49,12 @@ class ProviderLibrary implements ServiceProviderInterface
         $container['document'] = function ($c) {
             return new Library\Document();
         };
+
+        $container['date_carbon'] = function ($c) {
+            return new \Carbon\Carbon();
+        };
+        $container['date'] = function ($c) {
+            return new Library\Date($c['date_carbon'], $c['parameterBag']);
+        };
     }
 }

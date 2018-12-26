@@ -10,6 +10,6 @@
  */
 
 return [
-    'page_title'    => 'Welcome Home',
-    'message'       => 'Component Home'
+'page_title'    => 'Welcome Home',
+'message'       => 'Component Home'
 ];

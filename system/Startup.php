@@ -11,9 +11,12 @@
 
 namespace Mocha\System;
 
+defined('DS') or define('DS', DIRECTORY_SEPARATOR);
+defined('ROOT') or define('ROOT', realpath(__DIR__ . '/../') . DS);
+defined('MOCHA') or define('MOCHA', '1.0.0-a.1');
+
 mb_internal_encoding('UTF-8');
 ini_set('display_errors', 1);
-
 
 // ====== Validate
 
@@ -28,12 +31,9 @@ if (!is_file(ROOT . 'config.php')) {
     exit;
 }
 
-
 // ====== Base
 
 require_once ROOT . '/system/vendor/' . DS . 'autoload.php';
-
-// \Kint::$enabled_mode = false;
 
 // Protocols
 $_https = false;
@@ -44,9 +44,14 @@ if (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on' || !empty($_SERVER['H
 }
 $_SERVER['HTTPS'] = $_https;
 
+// Configuration
+$config = array_replace_recursive(
+    require_once 'config.php',
+    ['app' => $config_app]
+);
+
 $config['setting']['url_site'] = $config['setting']['url_site'];
 $config['setting']['url_base'] = $config['setting']['url_site'] . $config['app']['url_part'];
-
 
 // ====== Framework
 

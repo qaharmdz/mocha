@@ -12,7 +12,7 @@
 html {
   /* 1 */
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-  font-size: 14.5px;
+  font-size: 14px;
   font-weight: normal;
   line-height: 1.6;
   /* 2 */
@@ -88,7 +88,7 @@ strong {
   /* 1 */
   font-family: Consolas, monaco, monospace;
   /* 2 */
-  font-size: 0.875rem;
+  font-size: 0.9rem;
   /* 3 */
   color: #f53123;
   white-space: nowrap;
@@ -287,12 +287,12 @@ h4,
 }
 h5,
 .uk-h5 {
-  font-size: 14.5px;
+  font-size: 14px;
   line-height: 1.4;
 }
 h6,
 .uk-h6 {
-  font-size: 0.875rem;
+  font-size: 0.9rem;
   line-height: 1.4;
 }
 /* Tablet landscape and bigger */
@@ -382,7 +382,7 @@ blockquote p:last-of-type {
 }
 blockquote footer {
   margin-top: 10px;
-  font-size: 0.875rem;
+  font-size: 0.9rem;
   line-height: 1.5;
   color: #444;
 }
@@ -831,7 +831,7 @@ a.uk-link-reset:hover,
  */
 .uk-description-list > dt {
   color: #222;
-  font-size: 0.875rem;
+  font-size: 0.9rem;
   font-weight: normal;
   text-transform: uppercase;
 }
@@ -883,7 +883,7 @@ a.uk-link-reset:hover,
   text-align: right;
   vertical-align: bottom;
   /* 1 */
-  font-size: 0.875rem;
+  font-size: 0.9rem;
   font-weight: 600;
   color: #444;
   text-transform: uppercase;
@@ -903,12 +903,12 @@ a.uk-link-reset:hover,
 /* Footer
  ========================================================================== */
 .uk-table tfoot {
-  font-size: 0.875rem;
+  font-size: 0.9rem;
 }
 /* Caption
  ========================================================================== */
 .uk-table caption {
-  font-size: 0.875rem;
+  font-size: 0.9rem;
   text-align: right;
   color: #888;
 }
@@ -955,7 +955,7 @@ a.uk-link-reset:hover,
 .uk-table-small th,
 .uk-table-small td {
   padding: 7px 6px;
-  font-size: 0.8rem;
+  font-size: 0.86rem;
 }
 .uk-table-large th,
 .uk-table-large td {
@@ -1060,7 +1060,7 @@ a.uk-link-reset:hover,
   background: #ffe3e9;
 }
 .uk-table .uk-text-meta {
-  font-size: 0.8rem;
+  font-size: 0.86rem;
 }
 /* ========================================================================
    Component: Icon
@@ -1523,7 +1523,7 @@ button.uk-icon:not(:disabled) {
  * Small
  */
 .uk-form-small {
-  font-size: 0.875rem;
+  font-size: 0.9rem;
 }
 .uk-form-small:not(textarea):not([multiple]):not([size]) {
   height: 26px;
@@ -1803,7 +1803,7 @@ td .uk-checkbox {
  ========================================================================== */
 .uk-form-label {
   color: #444;
-  font-size: 14.5px;
+  font-size: 14px;
   line-height: 1.4;
 }
 /* Layout
@@ -1964,7 +1964,7 @@ td .uk-checkbox {
   box-sizing: border-box;
   padding: 0 22px;
   vertical-align: middle;
-  font-size: 14.5px;
+  font-size: 14px;
   /* 7 */
   line-height: 36px;
   /* 8 */
@@ -2112,7 +2112,7 @@ td .uk-checkbox {
 .uk-button-small {
   padding: 0 14px;
   line-height: 24px;
-  font-size: 0.875rem;
+  font-size: 0.9rem;
 }
 .uk-button-large {
   padding: 0 40px;
@@ -3310,7 +3310,7 @@ td .uk-checkbox {
   padding: 15px 15px 15px 35px;
   background: #f4f4f4;
   color: #444;
-  font-size: 0.875rem;
+  font-size: 0.9rem;
   line-height: 1.5;
   border-right: 4px solid #bbbbbb;
 }
@@ -3406,7 +3406,7 @@ td .uk-checkbox {
   text-decoration: underline;
 }
 .uk-alert-small {
-  font-size: 0.875rem;
+  font-size: 0.9rem;
   line-height: 1.5;
   padding: 7px 11px 7px 30px;
 }
@@ -3433,7 +3433,7 @@ td .uk-checkbox {
   /* 1 */
   background: #1e87f0;
   color: #fff;
-  font-size: 0.875rem;
+  font-size: 0.9rem;
   /* 2 */
   display: inline-flex;
   justify-content: center;
@@ -3470,7 +3470,7 @@ td .uk-checkbox {
   padding: 0 10px;
   background: #1e87f0;
   line-height: 1.6;
-  font-size: 0.8rem;
+  font-size: 0.86rem;
   color: #fff;
   vertical-align: middle;
   white-space: nowrap;
@@ -3568,7 +3568,7 @@ td .uk-checkbox {
 /* Meta
  ========================================================================== */
 .uk-article-meta {
-  font-size: 0.875rem;
+  font-size: 0.9rem;
   line-height: 1.4;
   color: #888;
 }
@@ -3621,7 +3621,7 @@ td .uk-checkbox {
 /* Meta
  ========================================================================== */
 .uk-comment-meta {
-  font-size: 0.875rem;
+  font-size: 0.9rem;
   line-height: 1.4;
   color: #888;
 }
@@ -3948,7 +3948,7 @@ ul.uk-nav-sub {
 .uk-nav-header {
   padding: 5px 0;
   text-transform: uppercase;
-  font-size: 0.875rem;
+  font-size: 0.9rem;
 }
 .uk-nav-header:not(:first-child) {
   margin-top: 20px;
@@ -4240,7 +4240,7 @@ ul.uk-nav-sub {
 /* Subtitle
  ========================================================================== */
 .uk-navbar-subtitle {
-  font-size: 0.875rem;
+  font-size: 0.9rem;
 }
 /* Style modifiers
  ========================================================================== */
@@ -4469,7 +4469,7 @@ ul.uk-nav-sub {
   display: block;
   /* 2 */
   color: #888;
-  font-size: 0.875rem;
+  font-size: 0.9rem;
   text-transform: uppercase;
   transition: 0.1s ease-in-out;
   transition-property: color, background-color;
@@ -4560,7 +4560,7 @@ ul.uk-nav-sub {
  ========================================================================== */
 .uk-breadcrumb > * > * {
   display: inline-block;
-  font-size: 0.875rem;
+  font-size: 0.9rem;
   color: #888;
 }
 /* Hover + Focus */
@@ -4697,7 +4697,7 @@ ul.uk-nav-sub {
   padding: 5px 10px;
   color: #888;
   border-bottom: 3px solid transparent;
-  font-size: 0.875rem;
+  font-size: 0.9rem;
   text-transform: uppercase;
   transition: color 0.1s ease-in-out;
 }
@@ -6058,7 +6058,7 @@ ul.uk-nav-sub {
   padding: 15px;
   background: #fdfdfd;
   color: #444;
-  font-size: 0.875rem;
+  font-size: 0.9rem;
   line-height: 1.5;
   cursor: pointer;
   border: 1px solid #c4c4c4;
@@ -7253,7 +7253,7 @@ ul.uk-nav-sub {
   color: #222;
 }
 .uk-text-meta {
-  font-size: 0.875rem;
+  font-size: 0.9rem;
   line-height: 1.4;
   color: #888;
 }
@@ -7267,7 +7267,7 @@ ul.uk-nav-sub {
 /* Size modifiers
  ========================================================================== */
 .uk-text-small {
-  font-size: 0.875rem;
+  font-size: 0.9rem;
   line-height: 1.5;
 }
 .uk-text-large {

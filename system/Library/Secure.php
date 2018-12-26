@@ -20,7 +20,12 @@ class Secure
      */
     public function __construct(array $param = [])
     {
-        $this->param = array_merge(['hash_type' => 'sha256'], $param);
+        $this->param = array_merge(
+            [
+                'hash_type' => 'sha256'
+            ],
+            $param
+        );
     }
 
     public function password(string $password)

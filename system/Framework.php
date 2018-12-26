@@ -22,11 +22,6 @@ class Framework
     public $container;
 
     /**
-     * @var \Mocha\System\Engine\Response
-     */
-    public $response;
-
-    /**
      * @var \Mocha\System\Engine\Config
      */
     public $config;
@@ -44,6 +39,7 @@ class Framework
     public function init(array $config = [])
     {
         $this->initConfig($config);
+        $this->initEnvironment();
         $this->initService();
         $this->initSession();
         $this->initEvent();
@@ -73,11 +69,13 @@ class Framework
                     ],
                     'server'    => [
                         'environment'   => 'live',
+                        'debug'         => false,
+                        'secure'        => false, // force https
                         'log_error'     => 'error.log',
                     ]
                 ],
                 'system'        => [
-                    'version'       => '1.0.0-a.1',
+                    'version'       => MOCHA,
                     'database'      => [
                         'charset'   => 'utf8',
                         'port'      => 3306
@@ -116,7 +114,7 @@ class Framework
                         'temp'              => ROOT . 'temp' . DS,
                     ],
                     'serviceProvider'       => [
-                        '\Mocha\System\Tool\ProviderTool' // @todo: move to each app folder \Mocha\ucfirst($config['app']['folder'])\ProviderTool
+                        '\Mocha\System\Tool\ProviderTool' // TODO: move to each app folder \Mocha\ucfirst($config['app']['folder'])\ProviderTool
                     ],
                     'eventSubscriber'       => [],
                     'routeCollection'       => [],
@@ -125,10 +123,21 @@ class Framework
             $config
         ));
 
-        // Update setting from database
+        return $this;
+    }
+
+    public function initEnvironment()
+    {
         $this->container['database.param'] = $this->config->get('system.database');
         $this->config->remove('system.database');
 
+        // Standardize PHP and database timezone MUST be UTC
+        date_default_timezone_set('UTC');
+        $this->container['database']->rawQuery('SET time_zone="+00:00";');
+
+        // ====== Update config
+
+        // Load setting from database
         foreach ($this->container['database']->where('`group`', 'setting')->get('setting') as $item) {
             $this->config->set(
                 implode('.', [$item['group'], $item['type'], $item['key']]),
@@ -136,47 +145,46 @@ class Framework
             );
         }
 
-        // @todo: Update serviceProvider, eventSubscriber, routeCollection with plugins
-        /*
-        Use `key` to store plugin_id and check if plugin is enabled
-        d($this->container['database']->where('`group`', 'system')->get('setting'));
-         */
-
-        // @todo: Update languages
-
-        // Adjustment
-        if ($this->config->get('setting.server.secure')) {
-            $this->container['request']->server->set('HTTPS', true);
-        }
-
+        // Config adjustment
         $this->config->set('setting.url_site', $this->container['request']->getScheme() . '://' . rtrim($this->config->get('setting.url_site'), '/.\\')  . '/');
         $this->config->set('setting.url_base', rtrim($this->config->get('setting.url_site') . $this->config->get('app.url_part'), '/.\\')  . '/');
 
+        $this->config->set('setting.site.theme', $this->config->get('setting.site.theme_' . $this->config->get('app.folder')));
         $this->config->set('setting.local.language', $this->config->get('setting.local.language_' . $this->config->get('app.folder')));
         $this->config->set('setting.local.language_id', $this->config->get('setting.local.languages')[$this->config->get('setting.local.language')]['id']);
-        $this->config->set('setting.site.theme', $this->config->get('setting.site.theme_' . $this->config->get('app.folder')));
-        $this->config->set('setting.server.debug', $this->config->getBoolean(
-            'setting.server.debug',
-            in_array($this->config->get('setting.server.environment'), ['dev', 'test'])
-        ));
+
+        if (in_array($this->config->get('setting.server.environment'), ['dev', 'test'])) {
+            $this->config->set('setting.server.debug', true);
+        }
 
         if ($env = ROOT . '.env' && is_file($env)) {
             $this->config->load($env, 'env');
         }
 
-        // Standarize php and database timezone to UTC
-        date_default_timezone_set('UTC');
-        $this->container['database']->rawQuery('SET time_zone="+00:00";');
+        // TODO: Update languages
+
+        // ====== TODO: Update serviceProvider, eventSubscriber, routeCollection list with plugins
+        /*
+        Use `key` to store plugin_id and check if plugin is enabled
+        d($this->container['database']->where('`group`', 'system')->get('setting'));
+         */
 
         return $this;
     }
 
     public function initService()
     {
+        if ($this->config->get('setting.server.debug')) {
+            Debug\Debug::enable(E_ALL, true);
+        }
+
+        if ($this->config->get('setting.server.secure')) {
+            $this->container['request']->server->set('HTTPS', true);
+        }
+
         $this->container['log.output'] = $this->config->get('system.path.temp') . 'log' . DS . $this->config->get('setting.server.log_error');
         $this->container['router.context']->fromRequest($this->container['request']);
         $this->container['resolver.controller']->param->set('namespace', $this->config->get('system.namespace'));
-        $this->container['controller'] = $this->container['resolver.controller']; // alias
         $this->container['presenter']->param->add([
             'debug'     => $this->config->get('setting.server.debug'),
             'timezone'  => $this->config->get('setting.local.timezone'),
@@ -189,16 +197,19 @@ class Framework
                 'cache'     => $this->config->get('system.path.temp') . 'twigs' . DS
             ]
         ]);
+
         $this->container['language']->param([
             'active'    => $this->config->get('setting.local.language'),
             'path'      => $this->config->get('system.path')
         ]);
+        $this->container['language']->load('general');
 
-        if ($this->config->get('setting.server.debug')) {
-            Debug\Debug::enable(E_ALL, true);
-        }
+        $this->container['date']->param->add([
+            // TODO: more date param from database setting
+            'localize_datetime' => $this->container['language']->get('i18n_localize_datetime')
+        ]);
 
-        // Extra
+        // Extra service
         foreach ($this->config->get('system.serviceProvider', []) as $provider) {
             $this->container->register(new $provider());
         }
@@ -279,18 +290,16 @@ class Framework
     {
         Engine\ServiceContainer::storage($this->container);
 
-        $this->response = $this->container['response'];
-
         if ($this->config->get('system.controller.init')) {
             list($class, $method) = explode('::', $this->config->get('system.controller.init'), 2);
 
-            $this->response = call_user_func([new $class, $method]);
+            $this->container['response'] = call_user_func([new $class, $method]);
         } else {
-            $this->response->setContent('Oops! looks like your app is not configured properly.');
+            $this->container['response']->setContent('Oops! looks like your app is not configured properly.');
         }
 
-        $this->response->send();
+        $this->container['response']->send();
 
-        $this->container['dispatcher']->terminate($this->container['request'], $this->response);
+        $this->container['dispatcher']->terminate($this->container['request'], $this->container['response']);
     }
 }

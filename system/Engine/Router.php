@@ -133,8 +133,8 @@ class Router
             }
         }
 
-        // @todo: plugin event to use url alias from database
-        // @todo: for reverse, use event "init.start" to manipulate request->pathinfo
+        // TODO: plugin event to use url alias from database
+        // TODO: for reverse, use event "init.start" to manipulate request->pathinfo
 
         return $result;
     }

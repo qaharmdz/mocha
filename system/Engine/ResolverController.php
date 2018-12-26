@@ -24,7 +24,7 @@ class ResolverController extends ControllerResolver
     /**
      * @var \Psr\Log\LoggerInterface
      */
-    public $log;
+    protected $log;
 
     /**
      * @var \Symfony\Component\HttpFoundation\ParameterBag
@@ -37,6 +37,15 @@ class ResolverController extends ControllerResolver
 
         $this->log   = $logger;
         $this->param = $bag;
+
+        $this->param->add([
+            'namespace'     => [
+                'component' => 'Component',
+                'module'    => 'Module',
+                'plugin'    => 'Plugin',
+                'theme'     => 'Theme'
+            ]
+        ]);
     }
 
     /**

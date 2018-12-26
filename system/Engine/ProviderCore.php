@@ -21,6 +21,8 @@ class ProviderCore implements ServiceProviderInterface
 {
     public function register(Container $container)
     {
+        // TODO: change . with _
+
         // === Request
         $container['request.stack'] = function ($c) {
             return new HttpFoundation\RequestStack();
@@ -48,7 +50,7 @@ class ProviderCore implements ServiceProviderInterface
             return new Routing\Generator\UrlGenerator($c['router.collection'], $c['router.context']);
         };
         $container['router'] = function ($c) {
-            return new Router($c['router.collection'], $c['router.route'], $c['router.matcher'], $c['router.generator'], $c['paramBag']);
+            return new Router($c['router.collection'], $c['router.route'], $c['router.matcher'], $c['router.generator'], $c['parameterBag']);
         };
 
         // === Dispatcher
@@ -56,7 +58,7 @@ class ProviderCore implements ServiceProviderInterface
             return new Event();
         };
         $container['resolver.controller'] = function ($c) {
-            return new ResolverController($c['log'], $c['paramBag']);
+            return new ResolverController($c['log'], $c['parameterBag']);
         };
         $container['resolver.argument'] = function ($c) {
             return new HttpKernel\Controller\ArgumentResolver();
@@ -82,11 +84,11 @@ class ProviderCore implements ServiceProviderInterface
             return new Session($c['session.storage']);
         };
 
-        $container['paramBag'] = $container->factory(function ($c) {
+        $container['parameterBag'] = $container->factory(function ($c) {
             return new Config();
         });
         $container['config'] = function ($c) {
-            return $c['paramBag'];
+            return $c['parameterBag'];
         };
 
         $container['log.output'] = 'php://stderr';
@@ -95,7 +97,7 @@ class ProviderCore implements ServiceProviderInterface
         };
 
         $container['presenter'] = function ($c) {
-            return new Presenter($c['paramBag']);
+            return new Presenter($c['parameterBag']);
         };
     }
 }
