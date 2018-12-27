@@ -15,24 +15,27 @@ defined('PATH_MOCHA') or define('PATH_MOCHA', realpath(PATH_ROOT . './mocha/') .
 defined('PATH_PUBLIC') or define('PATH_PUBLIC', realpath(__DIR__) . DS);
 
 // Public access through symlinks
-$symlinks = [
-    realpath(PATH_MOCHA . './asset/')                  => PATH_PUBLIC . 'asset' . DS,
-    realpath(PATH_MOCHA . './storage/image/')          => PATH_PUBLIC . 'image' . DS,       // Uploaded image
-    realpath(PATH_MOCHA . './temp/image/')             => PATH_PUBLIC . '_image' . DS,      // Cache and resized image
-    realpath(PATH_MOCHA . './front/theme/base/asset/') => PATH_PUBLIC . 'th_base'
-];
-foreach ($symlinks as $real => $link) {
-    if (file_exists($real) && (!is_link($link) || readlink($link) != $real)) {
-        try {
-            if (file_exists($link)) {
-                @unlink($link);
-            }
+$symlinkStatus = true;
+if ($symlinkStatus) {
+    $symlinks      = [
+        realpath(PATH_MOCHA . './storage/image/')          => PATH_PUBLIC . '_image' . DS,      // Uploaded image
+        realpath(PATH_MOCHA . './temp/image/')             => PATH_PUBLIC . '_images' . DS,     // Cache and resized image
+        realpath(PATH_MOCHA . './asset/')                  => PATH_PUBLIC . '_asset' . DS,      // General asset
+        realpath(PATH_MOCHA . './front/theme/base/asset/') => PATH_PUBLIC . '_thbase'           // Theme asset
+    ];
+    foreach ($symlinks as $real => $link) {
+        if (file_exists($real) && (!is_link($link) || readlink($link) != $real)) {
+            try {
+                if (file_exists($link)) {
+                    @unlink($link);
+                }
 
-            if (!file_exists($link)) {
-                symlink($real, $link);
+                if (!file_exists($link)) {
+                    symlink($real, $link);
+                }
+            } catch (\Exception $e) {
+                exit('DEPRESSO | The feeling you get when you run out of coffee!');
             }
-        } catch (\Exception $e) {
-            exit('DEPRESSO | The feeling you get when you run out of coffee!');
         }
     }
 }

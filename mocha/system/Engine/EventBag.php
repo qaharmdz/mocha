@@ -75,14 +75,6 @@ class EventBag extends EventDispatcher\Event
     }
 
     /**
-     * Shortcut to update data
-     *
-     * @return array
-     */
-    public function editData(array $data)
-    {
-        $this->data->add($data);
-    }
 
     /**
      * Shortcut to get data
@@ -95,7 +87,7 @@ class EventBag extends EventDispatcher\Event
     }
 
     /**
-     * Get initial data
+     * Get output
      *
      * @return array
      */

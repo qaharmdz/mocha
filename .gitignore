@@ -4,10 +4,7 @@ temp/
 vendor/
 _vendor/
 
-public/image
-public/_image
-public/asset
-public/th_base
+public/_*
 
 phpunit.xml
 *.log
