@@ -104,17 +104,17 @@ class Framework
                         'sid_length'        => rand(48, 64)
                     ],
                     'path'          => [
-                        'root'              => ROOT,
+                        'root'              => PATH_ROOT,
                         'app'               => $config['app']['path'],
                         'component'         => $config['app']['path'] . 'Component' . DS,
                         'module'            => $config['app']['path'] . 'Module' . DS,
                         'plugin'            => $config['app']['path'] . 'Plugin' . DS,
                         'language'          => $config['app']['path'] . 'Language' . DS,
                         'theme'             => $config['app']['path'] . 'Theme' . DS,
-                        'asset'             => ROOT . 'asset' . DS,
-                        'storage'           => ROOT . 'storage' . DS,
-                        'system'            => ROOT . 'system' . DS,
-                        'temp'              => ROOT . 'temp' . DS,
+                        'asset'             => PATH_PUBLIC . 'asset' . DS,
+                        'storage'           => PATH_MOCHA . 'storage' . DS,
+                        'system'            => PATH_MOCHA . 'system' . DS,
+                        'temp'              => PATH_MOCHA . 'temp' . DS,
                     ],
                     'serviceProvider'       => [
                         '\Mocha\System\Tool\ProviderTool' // TODO: move to each app folder \Mocha\ucfirst($config['app']['folder'])\ProviderTool
@@ -160,7 +160,7 @@ class Framework
             $this->config->set('setting.server.debug', true);
         }
 
-        if ($env = ROOT . '.env' && is_file($env)) {
+        if ($env = PATH_PUBLIC . '.env' && is_file($env)) {
             $this->config->load($env, 'env');
         }
 

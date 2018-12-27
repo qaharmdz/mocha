@@ -9,13 +9,13 @@
  * Full copyright and license see LICENSE file or visit https://www.gnu.org/licenses/gpl-3.0.en.html.
  */
 
-defined('ROOT') or define('ROOT', realpath(__DIR__) . DIRECTORY_SEPARATOR);
+require_once '../path.php';
 
 $config_app = [
-    'folder'    => 'front',
-    'url_part'  => '',
-    'path'      => ROOT . 'front' . DIRECTORY_SEPARATOR,
-    'namespace' => 'Mocha\Front',
+    'folder'    => 'admin',
+    'url_part'  => '/admin',
+    'path'      => PATH_MOCHA . 'admin' . DS,
+    'namespace' => 'Mocha\Admin'
 ];
 
-require_once ROOT . 'system' . DIRECTORY_SEPARATOR . 'Startup.php';
+require_once PATH_MOCHA . 'system' . DS . 'Startup.php';

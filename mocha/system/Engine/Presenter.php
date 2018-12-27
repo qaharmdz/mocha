@@ -59,7 +59,7 @@ class Presenter
             $this->param->get('path.theme') . $this->param->get('theme.active') . DS . 'template' . DS,
             $this->param->get('path.theme') . $this->param->get('theme.default') . DS . 'template' . DS,
             $this->param->get('path.app'),
-            ROOT
+            PATH_MOCHA
         ]);
 
         if (!is_dir($template_path[0])) {

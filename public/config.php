@@ -1,7 +1,7 @@
 <?php
 return [
     'setting'   => [
-        'url_site'          => 'localhost/mocha/',      // no protocol
+        'url_site'          => 'localhost/mocha/public',      // no protocol
     ],
     'system'    => [
         'database'          => [
