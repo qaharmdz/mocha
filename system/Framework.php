@@ -60,9 +60,12 @@ class Framework
                     'local'     => [
                         'timezone'      => 'UTC', // Timezone on display
                         'language'      => 'en',
-                        'languages'     => ['en' => [
-                            'id'    => 1
-                        ]],
+                        'languages'     => [
+                            'en' => [
+                                'id'    => 1
+                            ],
+                            ['id' => ['id' => 2]]
+                        ],
                     ],
                     'site'    => [
                         'theme'         => 'base'
@@ -185,6 +188,17 @@ class Framework
         $this->container['log.output'] = $this->config->get('system.path.temp') . 'log' . DS . $this->config->get('setting.server.log_error');
         $this->container['router.context']->fromRequest($this->container['request']);
         $this->container['resolver.controller']->param->set('namespace', $this->config->get('system.namespace'));
+
+        $this->container['router']->param->add([
+            'routeDefaults'     => ['_locale' => 'en'],
+            'routeRequirements' => ['_locale' => 'en'],
+            'buildLocale'       => count($this->config->get('setting.local.languages')) > 1,
+            'buildParameters'   => $buildParameters = [
+                'token' => '12345'
+            ],
+            'buildFlatten'      => !(bool)$buildParameters,
+        ]);
+
         $this->container['presenter']->param->add([
             'debug'     => $this->config->get('setting.server.debug'),
             'timezone'  => $this->config->get('setting.local.timezone'),
@@ -269,7 +283,7 @@ class Framework
         // Base
         $this->container['router']->addRoute('_base', '/', ['_controller' => $this->config->get('system.controller.default')]);
         if (count($this->config->get('setting.local.languages')) > 1) {
-            $this->container['router']->addRoute('base_locale', '/{_locale}/', ['_controller' => $this->config->get('system.controller.default')]);
+            $this->container['router']->addRoute('_base_locale', '/{_locale}/', ['_controller' => $this->config->get('system.controller.default')]);
         }
 
         // Register routes
@@ -279,7 +293,7 @@ class Framework
 
         // Dynamic fallback
         if (count($this->config->get('setting.local.languages')) > 1) {
-            $this->container['router']->addRoute('dynamic_locale', '/{_locale}/{_controller}', ['_controller' => $this->config->get('system.controller.default')], ['_controller' => '.*']);
+            $this->container['router']->addRoute('_dynamic_locale', '/{_locale}/{_controller}', ['_controller' => $this->config->get('system.controller.default')], ['_controller' => '.*']);
         }
         $this->container['router']->addRoute('_dynamic', '/{_controller}', ['_controller' => $this->config->get('system.controller.default')], ['_controller' => '.*']);
 

@@ -57,6 +57,7 @@ class Router
         $this->param->add([
             'routeDefaults'     => ['_locale' => 'en'], // Default addRoute
             'routeRequirements' => ['_locale' => 'en'], // Requirement addRoute, multi-language en|id|fr
+            'buildFlatten'      => false,               // Implode query url
             'buildLocale'       => false,               // Force urlBuild to use "_locale"
             'buildParameters'   => []                   // Force urlBuild to add extra parameter
         ]);
@@ -119,17 +120,17 @@ class Router
         // Check to avoid exception error
         if ($this->collection->get($name)) {
             $name = $this->param->get('buildLocale') ? preg_replace('/_locale$/', '', $name) . '_locale' : $name;
-            $params = $extraParam ? array_replace($this->param->get('buildParameters'), $params) : $params;
+            $params = $extraParam ? array_replace($params, $this->param->get('buildParameters')) : $params;
 
             $result = $this->urlGenerator->generate($name, $params, UrlGenerator::ABSOLUTE_URL);
         }
 
         // Flatten
-        if ($result) {
+        if ($this->param->get('buildFlatten') && $result) {
             $parts = explode('?', $result);
 
             if (!empty($parts[1])) {
-                $result = $parts[0] . '/' . implode('/', explode('=', str_replace('&', '=', $parts[1])));
+                $result = rtrim($parts[0], '/') . '/' . implode('/', explode('=', str_replace('&', '=', $parts[1])));
             }
         }
 
