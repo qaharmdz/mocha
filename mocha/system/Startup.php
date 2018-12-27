@@ -22,7 +22,7 @@ if (version_compare($php = PHP_VERSION, $req = '7.1.8', '<')) {
     exit(sprintf('You are running PHP %s, Mocha require at least <b>PHP %s</b> to run.', $php, $req));
 }
 if (is_file(PATH_PUBLIC . '.maintenance')) {
-    exit('<h1>Maintenance</h1><p>Website under maintenance. Please visit again later.</p>');
+    exit('Temporary closed for CAFFEINE maintenance.');
 }
 if (!is_file(PATH_PUBLIC . 'config.php')) {
     header('Location: setup/');
@@ -50,33 +50,6 @@ $config = array_replace_recursive(
 
 $config['setting']['url_site'] = $config['setting']['url_site'];
 $config['setting']['url_base'] = $config['setting']['url_site'] . $config['app']['url_part'];
-
-// TODO: (1) Symbolic links check to plugin
-// $symlinks = [
-//     realpath(PATH_MOCHA . './storage/image/') => PATH_PUBLIC . 'image' . DS
-// ];
-// foreach ($symlinks as $real => $link) {
-//     if (file_exists($real) && (!is_link($link) || readlink($link) != $real)) {
-//         try {
-//             if (file_exists($link)) {
-//                 @unlink($link);
-//             }
-
-//             if (!file_exists($link)) {
-//                 symlink($real, $link);
-
-//                 !d(
-//                     file_exists($link),
-//                     is_link($link),
-//                     readlink($link),
-//                     linkinfo($link)
-//                 );
-//             }
-//         } catch (\Exception $e) {
-//             exit('Symbolic link issues!');
-//         }
-//     }
-// }
 
 // ====== Framework
 
