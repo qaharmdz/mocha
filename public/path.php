@@ -14,10 +14,12 @@ defined('PATH_ROOT') or define('PATH_ROOT', realpath(__DIR__ . './../') . DS);
 defined('PATH_MOCHA') or define('PATH_MOCHA', realpath(PATH_ROOT . './mocha/') . DS);
 defined('PATH_PUBLIC') or define('PATH_PUBLIC', realpath(__DIR__) . DS);
 
-// TODO: (1) Keep here or remove to plugin?
+// Public access through symlinks
 $symlinks = [
-    realpath(PATH_MOCHA . './storage/image/') => PATH_PUBLIC . 'image' . DS,
-    realpath(PATH_MOCHA . './front/theme/base/') => PATH_PUBLIC . 'asset' . DS . 'theme_base'
+    realpath(PATH_MOCHA . './asset/')                  => PATH_PUBLIC . 'asset' . DS,
+    realpath(PATH_MOCHA . './storage/image/')          => PATH_PUBLIC . 'image' . DS,       // Uploaded image
+    realpath(PATH_MOCHA . './temp/image/')             => PATH_PUBLIC . '_image' . DS,      // Cache and resized image
+    realpath(PATH_MOCHA . './front/theme/base/asset/') => PATH_PUBLIC . 'th_base'
 ];
 foreach ($symlinks as $real => $link) {
     if (file_exists($real) && (!is_link($link) || readlink($link) != $real)) {

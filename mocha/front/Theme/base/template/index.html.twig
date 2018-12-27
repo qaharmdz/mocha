@@ -18,7 +18,7 @@
 {% endfor %}
 
     <link rel="stylesheet" href="{{ mocha.config.get('setting.url_site') }}asset/style/uikit.sketsa{{ i18n_lang_dir == 'rtl' ? '-rtl' }}.min.css?v=1.0.0-rc.25" media="all">
-    <link rel="stylesheet" href="{{ mocha.config.get('setting.url_site') ~ mocha.config.get('app.folder') }}/Theme/base/style/dummy.min.css" media="all">
+    <link rel="stylesheet" href="{{ mocha.config.get('setting.url_site') }}th_base/style/dummy.min.css" media="all">
 {% for style in mocha.document.getStyle %}
     <link rel="stylesheet" href="{{ style.href }}" media="{{ style.media }}">
 {% endfor %}
@@ -93,7 +93,7 @@
 {% for script in mocha.document.getScript %}
 <script src="{{ script }}"></script>
 {% endfor %}
-<script src="{{ mocha.config.get('setting.url_site') ~ mocha.config.get('app.folder') }}/Theme/base/script/dummy.min.js"></script>
+<script src="{{ mocha.config.get('setting.url_site') }}th_base/script/dummy.min.js"></script>
 
 {#
 <script>

@@ -5,7 +5,9 @@ vendor/
 _vendor/
 
 public/image
-public/asset/theme_base
+public/_image
+public/asset
+public/th_base
 
 phpunit.xml
 *.log
