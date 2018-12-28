@@ -117,7 +117,7 @@ class Framework
                         'temp'              => PATH_MOCHA . 'temp' . DS,
                     ],
                     'serviceProvider'       => [
-                        '\Mocha\System\Tool\ProviderTool' // TODO: move to each app folder \Mocha\ucfirst($config['app']['folder'])\ProviderTool
+                        '\Mocha\System\Tool\ProviderTool'
                     ],
                     'eventSubscriber'       => [],
                     'routeCollection'       => [],
@@ -131,7 +131,7 @@ class Framework
 
     public function initEnvironment()
     {
-        $this->container['database.param'] = $this->config->get('system.database');
+        $this->container['database_param'] = $this->config->get('system.database');
         $this->config->remove('system.database');
 
         // Standardize PHP and database timezone MUST be UTC
@@ -185,9 +185,9 @@ class Framework
             $this->container['request']->server->set('HTTPS', true);
         }
 
-        $this->container['log.output'] = $this->config->get('system.path.temp') . 'log' . DS . $this->config->get('setting.server.log_error');
-        $this->container['router.context']->fromRequest($this->container['request']);
-        $this->container['resolver.controller']->param->set('namespace', $this->config->get('system.namespace'));
+        $this->container['log_output'] = $this->config->get('system.path.temp') . 'log' . DS . $this->config->get('setting.server.log_error');
+        $this->container['router_context']->fromRequest($this->container['request']);
+        $this->container['resolver_controller']->param->set('namespace', $this->config->get('system.namespace'));
 
         $this->container['router']->param->add([
             'routeDefaults'     => ['_locale' => 'en'],
@@ -233,7 +233,7 @@ class Framework
 
     public function initSession()
     {
-        $this->container['session.options'] = $this->config->get('system.session');
+        $this->container['session_option'] = $this->config->get('system.session');
         $this->container['session']->start();
 
         return $this;
@@ -244,16 +244,16 @@ class Framework
         $this->container['event']->addSubscriber(
             new EventListener\RouterListener(
                 $this->container['router']->urlMatcher,
-                $this->container['request.stack'],
-                $this->container['router.context']
+                $this->container['request_stack'],
+                $this->container['router_context']
             )
         );
 
         $this->container['event']->addSubscriber(
             new EventListener\LocaleListener(
-                $this->container['request.stack'],
+                $this->container['request_stack'],
                 $this->config->get('setting.local.language'),
-                $this->container['router.generator']
+                $this->container['router_generator']
             )
         );
 
@@ -268,7 +268,7 @@ class Framework
         }
 
         foreach ($this->config->get('system.eventSubscriber') as $subscriber) {
-            $controller = $this->container['resolver.controller']->resolve($subscriber, [], 'Plugin');
+            $controller = $this->container['resolver_controller']->resolve($subscriber, [], 'Plugin');
             $this->container['event']->addSubscriber(new $controller['class']());
         }
 

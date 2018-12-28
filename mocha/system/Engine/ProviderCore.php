@@ -24,7 +24,7 @@ class ProviderCore implements ServiceProviderInterface
         // TODO: change . with _
 
         // === Request
-        $container['request.stack'] = function ($c) {
+        $container['request_stack'] = function ($c) {
             return new HttpFoundation\RequestStack();
         };
         $container['request'] = function ($c) {
@@ -32,39 +32,39 @@ class ProviderCore implements ServiceProviderInterface
         };
 
         // === Router
-        $container['router.collection'] = function ($c) {
+        $container['router_collection'] = function ($c) {
             return new Routing\RouteCollection();
         };
-        $container['router.route'] = function ($c) {
+        $container['router_route'] = function ($c) {
             return function ($path, $defaults = [], $requirements = [], $options = [], $host = '', $schemes = [], $methods = [], $condition = '') {
                 return new \Symfony\Component\Routing\Route($path, $defaults, $requirements, $options, $host, $schemes, $methods, $condition);
             };
         };
-        $container['router.context'] = function ($c) {
+        $container['router_context'] = function ($c) {
             return new Routing\RequestContext();
         };
-        $container['router.matcher'] = function ($c) {
-            return new Routing\Matcher\UrlMatcher($c['router.collection'], $c['router.context']);
+        $container['router_matcher'] = function ($c) {
+            return new Routing\Matcher\UrlMatcher($c['router_collection'], $c['router_context']);
         };
-        $container['router.generator'] = function ($c) {
-            return new Routing\Generator\UrlGenerator($c['router.collection'], $c['router.context']);
+        $container['router_generator'] = function ($c) {
+            return new Routing\Generator\UrlGenerator($c['router_collection'], $c['router_context']);
         };
         $container['router'] = function ($c) {
-            return new Router($c['router.collection'], $c['router.route'], $c['router.matcher'], $c['router.generator'], $c['parameterBag']);
+            return new Router($c['router_collection'], $c['router_route'], $c['router_matcher'], $c['router_generator'], $c['parameterBag']);
         };
 
         // === Dispatcher
         $container['event'] = function ($c) {
             return new Event();
         };
-        $container['resolver.controller'] = function ($c) {
+        $container['resolver_controller'] = function ($c) {
             return new ResolverController($c['log'], $c['parameterBag']);
         };
-        $container['resolver.argument'] = function ($c) {
+        $container['resolver_argument'] = function ($c) {
             return new HttpKernel\Controller\ArgumentResolver();
         };
         $container['dispatcher'] = function ($c) {
-            return new Dispatcher($c['event'], $c['resolver.controller'], $c['request.stack'], $c['resolver.argument']);
+            return new Dispatcher($c['event'], $c['resolver_controller'], $c['request_stack'], $c['resolver_argument']);
         };
 
         // Response
@@ -76,12 +76,12 @@ class ProviderCore implements ServiceProviderInterface
         });
 
         // Misc
-        $container['session.options'] = [];
-        $container['session.storage'] = function ($c) {
-            return new HttpFoundation\Session\Storage\NativeSessionStorage($c['session.options']);
+        $container['session_option'] = [];
+        $container['session_storage'] = function ($c) {
+            return new HttpFoundation\Session\Storage\NativeSessionStorage($c['session_option']);
         };
         $container['session'] = function ($c) {
-            return new Session($c['session.storage']);
+            return new Session($c['session_storage']);
         };
 
         $container['parameterBag'] = $container->factory(function ($c) {
@@ -91,9 +91,9 @@ class ProviderCore implements ServiceProviderInterface
             return $c['parameterBag'];
         };
 
-        $container['log.output'] = 'php://stderr';
+        $container['log_output'] = 'php://stderr';
         $container['log'] = function ($c) {
-            return new HttpKernel\Log\Logger(\Psr\Log\LogLevel::DEBUG, $c['log.output']);
+            return new HttpKernel\Log\Logger(\Psr\Log\LogLevel::DEBUG, $c['log_output']);
         };
 
         $container['presenter'] = function ($c) {
