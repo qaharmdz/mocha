@@ -57,11 +57,19 @@ class Init extends \Mocha\Controller
 
         // ========= Presenter
 
+        /**
+         * template_base
+         * - index   : Header, Footer, Block Layout
+         * - minimum : Header, Footer, no Block Layout
+         * - blank   : No Header, no Footer, no Block Layout
+         */
+        $template = $this->document->getNode('template_base', 'index');
+
         $this->presenter->param->add(
             $this->event->trigger(
-                'init.presenter.global',
+                'init.twig.global',
                 ['global' => [
-                    'theme'     => $this->meta('theme', $this->config->get('setting.site.theme_front')),
+                    'theme'     => $this->tool->metafile('theme', $this->config->get('setting.site.theme_front')),
                     'config'    => $this->config,
                     'router'    => $this->router,
                     'document'  => $this->document,
@@ -80,18 +88,13 @@ class Init extends \Mocha\Controller
 
         return $this->response
             ->setStatusCode($component->getStatusCode())
-            ->setContent($this->render(
-                $this->document->getNode('template_base', 'index'),
+            ->setContent($this->tool->render(
+                $template,
                 $data,
-                'init.presenter'
+                'init.' . $template
             ));
+    }
 
-        /*
-        template_base
-        - index   : Header, Footer, Block Layout
-        - minimum : Header, Footer, no Block Layout
-        - blank   : No Header, no Footer, no Block Layout
-         */
     }
 
     protected function test($data = [])

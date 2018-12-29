@@ -11,25 +11,17 @@
 
 namespace Mocha;
 
-class Controller extends Abstractor
+class Controller extends System\Engine\ServiceContainer
 {
     /**
-     * [render description]
+     * Fallback inaccessible properties to ServiceContainer
      *
-     * @param  string $template
-     * @param  array  $vars
-     * @param  string $eventName
+     * @param  string $service
      *
-     * @return string
+     * @return object
      */
-    protected function render(string $template, array $vars = [], string $eventName = '')
+    public function __get(string $service)
     {
-        $eventName = $eventName ?: $template . '/presenter';
-
-        // Event to manipulate twig variables
-        $data = $this->event->trigger($eventName . '_data', $vars)->getData();
-
-        // Event to manipulate render result
-        return $this->event->trigger($eventName . '_output', [], $this->presenter->render($template, $data))->getOutput();
+        return $this->use($service);
     }
 }

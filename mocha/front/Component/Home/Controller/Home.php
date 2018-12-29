@@ -22,7 +22,7 @@ class Home extends \Mocha\Controller
 
         $data['content'] = $this->language->get('i18n_message');
 
-        return $this->response->setContent($this->render(
+        return $this->response->setContent($this->tool->render(
             'Component/Home/home',
             $data
         ));
@@ -37,7 +37,7 @@ class Home extends \Mocha\Controller
 
         $data['content'] = 'Method test';
 
-        return $this->response->setContent($this->render(
+        return $this->response->setContent($this->tool->render(
             'Component/Home/test',
             $data
         ));
