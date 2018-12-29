@@ -95,18 +95,19 @@ class Init extends \Mocha\Controller
             ));
     }
 
-    }
-
     protected function test($data = [])
     {
         // d(MOCHA);
         // d($data);
 
         // d($this->event);
+        // d($this->event->getEmitters());
+        // d($this->container()->keys());
         // d($this->config->all());
+        // d($this->presenter->param->get('global'));
+
         // d($this->session->all());
         // $this->session->set('foo', 'bar');
-        // d($this->presenter->param->get('global'));
 
         // d(
         //     $this->request->attributes->all(),

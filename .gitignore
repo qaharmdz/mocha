@@ -2,7 +2,6 @@
 _dev/
 temp/
 vendor/
-_vendor/
 
 public/_*
 
