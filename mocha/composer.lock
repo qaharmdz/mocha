@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "f95217b03e9bb174c04e692300288dbc",
+    "content-hash": "8c759dc3d4077dcb9797b05206442a69",
     "packages": [
         {
             "name": "claviska/simpleimage",
@@ -146,16 +146,16 @@
         },
         {
             "name": "nesbot/carbon",
-            "version": "2.8.0",
+            "version": "2.9.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/briannesbitt/Carbon.git",
-                "reference": "13bbbe16e4afcbbff7476cdcd1472a68950496a5"
+                "reference": "99dd27fc02740642884e2aebde312ccca5a0ec3c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/briannesbitt/Carbon/zipball/13bbbe16e4afcbbff7476cdcd1472a68950496a5",
-                "reference": "13bbbe16e4afcbbff7476cdcd1472a68950496a5",
+                "url": "https://api.github.com/repos/briannesbitt/Carbon/zipball/99dd27fc02740642884e2aebde312ccca5a0ec3c",
+                "reference": "99dd27fc02740642884e2aebde312ccca5a0ec3c",
                 "shasum": ""
             },
             "require": {
@@ -201,7 +201,7 @@
                 "datetime",
                 "time"
             ],
-            "time": "2018-12-18T10:35:13+00:00"
+            "time": "2018-12-25T17:37:52+00:00"
         },
         {
             "name": "phpfastcache/phpfastcache",
@@ -1333,6 +1333,49 @@
                 "php"
             ],
             "time": "2018-11-30T09:54:22+00:00"
+        },
+        {
+            "name": "kint-php/kint-twig",
+            "version": "2.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/kint-php/kint-twig.git",
+                "reference": "9ff42f0fe6e2ed8abdc664259edee5ed52d6502b"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/kint-php/kint-twig/zipball/9ff42f0fe6e2ed8abdc664259edee5ed52d6502b",
+                "reference": "9ff42f0fe6e2ed8abdc664259edee5ed52d6502b",
+                "shasum": ""
+            },
+            "require": {
+                "kint-php/kint": "^3.0@dev",
+                "php": ">= 5.3.9",
+                "twig/twig": "^1.34 || ^2.4"
+            },
+            "require-dev": {
+                "friendsofphp/php-cs-fixer": "^2.0",
+                "phpunit/phpunit": "^4.0",
+                "vimeo/psalm": "^2.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Kint\\Twig\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "GPL-3.0"
+            ],
+            "authors": [
+                {
+                    "name": "Jonathan Vollebregt",
+                    "email": "jnvsor@gmail.com"
+                }
+            ],
+            "description": "Twig extension for Kint integration",
+            "time": "2018-09-29T07:24:13+00:00"
         },
         {
             "name": "myclabs/deep-copy",
@@ -2691,20 +2734,21 @@
         },
         {
             "name": "webmozart/assert",
-            "version": "1.3.0",
+            "version": "1.4.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/webmozart/assert.git",
-                "reference": "0df1908962e7a3071564e857d86874dad1ef204a"
+                "reference": "83e253c8e0be5b0257b881e1827274667c5c17a9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/webmozart/assert/zipball/0df1908962e7a3071564e857d86874dad1ef204a",
-                "reference": "0df1908962e7a3071564e857d86874dad1ef204a",
+                "url": "https://api.github.com/repos/webmozart/assert/zipball/83e253c8e0be5b0257b881e1827274667c5c17a9",
+                "reference": "83e253c8e0be5b0257b881e1827274667c5c17a9",
                 "shasum": ""
             },
             "require": {
-                "php": "^5.3.3 || ^7.0"
+                "php": "^5.3.3 || ^7.0",
+                "symfony/polyfill-ctype": "^1.8"
             },
             "require-dev": {
                 "phpunit/phpunit": "^4.6",
@@ -2737,7 +2781,7 @@
                 "check",
                 "validate"
             ],
-            "time": "2018-01-29T19:49:41+00:00"
+            "time": "2018-12-25T11:19:39+00:00"
         }
     ],
     "aliases": [],

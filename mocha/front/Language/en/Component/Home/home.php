@@ -10,5 +10,7 @@
  */
 
 return [
+
 'message'       => 'Component Home lang\en'
+
 ];

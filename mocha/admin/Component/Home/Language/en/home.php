@@ -10,6 +10,8 @@
  */
 
 return [
-    'name'      => 'Base Theme',
-    'version'   => $this->config->get('system.version')
+
+'page_title'    => 'Welcome Home',
+'message'       => 'Component Home'
+
 ];

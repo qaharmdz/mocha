@@ -28,9 +28,9 @@ class Request extends HttpFoundation\Request
     }
 
     /**
-     * Consistenly remove trailing slash from PathInfo
+     * Consistenly remove trailing slash from PathInfo.
      *
-     * @return string The raw path (not urldecoded)
+     * @return string The raw path (not urldecoded).
      */
     public function getPathInfo()
     {
@@ -38,9 +38,9 @@ class Request extends HttpFoundation\Request
     }
 
     /**
-     * Set pathinfo
+     * Set pathinfo.
      *
-     * @return string The raw path (not urldecoded)
+     * @return string The raw path (not urldecoded).
      */
     public function setPathInfo(string $path)
     {
@@ -50,7 +50,7 @@ class Request extends HttpFoundation\Request
     /**
      * Get base URI for the Request.
      *
-     * @return string Base URI
+     * @return string Base URI.
      */
     public function getBaseUri()
     {
@@ -67,5 +67,68 @@ class Request extends HttpFoundation\Request
     public function getUriForPath($path)
     {
         return $this->getBaseUri() . ltrim($path, '/');
+    }
+
+    /**
+     * Change the sequence in parent::get() to attributes, post, query ($_GET).
+     *
+     * @param  string $key
+     * @param  mixed $default
+     *
+     * @return mixed
+     */
+    public function get($key, $default = null)
+    {
+        if ($this !== $result = $this->attributes->get($key, $this)) {
+            return $result;
+        }
+
+        if ($this !== $result = $this->post->get($key, $this)) {
+            return $result;
+        }
+
+        if ($this !== $result = $this->query->get($key, $this)) {
+            return $result;
+        }
+
+        return $default;
+    }
+
+    /**
+     * General checker.
+     *
+     * @param  string $check
+     *
+     * @return boolean
+     */
+    public function is(string $check)
+    {
+        switch (strtolower($check)) {
+            case 'post':
+                return $this->getMethod() == 'POST';
+
+            case 'get':
+                return $this->getMethod() == 'GET';
+
+            case 'put':
+                return $this->getMethod() == 'PUT';
+
+            case 'delete':
+                return $this->getMethod() == 'DELETE';
+
+            case 'ssl':
+            case 'https':
+            case 'secure':
+                return $this->isSecure();
+
+            case 'ajax':
+                return $this->isXmlHttpRequest();
+
+            case 'cli':
+                return (PHP_SAPI === 'cli' or defined('STDIN'));
+
+            default:
+                return false;
+        }
     }
 }

@@ -9,10 +9,8 @@
  * Full copyright and license see LICENSE file or visit https://www.gnu.org/licenses/gpl-3.0.en.html.
  */
 
-if (!function_exists('sanitize_char')) {
-    function sanitize_char($string, $glue = '-', $trim = '_-.')
-    {
-        // [1]<>+=_`~ !–@#$;"\'\%   ^&*(\{)?}/2=\ -,./../*:|3    result: 1-_-2-3
-        return trim(preg_replace('/[\>\<\+\?\&\"\'\`\/\\\:\;\s\–\-\,\.\{\}\(\)\[\]\~\!\@\^\*\|\$\#\%\=\r\n\t]+/', $glue, $string), $trim);
-    }
-}
+return [
+    'name'      => 'Pendapa Theme',
+    'codename'  => 'pendapa',
+    'version'   => $this->config->get('system.version')
+];

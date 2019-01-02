@@ -30,7 +30,7 @@ class Presenter
             'file_ext'  => '.html.twig',
             'global'    => [],
             'theme'     => [
-                'default'   => 'base',
+                'default'   => '_',
                 'active'    => ''
             ],
             'path'      => [
@@ -42,7 +42,7 @@ class Presenter
     }
 
     /**
-     * Twig render
+     * Twig render.
      *
      * @param  string $template
      * @param  array  $vars
@@ -80,8 +80,13 @@ class Presenter
 
         $twig->getExtension('Twig_Extension_Core')->setTimezone($this->param->get('timezone'));
         $twig->addExtension(new \Twig_Extension_StringLoader());        // {{ include(template_from_string("Hello {{ name }}")) }}
+
         if ($this->param->get('debug')) {
             $twig->addExtension(new \Twig_Extension_Debug());           // {{ dump(...) }}
+
+            if (class_exists('Kint\Kint')) {
+                $twig->addExtension(new \Kint\Twig\TwigExtension());    // {{ d(...) }}
+            }
         }
 
         $twig->addGlobal('mocha', $this->param->get('global'));         // available in all templates and macros
@@ -90,7 +95,7 @@ class Presenter
     }
 
     /**
-     * Clear twig cache
+     * Clear twig cache.
      *
      * @see https://github.com/twigphp/Twig/blob/cacfb069b2e65d5487489677238142b464135b40/lib/Twig/Environment.php#L502
      */

@@ -12,10 +12,11 @@
 require_once '../path.php';
 
 $config_app = [
-    'folder'    => 'admin',
-    'url_part'  => '/admin',
-    'path'      => PATH_MOCHA . 'admin' . DS,
-    'namespace' => 'Mocha\Admin'
+    'folder'     => 'admin',
+    'url_part'   => 'admin',
+    'path'       => PATH_MOCHA . 'admin' . DS,
+    'namespace'  => $namespace = 'Mocha\Admin',
+    'controller' => $namespace . '\Component\Login::index'
 ];
 
 require_once PATH_MOCHA . 'system' . DS . 'Startup.php';

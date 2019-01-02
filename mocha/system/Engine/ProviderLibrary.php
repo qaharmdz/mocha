@@ -35,7 +35,7 @@ class ProviderLibrary implements ServiceProviderInterface
         };
 
         $container['secure'] = function ($c) {
-            return new Library\Secure();
+            return new Library\Secure($c['parameterBag']);
         };
 
         $container['user'] = function ($c) {
@@ -43,7 +43,7 @@ class ProviderLibrary implements ServiceProviderInterface
         };
 
         $container['language'] = function ($c) {
-            return new Library\Language();
+            return new Library\Language($c['parameterBag']);
         };
 
         $container['document'] = function ($c) {

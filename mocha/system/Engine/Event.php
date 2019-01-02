@@ -14,12 +14,12 @@ namespace Mocha\System\Engine;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 
 /**
- * Simplify event dispatcher
+ * Simplify event dispatcher.
  */
 class Event extends EventDispatcher
 {
     /**
-     * Event emitters storage
+     * Event emitters storage.
      *
      * @var array
      */
@@ -36,7 +36,7 @@ class Event extends EventDispatcher
     ];
 
     /**
-     * Trigger event to all registered listeners
+     * Trigger event to all registered listeners.
      *
      * @param  string $eventName
      * @param  array  $param
@@ -55,8 +55,8 @@ class Event extends EventDispatcher
     }
 
     /**
-     * Get all emitter list
-     * Info: use "getListeners()" to get all registered listeners
+     * Get all emitter list.
+     * Info: use "getListeners()" to get all registered listeners.
      *
      * @return array
      */
@@ -66,7 +66,7 @@ class Event extends EventDispatcher
     }
 
     /**
-     * Format event name in dot notation
+     * Format event name in dot notation.
      *
      * @param  string $name
      * @param  string $verb

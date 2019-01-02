@@ -11,13 +11,20 @@
 
 namespace Mocha\System\Library;
 
+use Symfony\Component\HttpFoundation\ParameterBag;
+
 class Language
 {
-    protected $data = [];
+    /**
+     * @var \Symfony\Component\HttpFoundation\ParameterBag
+     */
+    protected $storage;
 
-    public function __construct()
+    public function __construct(ParameterBag $bag)
     {
-        $this->data = [
+        $this->storage = $bag;
+
+        $this->storage->add([
             'param'     => [
                 'default'   => 'en',
                 'active'    => 'en',
@@ -25,46 +32,33 @@ class Language
             ],
             'vars'      => [],
             'loaded'    => [],
-        ];
+        ]);
     }
 
     public function param(array $param)
     {
-        $this->data['param'] = array_replace_recursive(
-            $this->data['param'],
-            $param
-        );
+        $this->storage->add(['param' => $param]);
     }
 
-    public function set(string $key, $value = '', string $group = '')
+    public function set(string $key, $value = '')
     {
-        if ($group) {
-            $this->data['vars'][$group]['i18n_' . $key] = $value;
-        } else {
-            $this->data['vars']['i18n_' . $key] = $value;
-        }
+        $this->storage->set('vars.' . $key, $value);
     }
 
-    public function get(string $key, string $group = '')
+    public function get(string $key, $default = null)
     {
-        $vars = $this->data['vars'][$key] ?? $key;
-
-        if ($group) {
-            $vars = $this->data['vars'][$group][$key] ?? $key;
-        }
-
-        return $vars;
+        return $this->storage->get('vars.' . $key, $default);
     }
 
     public function all()
     {
-        return $this->data['vars'];
+        return $this->storage->all();
     }
 
     public function load(string $filename, string $group = '')
     {
-        if (array_key_exists($filename, $this->data['loaded'])) {
-            return $this->data['loaded'][$filename];
+        if ($this->storage->has('loaded.' . $filename)) {
+            return $this->storage->get('loaded.' . $filename);
         }
 
         $files = [];
@@ -78,10 +72,10 @@ class Language
         }
 
         $files = array_unique([
-            $this->data['param']['path']['app'] . $filepart . 'Language' . DS .$this->data['param']['default'] . DS . $file . '.php',
-            $this->data['param']['path']['language'] . $this->data['param']['default'] . DS . $filepart . $file . '.php',
-            $this->data['param']['path']['app'] . $filepart . 'Language' . DS .$this->data['param']['active'] . DS . $file . '.php',
-            $this->data['param']['path']['language'] . $this->data['param']['active'] . DS . $filepart . $file . '.php'
+            $this->storage->get('param.path.app') . $filepart . 'Language' . DS . $this->storage->get('param.default') . DS . $file . '.php',
+            $this->storage->get('param.path.language') . $this->storage->get('param.default') . DS . $filepart . $file . '.php',
+            $this->storage->get('param.path.app') . $filepart . 'Language' . DS . $this->storage->get('param.active') . DS . $file . '.php',
+            $this->storage->get('param.path.language') . $this->storage->get('param.active') . DS . $filepart . $file . '.php'
         ]);
 
 
@@ -99,14 +93,11 @@ class Language
 
         $vars = [];
         foreach ($variables as $key => $value) {
-            $vars['i18n_' . $key] = $value;
+            $vars[$key] = $value;
         }
 
-        $this->data['loaded'][$filename] = $vars;
-        $this->data['vars']     = array_merge(
-            $this->data['vars'],
-            $group ? [$group => $vars] : $vars
-        );
+        $this->storage->set('loaded.' . $filename, $vars);
+        $this->storage->add(['vars' => $group ? [$group => $vars] : $vars]);
 
         return $vars;
     }

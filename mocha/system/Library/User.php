@@ -60,7 +60,7 @@ class User
 
         if ($user['user_id'] && $this->secure->isValidPassword($password, $user['password'])) {
             if ($this->secure->isPasswordNeedRehash($user['password'])) {
-                $this->dbUpdateHash($user['user_id'], $password);
+                $this->dbUpdatePassword($user['user_id'], $password);
             }
             unset($user['password']);
 
@@ -70,9 +70,9 @@ class User
             $this->data = $user;
 
             $this->session->migrate(true);
-            $this->session->set('token', $this->secure->randCode('hash', 16));
             $this->session->set('user_mail', $user['email']);
             $this->session->set('user_activity', time());
+            $this->session->set('user_token', $this->secure->generateCode('hash', rand(24, 48)));
             $this->session->set('fingerprint', $this->fingerprint());
 
             return true;
@@ -87,10 +87,10 @@ class User
         $this->access = [];
 
         $this->session->migrate(true);
-        $this->session->remove('token');
         $this->session->remove('user_mail');
-        $this->session->remove('fingerprint');
         $this->session->remove('user_activity');
+        $this->session->remove('user_token');
+        $this->session->remove('fingerprint');
     }
 
     public function isLogged()
@@ -141,11 +141,18 @@ class User
     public function fingerprint()
     {
         return md5(json_encode([
+            // User identity
             $this->get('user_id'),
             $this->get('email'),
+            $this->get('created'),
+
+            // User environment
             $this->getIp(),
             $_SERVER['HTTP_USER_AGENT'],
             $_SERVER['HTTP_ACCEPT_LANGUAGE'],
+
+            // User session
+            $this->session->get('user_token')
         ]));
     }
 
@@ -159,7 +166,7 @@ class User
                getenv('REMOTE_ADDR');
     }
 
-    protected function dbUpdateHash($id, $password)
+    protected function dbUpdatePassword($id, $password)
     {
         return $this->db->where('user_id', $id)
                         ->update('user', ['password' => $this->secure->password($post['password'])]);
@@ -209,8 +216,8 @@ class User
         // Main access
         $result = $this->db->where('role_id', $id)->getOne('role');
 
-        $data['admin_access'] = (bool)$result['admin_access'];
-        $data['super_admin']  = (bool)$result['super_admin'];
+        $data['backend']     = (bool)$result['backend'];
+        $data['super_admin'] = (bool)$result['super_admin'];
 
         // Access
         $accesses = $this->db->join('role_resource rr', 'ra.resource_id = rr.resource_id', 'LEFT')

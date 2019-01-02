@@ -20,7 +20,7 @@ use Symfony\Component\HttpFoundation\Session\Storage\SessionStorageInterface;
 class Session extends HttpFoundation\Session\Session
 {
     /**
-     * Access to flash bag
+     * Access to flash bag.
      *
      * @var \Symfony\Component\HttpFoundation\Session\Flash\Flashbag
      */

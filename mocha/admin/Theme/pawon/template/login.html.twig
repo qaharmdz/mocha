@@ -1,0 +1,73 @@
+{% extends 'index.html.twig' %}
+
+
+{# Empty override #}
+{% block header %}{% endblock header %}
+{% block top %}{% endblock top %}
+{% block footer %}{% endblock footer %}
+{% block bottom %}{% endblock bottom %}
+
+{% block content %}
+<div class="uk-flex uk-flex-center uk-flex-middle" uk-height-viewport="expand:true">
+    <div class="uk-position-cover login-background">asd</div>
+
+    <div class="uk-position-z-index">
+        <div class="uk-width-medium">
+            <div class="uk-margin-bottom uk-text-center">
+                <img src="{{ mocha.config.get('setting.url_site') }}_asset/image/mocha-light.png" alt="Mocha logo" style="width:210px">
+            </div>
+
+            <div class="uk-card-panel uk-card-body">
+                {% for alert in alerts %}
+                    {% if _context['alert_' ~ alert] %}
+                        <div class="uk-alert-{{ alert }} uk-alert-small" uk-alert>
+                            <a class="uk-alert-close" uk-close></a>
+                            <p>{{ _context['alert_' ~ alert] }}</p>
+                        </div>
+                    {% endif %}
+                {% endfor %}
+
+                <form action="{{ mocha.config.get('setting.url_base') }}" method="post" class="uk-form-stacked">
+                    {{ mocha.tool_secure.csrfField() }}
+                    <div>
+                        <label class="uk-form-label" for="email">Email</label>
+                        <div class="uk-form-controls">
+                            <input type="email" name="email" value="{{ email }}" id="email" class="uk-input" autocomplete="off" style="background-image: url(&quot;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAASCAYAAABSO15qAAAAAXNSR0IArs4c6QAAAYJJREFUOBGVVLuKwkAUPRFRY2GlhRKDVRpBMFgJgRQ2C37HCvmCdOpnuE0qWzvZBf8hTbC2SLAKqQQfTXbumAy6xE0cmMx9nHNm5t4h0nK5/IjjeMVmFwWGJEk+g30uFosfgpfeIRMh2eiLbBokUGjnO/z+feSUHhN5dr1eh6ZpT7C3BHq9HiaTSbZArVYTiWq1ClYs4T/mRDAxyrROp1Pouo71eo0oimBZFo7HIxzHecr9JZP/1hWyBKT5fB5Tgo55uVw4hq5wvV6z8CLGrhgwZyZOkJIJkUcmDGulwpYVrwEF8oZhGOj3+2g2m7xWh8OBi4gT/CcwHo9hmiZ838d2u+WFTvGl5G2nfuY6Go04WZZlqKqK2+0mcCQwyxNpNBpQFAWVSgXD4RCDwUAIlFkXvpmnikhipN0h93w+43Q6YbPZwLZtdDodAS9UA8/z0G63+QMjJhUwHS+7QH1OWoXdbocwDNFqtRAEAfb7PecT5qUAQ1Bt6EejsAnXddNNBZkwv/3KjSrHve9/AAAAAElFTkSuQmCC&quot;); background-repeat: no-repeat; background-attachment: scroll; background-size: 16px 18px; background-position: 98% 50%;">
+                        </div>
+                    </div>
+
+                    <div class="uk-margin">
+                        <label class="uk-form-label" for="password">Password</label>
+                        <div class="uk-form-controls">
+                            <input type="password" name="password" value="{{ password }}" id="password" class="uk-input" autocomplete="off" style="background-image: url(&quot;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAASCAYAAABSO15qAAAAAXNSR0IArs4c6QAAAYJJREFUOBGVVLuKwkAUPRFRY2GlhRKDVRpBMFgJgRQ2C37HCvmCdOpnuE0qWzvZBf8hTbC2SLAKqQQfTXbumAy6xE0cmMx9nHNm5t4h0nK5/IjjeMVmFwWGJEk+g30uFosfgpfeIRMh2eiLbBokUGjnO/z+feSUHhN5dr1eh6ZpT7C3BHq9HiaTSbZArVYTiWq1ClYs4T/mRDAxyrROp1Pouo71eo0oimBZFo7HIxzHecr9JZP/1hWyBKT5fB5Tgo55uVw4hq5wvV6z8CLGrhgwZyZOkJIJkUcmDGulwpYVrwEF8oZhGOj3+2g2m7xWh8OBi4gT/CcwHo9hmiZ838d2u+WFTvGl5G2nfuY6Go04WZZlqKqK2+0mcCQwyxNpNBpQFAWVSgXD4RCDwUAIlFkXvpmnikhipN0h93w+43Q6YbPZwLZtdDodAS9UA8/z0G63+QMjJhUwHS+7QH1OWoXdbocwDNFqtRAEAfb7PecT5qUAQ1Bt6EejsAnXddNNBZkwv/3KjSrHve9/AAAAAElFTkSuQmCC&quot;); background-repeat: no-repeat; background-attachment: scroll; background-size: 16px 18px; background-position: 98% 50%;">
+                        </div>
+                    </div>
+
+                    <div class="uk-text-right">
+                        <button class="uk-button uk-button-primary"><i class="uk-icon-lock"></i> Login</button>
+                    </div>
+                </form>
+            </div>
+
+            <div class="uk-margin-top uk-text-mini uk-text-muted">Powered by <a href="https://www.mochacms.org" target="_blank">Mocha</a></div>
+        </div>
+    </div>
+</div>
+
+<style>
+.page-login {
+    background: #2c3ba5;
+    background: linear-gradient(154deg, #2c3ba5 0, #4a1173 75%);
+}
+.login-background {
+    z-index: 1;
+    opacity: 0.06;
+    background: url("{{ mocha.config.get('setting.url_site') }}_asset/image/bg-login.png") center repeat;
+
+}
+.login-background + * {
+    z-index: 2;
+    position: relative;
+}
+</style>
+{% endblock content %}

@@ -124,7 +124,7 @@ class Document
     }
 
     /**
-     * Node is general purpose storage
+     * Node is general purpose storage.
      */
     public function addNode(string $name, array $value)
     {

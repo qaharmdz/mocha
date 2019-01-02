@@ -17,7 +17,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Controller\ControllerResolver;
 
 /**
- * Opiniated controller resolver
+ * Opiniated controller resolver.
  */
 class ResolverController extends ControllerResolver
 {
@@ -54,15 +54,15 @@ class ResolverController extends ControllerResolver
      * @param  Request  $request
      *
      * @return callable|false A PHP callable representing the Controller,
-     *                        or false if this resolver is not able to determine the controller
+     *                        or false if this resolver is not able to determine the controller.
      */
     public function getController(Request $request)
     {
         if (!is_callable($request->attributes->get('_controller'))) {
             if (false !== $controller = $this->resolve($request->attributes->get('_controller'), $request->attributes->get('_route_params'))) {
                 $request->attributes->set('_controller', [new $controller['class'], $controller['method']]);
+                $request->attributes->set('_route_path', $controller['path']);
                 $request->query->add($controller['arguments']);
-                $request->query->set('_route_path', $controller['path']);
             } else {
                 return false;
             }
@@ -91,11 +91,12 @@ class ResolverController extends ControllerResolver
 
         try {
             list($class, $path) = $this->resolveClass($path, $namespace, $segments);
-            $method             = $this->resolveMethod($class, $segments);
-            $arguments          = $this->resolveArguments($params, $segments);
+            $method    = $this->resolveMethod($class, $segments);
+            $arguments = $this->resolveArguments($params, $segments);
+            $path      = strtolower($path . ($method != 'index' ?  '/' . $method : ''));
 
             return [
-                'path'      => strtolower($path . '/' . $method),
+                'path'      => $path,
                 'class'     => $class,
                 'method'    => $method,
                 'arguments' => $arguments
@@ -116,30 +117,34 @@ class ResolverController extends ControllerResolver
      */
     protected function resolveClass($path, $namespace, &$segments)
     {
-        $folder  = $class  = ucwords(array_shift($segments));
-        $parts   = $_parts = [rtrim($namespace, '\\'), $folder, 'Controller', $class];
+        $folder  = $classname  = ucwords(array_shift($segments));
+        $parts   = $_parts = [rtrim($namespace, '\\'), $folder, 'Controller', $classname];
         $segment = !empty($segments[0]) ? $segments[0] : '';
-        $path    = $folder . '/' . $class;
 
         if ($segment) {
             $_parts[3] = ucwords($segment);
-            $path      = $folder . '/' . $_parts[3];
+            $classname = $_parts[3];
         }
 
-        $class = implode('\\', $_parts);
+        $namespace = implode('\\', $_parts);
 
-        if (class_exists($class)) {
+        if (class_exists($namespace)) {
             array_shift($segments);
         } else {
-            $class = implode('\\', $parts);
-            $path  = $folder . '/' . $parts[3];
+            if ($folder == $classname) {
+                $namespace = implode('\\', $parts);
+                $classname = $parts[3];
+            }
 
-            if (!class_exists($class)) {
-                throw new \InvalidArgumentException(sprintf('Cannot locate expected controller "%s" for path "%s"', $class, $path));
+            if (!class_exists($namespace)) {
+                throw new \InvalidArgumentException(sprintf('Cannot locate expected controller "%s" for route path "%s"', $classname, $path));
             }
         }
 
-        return [$class, $path];
+        return [
+            $namespace,
+            $folder != $classname ? $folder . '/' . $classname : $folder
+        ];
     }
 
     /**

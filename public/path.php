@@ -13,29 +13,3 @@ defined('DS') or define('DS', DIRECTORY_SEPARATOR);
 defined('PATH_ROOT') or define('PATH_ROOT', realpath(__DIR__ . './../') . DS);
 defined('PATH_MOCHA') or define('PATH_MOCHA', realpath(PATH_ROOT . './mocha/') . DS);
 defined('PATH_PUBLIC') or define('PATH_PUBLIC', realpath(__DIR__) . DS);
-
-// Public access through symlinks
-$symlinkStatus = true;
-if ($symlinkStatus) {
-    $symlinks      = [
-        realpath(PATH_MOCHA . './storage/image/')          => PATH_PUBLIC . '_image' . DS,      // Uploaded image
-        realpath(PATH_MOCHA . './temp/image/')             => PATH_PUBLIC . '_images' . DS,     // Cache and resized image
-        realpath(PATH_MOCHA . './asset/')                  => PATH_PUBLIC . '_asset' . DS,      // General asset
-        realpath(PATH_MOCHA . './front/theme/base/asset/') => PATH_PUBLIC . '_thbase'           // Theme asset
-    ];
-    foreach ($symlinks as $real => $link) {
-        if (file_exists($real) && (!is_link($link) || readlink($link) != $real)) {
-            try {
-                if (file_exists($link)) {
-                    @unlink($link);
-                }
-
-                if (!file_exists($link)) {
-                    symlink($real, $link);
-                }
-            } catch (\Exception $e) {
-                exit('DEPRESSO | The feeling you get when you run out of coffee!');
-            }
-        }
-    }
-}

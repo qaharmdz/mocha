@@ -14,8 +14,8 @@ namespace Mocha\System\Tool;
 class Primary extends \Mocha\Controller
 {
     /**
-     * Load metadata file
-     * Info: $this in metadata is instance of this class
+     * Load metadata file.
+     * Info: $this in metadata is instance of this class.
      *
      * @param  string $extension
      * @param  string $name
@@ -45,14 +45,14 @@ class Primary extends \Mocha\Controller
         $controller = $this->resolver_controller->resolve($path, $args);
 
         /**
-         * Event to manipulate arguments
+         * Event to manipulate arguments.
          *
          * @return \Mocha\System\Engine\EventBag $arguments
          */
         $arguments = $this->event->trigger($eventName . '/before', $controller['arguments']);
 
         /**
-         * Dispatch module to get response
+         * Dispatch module to get response.
          *
          * @return \Mocha\System\Engine\Response $response
          */

@@ -22,11 +22,11 @@ class Response extends HttpFoundation\Response
     private $output;
 
     /**
-     * A layer for response content
+     * A layer for response content.
      *
      * @param  HttpFoundation\Response $output
      *
-     * @return $this  Response instance (render, redirect, json, file etc)
+     * @return $this  Response instance (render, redirect, json, file etc).
      */
     public function setOutput(HttpFoundation\Response $output = null)
     {
@@ -64,26 +64,30 @@ class Response extends HttpFoundation\Response
     /**
      * Redirects to another URL.
      *
-     * 301 Permanently redirect from old url to new url
-     * 302 Temporary redirect to new url
+     * 301 Permanently redirect from old url to new url.
+     * 302 Forwarding to new url (temporary redirect).
      * 303 In response to a POST, redirect to new url with GET method. Redirect after form submission.
+     * 401 Unauthorized access
      *
      * @param  string $url     The URL should be a full URL, with schema etc.
-     * @param  int    $status  The status code (302 by default)
+     * @param  int    $status  The status code (302 by default).
      *
      * @return $this
      */
     public function redirect(string $url, int $status = 302)
     {
-        return $this->setOutput(new HttpFoundation\RedirectResponse($url, $status));
+        $response = new HttpFoundation\RedirectResponse($url, $status);
+        $response->setContent('');
+
+        return $this->setOutput($response);
     }
 
     /**
      * Return a JSON response.
      *
-     * @param  mixed $data    The response data
-     * @param  int   $status  The response status code
-     * @param  array $headers An array of response headers
+     * @param  mixed $data    The response data.
+     * @param  int   $status  The response status code.
+     * @param  array $headers An array of response headers.
      *
      * @return $this
      */
@@ -95,8 +99,8 @@ class Response extends HttpFoundation\Response
     /**
      * Send a file.
      *
-     * @param  string $file     Path to file
-     * @param  string $mask     Mask filename
+     * @param  string $file     Path to file.
+     * @param  string $mask     Mask filename.
      * @param  array  $headers
      *
      * @return $this
@@ -118,9 +122,9 @@ class Response extends HttpFoundation\Response
     /**
      * Aborts current request by sending a HTTP error.
      *
-     * @param int    $statusCode The HTTP status code
-     * @param string $message    The status message
-     * @param array  $headers    An array of HTTP headers
+     * @param int    $statusCode The HTTP status code.
+     * @param string $message    The status message.
+     * @param array  $headers    An array of HTTP headers.
      *
      * @throws HttpException
      */

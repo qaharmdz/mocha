@@ -14,18 +14,18 @@ namespace Mocha\System\Engine;
 use Symfony\Component\HttpFoundation\ParameterBag;
 
 /**
- * Extra dot-notation to \ParameterBag
+ * ParameterBag with dot-notation features.
  *
- * @see https://github.com/adbario/php-dot-notation
+ * @see \Adbar\Dot https://github.com/adbario/php-dot-notation
  */
 class Config extends ParameterBag
 {
     /**
      * Adds parameters.
      *
-     * @param array $parameters An array of parameters
+     * @param array $parameters
      */
-    public function add(array $parameters = array())
+    public function add(array $parameters = [])
     {
         $this->parameters = array_replace_recursive($this->parameters, $parameters);
     }
@@ -33,8 +33,8 @@ class Config extends ParameterBag
     /**
      * Returns a parameter by name (dot-notation).
      *
-     * @param string $key     The key
-     * @param mixed  $default The default value if the parameter key does not exist
+     * @param string $key
+     * @param mixed  $default
      *
      * @return mixed
      */
@@ -46,12 +46,25 @@ class Config extends ParameterBag
     /**
      * Sets a parameter by name (dot-notation).
      *
-     * @param string $key   The key
-     * @param mixed  $value The value
+     * @param array|string $key
+     * @param mixed  $value
      */
-    public function set($key, $value)
+    public function set($key, $value = null)
     {
         $this->setDot($key, $value);
+    }
+
+    /**
+     * Check if a given key or keys exists.
+     *
+     * @param array|string $keys
+     *
+     * @return bool
+     */
+    public function has($keys)
+    {
+        return $this->hasDot($keys);
+
     }
 
     /**
@@ -80,17 +93,27 @@ class Config extends ParameterBag
     /**
      * Returns a parameter by dot-notation keys.
      *
-     * @param  string $key     Key in dot-notation
-     * @param  mixed  $default The default value if the parameter key does not exist
+     * @see \Adbar\Dot::get()
+     *
+     * @param  string $key
+     * @param  mixed  $default
      *
      * @return mixed
      */
     public function getDot(string $key, $default = null)
     {
+        if ($this->exists($this->parameters, $key)) {
+            return $this->parameters[$key];
+        }
+
+        if (strpos($key, '.') === false) {
+            return $default;
+        }
+
         $items = $this->parameters;
 
         foreach (explode('.', $key) as $segment) {
-            if (!is_array($items) || !array_key_exists($segment, $items)) {
+            if (!is_array($items) || !$this->exists($items, $segment)) {
                 return $default;
             }
 
@@ -103,11 +126,21 @@ class Config extends ParameterBag
     /**
      * Sets a parameter by dot-notation keys.
      *
-     * @param string $keys  Key in dot-notation
-     * @param mixed  $value The value
+     * @see \Adbar\Dot::set()
+     *
+     * @param array|string  $keys
+     * @param mixed         $value
      */
-    public function setDot(string $keys, $value)
+    public function setDot($keys, $value = null)
     {
+        if (is_array($keys)) {
+            foreach ($keys as $key => $value) {
+                $this->setDot($key, $value);
+            }
+
+            return;
+        }
+
         $items = &$this->parameters;
 
         foreach (explode('.', $keys) as $key) {
@@ -122,31 +155,77 @@ class Config extends ParameterBag
     }
 
     /**
+     * Check if a given key or keys exists.
+     *
+     * @see \Adbar\Dot::has()
+     *
+     * @param  array|string $keys
+     *
+     * @return bool
+     */
+    public function hasDot($keys)
+    {
+        $keys = (array) $keys;
+
+        if (!$this->parameters || $keys === []) {
+            return false;
+        }
+
+        foreach ($keys as $key) {
+            $items = $this->parameters;
+
+            if ($this->exists($items, $key)) {
+                continue;
+            }
+
+            foreach (explode('.', $key) as $segment) {
+                if (!is_array($items) || !$this->exists($items, $segment)) {
+                    return false;
+                }
+
+                $items = $items[$segment];
+            }
+        }
+
+        return true;
+    }
+
+    /**
      * Remove a parameter by dot-notation keys.
      *
-     * @param  string $keys String key in dot-notation
+     * @see \Adbar\Dot::delete()
+     *
+     * @param  array|string $keys
      */
-    public function removeDot(string $keys)
+    public function removeDot($keys)
     {
-        if (isset($this->parameters[$keys])) {
-            unset($this->parameters[$keys]);
-        } else {
+        $keys = (array) $keys;
+
+        foreach ($keys as $key) {
+            if ($this->exists($this->parameters, $key)) {
+                unset($this->parameters[$key]);
+
+                continue;
+            }
+
             $items = &$this->parameters;
-            $segments = explode('.', $keys);
+            $segments = explode('.', $key);
             $lastSegment = array_pop($segments);
 
             foreach ($segments as $segment) {
                 if (!isset($items[$segment]) || !is_array($items[$segment])) {
-                    continue;
+                    continue 2;
                 }
+
                 $items = &$items[$segment];
             }
+
             unset($items[$lastSegment]);
         }
     }
 
     /**
-     * Configuration loader
+     * Configuration loader.
      *
      * @param  string $file
      *
@@ -178,7 +257,7 @@ class Config extends ParameterBag
     }
 
     /**
-     * Load array file configuration
+     * Load array file configuration.
      *
      * @param  string $file
      *
@@ -194,7 +273,7 @@ class Config extends ParameterBag
     }
 
     /**
-     * Load json file configuration
+     * Load json file configuration.
      *
      * @param  string $file
      *
@@ -210,7 +289,7 @@ class Config extends ParameterBag
     }
 
     /**
-     * Load and add .env content to $bags, $_ENV and $_SERVER
+     * Load and add .env content to $bags, $_ENV and $_SERVER.
      *
      * @param  string $file
      *
@@ -238,5 +317,18 @@ class Config extends ParameterBag
         }
 
         return $bags;
+    }
+
+    /**
+     * Checks if the given key exists in the provided array.
+     *
+     * @param  array      $array Array to validate.
+     * @param  int|string $key   The key to look for.
+     *
+     * @return bool
+     */
+    protected function exists($array, $key)
+    {
+        return array_key_exists($key, $array);
     }
 }

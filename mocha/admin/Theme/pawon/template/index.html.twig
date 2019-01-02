@@ -1,10 +1,11 @@
 <!DOCTYPE html>
-<html lang="{{ i18n_lang_code }}" dir="{{ i18n_lang_dir }}" class="{{ mocha.document.getNode('class_html')|join(' ') }}">
+<html lang="{{ mocha.i18n.get('lang_code') }}" dir="{{ mocha.i18n.get('lang_dir') }}" class="{{ mocha.document.getNode('class_html')|join(' ') }}">
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-{% if mocha.request.secure %}
+    <meta name="csrf-token" content="{{ mocha.tool_secure.csrfToken() }}">
+{% if mocha.secure %}
     <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
 {% endif %}
 
@@ -17,8 +18,8 @@
     <link rel="{{ link.rel }}" href="{{ link.href }}" {{ link.hreflang ? 'hreflang="' ~ link.hreflang ~ '"' }} {{ link.type ? 'type="' ~ link.type ~ '"' }} {{ link.media ? 'type="' ~ link.media ~ '"' }}>
 {% endfor %}
 
-    <link rel="stylesheet" href="{{ mocha.config.get('setting.url_site') }}_asset/style/uikit.sketsa{{ i18n_lang_dir == 'rtl' ? '-rtl' }}.min.css?v=1.0.0-rc.25" media="all">
-    <link rel="stylesheet" href="{{ mocha.config.get('setting.url_site') }}_thbase/style/dummy.min.css?v={{ mocha.theme.version }}" media="all">
+    <link rel="stylesheet" href="{{ mocha.config.get('setting.url_site') }}_asset/style/uikit.sketsa{{ mocha.i18n.get('lang_dir') == 'rtl' ? '-rtl' }}.min.css?v=1.0.0-rc.25" media="all">
+    <link rel="stylesheet" href="{{ mocha.config.get('setting.url_site') }}_th{{ mocha.theme.codename }}/style/dummy.min.css?v={{ mocha.theme.version }}" media="all">
 {% for style in mocha.document.getStyle %}
     <link rel="stylesheet" href="{{ style.href }}" media="{{ style.media }}">
 {% endfor %}
@@ -26,24 +27,46 @@
     <script src="{{ mocha.config.get('setting.url_site') }}_asset/script/jquery-3.3.1.min.js"></script>
     <script src="{{ mocha.config.get('setting.url_site') }}_asset/script/uikit.min.js?v=1.0.0-rc.25"></script>
     <script src="{{ mocha.config.get('setting.url_site') }}_asset/script/uikit-icons.min.js?v=1.0.0-rc.25"></script>
+
+{% block head %}
+<script>
+var mocha = {
+    'version'   : '{{ mocha.version }}',
+    'theme'     : {{ mocha.theme|json_encode() }},
+    'setting'   : {{ mocha.config.get('setting')|json_encode() }},
+    'i18n'      : {{ mocha.i18n.all()|json_encode() }},
+};
+console.log(mocha);
+$.ajaxSetup({
+    headers: {
+        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+    }
+});
+</script>
+{% endblock head %}
 </head>
 
 <body class="{{ mocha.document.getNode('class_body')|join(' ') }}">
 
+{% block header %}{% endblock header %}
+
+{% block top %}{% endblock top %}
+
+{% block content %}
 <div class="uk-container uk-margin-medium-top">
     <div class="uk-grid" uk-grid>
         <div class="uk-width-1-5 uk-hidden">
-            <div class="ux-card-panel uk-card-body">
+            <div class="uk-card-panel uk-card-body">
                 Block position
             </div>
         </div>
         <div class="uk-width-expand">
-            <div class="ux-card-panel uk-card-body">
+            <div class="uk-card-panel uk-card-body">
                 {{ component }}
             </div>
         </div>
         <div class="uk-width-1-4 uk-visible@m">
-            <div class="ux-card-panel uk-card-body">
+            <div class="uk-card-panel uk-card-body">
                 Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
             </div>
         </div>
@@ -89,31 +112,16 @@
         </div>
     </div>
 </div>
+{% endblock content %}
 
+{% block footer %}
+{% endblock footer %}
+
+{% block bottom %}
 {% for script in mocha.document.getScript %}
 <script src="{{ script }}"></script>
 {% endfor %}
-<script src="{{ mocha.config.get('setting.url_site') }}_thbase/script/dummy.min.js?v={{ mocha.theme.version }}"></script>
-
-{#
-<script>
-$.ajax({
-    url  : "{{ mocha.router.urlGenerate('home/ping', {'id':2, 'ref':'home'}) }}",
-    type : 'GET',
-    data : {
-        'foo' : 'bar',
-        'baz' : 101
-    },
-    dataType:'json',
-    success : function(data) {
-        console.log('Data: ' + data);
-    },
-    error : function(request,error)
-    {
-        console.log('Request: ' + JSON.stringify(request));
-    }
-});
- #}
-</script>
+<script src="{{ mocha.config.get('setting.url_site') }}_th{{ mocha.theme.codename }}/script/dummy.min.js?v={{ mocha.theme.version }}"></script>
+{% endblock bottom %}
 </body>
 </html>

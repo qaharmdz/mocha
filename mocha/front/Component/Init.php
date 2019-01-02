@@ -69,17 +69,20 @@ class Init extends \Mocha\Controller
             $this->event->trigger(
                 'init.twig.global',
                 ['global' => [
-                    'theme'     => $this->tool->metafile('theme', $this->config->get('setting.site.theme_front')),
+                    'data'      => $data,
+                    'theme'     => $this->tool->metafile('theme', $this->config->get('setting.site.theme')),
                     'config'    => $this->config,
                     'router'    => $this->router,
                     'document'  => $this->document,
+                    'i18n'      => $this->language,
                     'request'   => [
-                        'method'     => $this->request->getRealMethod(),
-                        'secure'     => $this->request->isSecure(),
-                        'post'       => $this->request->post,
-                        'query'      => $this->request->query, // $_GET
-                        'cookies'    => $this->request->cookies
+                        'method'    => $this->request->getRealMethod(),
+                        'secure'    => $this->request->isSecure(),
+                        'post'      => $this->request->post,
+                        'query'     => $this->request->query, // $_GET
+                        'cookies'   => $this->request->cookies
                     ],
+                    'tool_secure'   => $this->tool_secure
                 ]]
             )->getData()
         );
@@ -109,16 +112,31 @@ class Init extends \Mocha\Controller
         // d($this->session->all());
         // $this->session->set('foo', 'bar');
 
+        // !d(
+        //     $this->secure->generateCode('hash'),
+        //     $this->secure->generateCode('hash', 21),
+        // );
+
         // d(
         //     $this->request->attributes->all(),
         //     $this->request->query->all()
         // );
         // d();
 
-        // d(
-        //     $this->user->login('admin@example.com', 'password'),
-        //     $this->user->all()
-        // );
+        // d('==============================');
+        // d($this->user->login('admin@example.com', 'password'));
+        // d($this->user->isLogged());
+        // d($this->session->all());
+
+        // d($this->user->logout());
+        // d($this->user->isLogged());
+        // d($this->session->all());
+
+        // d('==============================');
+        // d($this->user->login('admin@example.com', 'password'));
+        // d($this->user->isLogged());
+        // d($this->session->all());
+        // d($this->user->logout());
 
         // d(
             // $this->date->param->all(),

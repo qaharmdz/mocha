@@ -17,10 +17,10 @@ class Home extends \Mocha\Controller
     {
         $data = $this->language->load('Component/Home/home');
 
-        $this->document->setTitle($this->language->get('i18n_page_title'));
+        $this->document->setTitle($this->language->get('page_title'));
         $this->document->addNode('class_body', ['page-home']);
 
-        $data['content'] = $this->language->get('i18n_message');
+        $data['content'] = $this->language->get('message');
 
         return $this->response->setContent($this->tool->render(
             'Component/Home/home',
@@ -32,7 +32,7 @@ class Home extends \Mocha\Controller
     {
         $data = $this->language->load('Component/Home/home');
 
-        $this->document->setTitle($this->language->get('i18n_page_title'));
+        $this->document->setTitle($this->language->get('page_title'));
         $this->document->addNode('class_body', ['page-home']);
 
         $data['content'] = 'Method test';

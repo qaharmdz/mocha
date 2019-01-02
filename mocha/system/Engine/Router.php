@@ -17,7 +17,7 @@ use Symfony\Component\Routing\Generator\UrlGenerator;
 use Symfony\Component\HttpFoundation\ParameterBag;
 
 /**
- * Wrap Symfony routing in one class
+ * Wrap Symfony routing in one class.
  */
 class Router
 {
@@ -57,24 +57,23 @@ class Router
         $this->param->add([
             'routeDefaults'     => ['_locale' => 'en'], // Default addRoute
             'routeRequirements' => ['_locale' => 'en'], // Requirement addRoute, multi-language en|id|fr
-            'buildFlatten'      => false,               // Implode query url
-            'buildLocale'       => false,               // Force urlBuild to use "_locale"
-            'buildParameters'   => []                   // Force urlBuild to add extra parameter
+            'buildFlatten'      => true,                // Implode query url
+            'buildLocale'       => false                // Force urlBuild to use "_locale"
         ]);
     }
 
     /**
      * Add route into collection.
      *
-     * @param string          $name         Route name
-     * @param string          $path         The path pattern to match
-     * @param array           $defaults     An array of default parameter values
-     * @param array           $requirements An array of requirements for parameters (regexes)
-     * @param string|string[] $methods      A required HTTP method or an array of restricted methods
-     * @param array           $options      An array of options
-     * @param string          $host         The host pattern to match
-     * @param string|string[] $schemes      A required URI scheme or an array of restricted schemes
-     * @param string          $condition    A condition that should evaluate to true for the route to match
+     * @param string          $name         Route name.
+     * @param string          $path         The path pattern to match.
+     * @param array           $defaults     An array of default parameter values.
+     * @param array           $requirements An array of requirements for parameters (regexes).
+     * @param string|string[] $methods      A required HTTP method or an array of restricted methods.
+     * @param array           $options      An array of options.
+     * @param string          $host         The host pattern to match.
+     * @param string|string[] $schemes      A required URI scheme or an array of restricted schemes.
+     * @param string          $condition    A condition that should evaluate to true for the route to match.
      */
     public function addRoute(string $name, string $path, array $defaults = [], array $requirements = [], $methods = [], array $options = ['utf8' => true], ?string $host = '', $schemes = [], ?string $condition = '')
     {
@@ -93,7 +92,7 @@ class Router
     }
 
     /**
-     * Helper on using router route to add collection
+     * Helper on using router route to add collection.
      *
      * @param  mixed $params
      *
@@ -105,22 +104,20 @@ class Router
     }
 
     /**
-     * Generate url by route name
+     * Generate url by route name.
      *
-     * @param  string $name       Route name
-     * @param  array  $params     Route parameter
-     * @param  bool   $extraParam Should extra parameter appended, mostly url token
+     * @param  string $name       Route name.
+     * @param  array  $params     Route parameter.
      *
      * @return string
      */
-    public function urlBuild(string $name, array $params = [], bool $extraParam = true)
+    public function urlBuild(string $name, array $params = [])
     {
         $result = '';
 
         // Check to avoid exception error
         if ($this->collection->get($name)) {
             $name = $this->param->get('buildLocale') ? preg_replace('/_locale$/', '', $name) . '_locale' : $name;
-            $params = $extraParam ? array_replace($params, $this->param->get('buildParameters')) : $params;
 
             $result = $this->urlGenerator->generate($name, $params, UrlGenerator::ABSOLUTE_URL);
         }
@@ -141,25 +138,24 @@ class Router
     }
 
     /**
-     * Helper to automatically check route $name in urlBuild
+     * Helper to automatically check route $name in urlBuild.
      *
-     * @param  string $path       Route path
-     * @param  array  $params     Route parameter
-     * @param  bool   $extraParam Append extra parameter?
+     * @param  string $path       Route path.
+     * @param  array  $params     Route parameter.
      *
      * @return string
      */
-    public function urlGenerate(string $path = '', array $params = [], bool $extraParam = true)
+    public function urlGenerate(string $path = '', array $params = [])
     {
         if (!$path) {
-            return $this->urlBuild('_base', $params, $extraParam);
+            return $this->urlBuild('_base', $params);
         }
         if ($this->collection->get($path)) {
-            return $this->urlBuild($path, $params, $extraParam);
+            return $this->urlBuild($path);
         }
 
         $params['_controller'] = $path;
 
-        return $this->urlBuild('_dynamic', $params, $extraParam);
+        return $this->urlBuild('_dynamic', $params);
     }
 }

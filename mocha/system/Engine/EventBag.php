@@ -15,7 +15,7 @@ namespace Mocha\System\Engine;
 use Symfony\Component\EventDispatcher;
 
 /**
- * General purpose EventDispatcher\Event
+ * General purpose EventBag.
  */
 class EventBag extends EventDispatcher\Event
 {
@@ -25,7 +25,7 @@ class EventBag extends EventDispatcher\Event
     protected $name;
 
     /**
-     * @var array Readonly initial data passed to event
+     * @var array Readonly initial data passed to event.
      */
     protected $defaultParam;
 
@@ -55,7 +55,7 @@ class EventBag extends EventDispatcher\Event
     }
 
     /**
-     * Get triggered event name
+     * Get triggered event name.
      *
      * @return string
      */
@@ -65,7 +65,7 @@ class EventBag extends EventDispatcher\Event
     }
 
     /**
-     * Get initial data
+     * Get initial data.
      *
      * @return array
      */
@@ -75,9 +75,7 @@ class EventBag extends EventDispatcher\Event
     }
 
     /**
-
-    /**
-     * Shortcut to get data
+     * Shortcut to get data.
      *
      * @return array
      */
@@ -87,7 +85,7 @@ class EventBag extends EventDispatcher\Event
     }
 
     /**
-     * Get output
+     * Get output.
      *
      * @return array
      */

@@ -62,9 +62,8 @@ class Framework
                         'language'      => 'en',
                         'languages'     => [
                             'en' => [
-                                'id'    => 1
-                            ],
-                            ['id' => ['id' => 2]]
+                                'language_id'    => 1
+                            ]
                         ],
                     ],
                     'site'    => [
@@ -92,7 +91,26 @@ class Framework
                     'controller'    => [
                         'init'      => $config['app']['namespace'] . '\Component\Init::index',
                         'error'     => $config['app']['namespace'] . '\Component\Error::index',
-                        'default'   => 'Home' // 'Mocha\Front\Component\Home::index'
+                        'default'   => $config['app']['controller'] ?? 'Home'
+                    ],
+                    'path'          => [
+                        'root'          => PATH_ROOT,
+                        'app'           => $config['app']['path'],
+                        'component'     => $config['app']['path'] . 'Component' . DS,
+                        'module'        => $config['app']['path'] . 'Module' . DS,
+                        'plugin'        => $config['app']['path'] . 'Plugin' . DS,
+                        'language'      => $config['app']['path'] . 'Language' . DS,
+                        'theme'         => $config['app']['path'] . 'Theme' . DS,
+                        'asset'         => PATH_MOCHA . 'asset' . DS,
+                        'storage'       => PATH_MOCHA . 'storage' . DS,
+                        'system'        => PATH_MOCHA . 'system' . DS,
+                        'temp'          => PATH_MOCHA . 'temp' . DS,
+                    ],
+                    'headers'       => [ // Additional response headers
+                        'Referrer-Policy'        => 'no-referrer-when-downgrade',
+                        'X-Content-Type-Options' => 'nosniff',
+                        'X-Frame-Options'        => 'sameorigin',
+                        'X-XSS-Protection'       => '1; mode=block'
                     ],
                     'session'       => [ // Key at php.net/session.configuration, omit 'session.'
                         'name'              => 'mocha',
@@ -102,19 +120,6 @@ class Framework
                         'cookie_httponly'   => 1,
                         'use_trans_sid'     => 0,
                         'sid_length'        => rand(48, 64)
-                    ],
-                    'path'          => [
-                        'root'              => PATH_ROOT,
-                        'app'               => $config['app']['path'],
-                        'component'         => $config['app']['path'] . 'Component' . DS,
-                        'module'            => $config['app']['path'] . 'Module' . DS,
-                        'plugin'            => $config['app']['path'] . 'Plugin' . DS,
-                        'language'          => $config['app']['path'] . 'Language' . DS,
-                        'theme'             => $config['app']['path'] . 'Theme' . DS,
-                        'asset'             => PATH_PUBLIC . 'asset' . DS,
-                        'storage'           => PATH_MOCHA . 'storage' . DS,
-                        'system'            => PATH_MOCHA . 'system' . DS,
-                        'temp'              => PATH_MOCHA . 'temp' . DS,
                     ],
                     'serviceProvider'       => [
                         '\Mocha\System\Tool\ProviderTool'
@@ -154,23 +159,51 @@ class Framework
 
         $this->config->set('setting.site.theme', $this->config->get('setting.site.theme_' . $this->config->get('app.folder')));
         $this->config->set('setting.local.language', $this->config->get('setting.local.language_' . $this->config->get('app.folder')));
-        $this->config->set('setting.local.language_id', $this->config->get('setting.local.languages')[$this->config->get('setting.local.language')]['id']);
+        $this->config->set('setting.local.language_id', $this->config->get('setting.local.languages')[$this->config->get('setting.local.language')]['language_id']);
 
         if (in_array($this->config->get('setting.server.environment'), ['dev', 'test'])) {
             $this->config->set('setting.server.debug', true);
         }
 
+        // ====== Environment replacement
         if ($env = PATH_PUBLIC . '.env' && is_file($env)) {
             $this->config->load($env, 'env');
         }
 
-        // TODO: Update languages
+        // TODO: Update languages list
 
         // ====== TODO: Update serviceProvider, eventSubscriber, routeCollection list with plugins
         /*
         Use `key` to store plugin_id and check if plugin is enabled
         d($this->container['database']->where('`group`', 'system')->get('setting'));
          */
+
+        // ====== Symlinks public assets
+        if ($this->config->getBoolean('system.symlink.status', true)) {
+            $symlinks = $this->config->get('system.symlink.path', [
+                $this->config->get('system.path.storage') . 'image' => PATH_PUBLIC . '_image',      // Uploaded image
+                $this->config->get('system.path.temp') . 'image'    => PATH_PUBLIC . '_images',     // Cache and resized image
+                $this->config->get('system.path.asset')  => PATH_PUBLIC . '_asset',      // General asset
+                $this->config->get('system.path.theme') . $this->config->get('setting.site.theme_admin') . DS . 'asset' => PATH_PUBLIC . '_th' . $this->config->get('setting.site.theme_admin'),
+                $this->config->get('system.path.theme') . $this->config->get('setting.site.theme_front') . DS . 'asset' => PATH_PUBLIC . '_th' .$this->config->get('setting.site.theme_front')
+            ]);
+
+            foreach ($symlinks as $real => $link) {
+                if (file_exists($real) && (!is_link($link) || readlink($link) != $real)) {
+                    try {
+                        if (file_exists($link)) {
+                            @unlink($link);
+                        }
+
+                        if (!file_exists($link)) {
+                            symlink($real, $link);
+                        }
+                    } catch (\Exception $e) {
+                        exit('DEPRESSO | The feeling you get when you run out of coffee!');
+                    }
+                }
+            }
+        }
 
         return $this;
     }
@@ -188,21 +221,19 @@ class Framework
         $this->container['log_output'] = $this->config->get('system.path.temp') . 'log' . DS . $this->config->get('setting.server.log_error');
         $this->container['router_context']->fromRequest($this->container['request']);
         $this->container['resolver_controller']->param->set('namespace', $this->config->get('system.namespace'));
+        $this->container['response']->headers->add($this->config->get('system.headers'));
 
         $this->container['router']->param->add([
             'routeDefaults'     => ['_locale' => 'en'],
             'routeRequirements' => ['_locale' => 'en'],
-            'buildLocale'       => count($this->config->get('setting.local.languages')) > 1,
-            'buildParameters'   => $buildParameters = [
-                'token' => '12345'
-            ],
-            'buildFlatten'      => !(bool)$buildParameters,
+            'buildLocale'       => count($this->config->get('setting.local.languages')) > 1
         ]);
 
         $this->container['presenter']->param->add([
             'debug'     => $this->config->get('setting.server.debug'),
             'timezone'  => $this->config->get('setting.local.timezone'),
             'theme'     => [
+                'default'   => $this->config->get('app.folder') == 'admin' ? 'pawon' : 'pendapa',
                 'active'    => $this->config->get('setting.site.theme')
             ],
             'path'      => [
@@ -235,6 +266,14 @@ class Framework
     {
         $this->container['session_option'] = $this->config->get('system.session');
         $this->container['session']->start();
+
+        // A 'user' visitor token
+        if (!$this->container['session']->has('user_token')) {
+            $this->container['session']->set(
+                'user_token',
+                $this->container['secure']->generateCode('hash', rand(16, 32))
+            );
+        }
 
         return $this;
     }
@@ -306,14 +345,13 @@ class Framework
 
         if ($this->config->get('system.controller.init')) {
             list($class, $method) = explode('::', $this->config->get('system.controller.init'), 2);
-
-            $this->container['response'] = call_user_func([new $class, $method]);
+            $response = call_user_func([new $class, $method]);
         } else {
-            $this->container['response']->setContent('Oops! looks like your app is not configured properly.');
+            $response->setContent('Oops! looks like your app is not configured properly.');
         }
 
-        $this->container['response']->send();
+        $response->send();
 
-        $this->container['dispatcher']->terminate($this->container['request'], $this->container['response']);
+        $this->container['dispatcher']->terminate($this->container['request'], $response);
     }
 }

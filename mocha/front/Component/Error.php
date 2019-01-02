@@ -25,7 +25,7 @@ class Error extends \Mocha\Controller
 
         return $this->response
             ->setStatusCode($exception->getStatusCode())
-            ->setContent($this->presenter->render('error', [
+            ->setContent($this->tool->render('error', [
                 'title'    => '404 Not Found!',
                 'subtitle' => $exception->getMessage(),
                 'content'  => 'Lorem ipsum dolor sit amet, consectetur adipisicing elit.'

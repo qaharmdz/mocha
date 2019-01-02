@@ -68,12 +68,13 @@ class ProviderCore implements ServiceProviderInterface
         };
 
         // Response
-        $container['response'] = $container->factory(function ($c) {
+        $container['response'] = function ($c) {
             $response = new Response();
             $response->prepare($c['request']);
+            $response->setCharset('UTF-8');
 
             return $response;
-        });
+        };
 
         // Misc
         $container['session_option'] = [];

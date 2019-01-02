@@ -10,6 +10,7 @@
  */
 
 return [
+
 // Locale
 'lang_code'             => 'en',
 'lang_dir'              => 'ltr',
@@ -38,4 +39,5 @@ return [
     'month_short'   => ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
     'month_long'    => ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
 ]
+
 ];

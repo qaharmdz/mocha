@@ -11,21 +11,19 @@
 
 namespace Mocha\System\Library;
 
+use Symfony\Component\HttpFoundation\ParameterBag;
+
 class Secure
 {
-    protected $param = [];
-
     /**
-     * @param   hash_type
+     * @var \Symfony\Component\HttpFoundation\ParameterBag
      */
-    public function __construct(array $param = [])
+    public $param;
+
+    public function __construct(ParameterBag $bag)
     {
-        $this->param = array_merge(
-            [
-                'hash_type' => 'sha256'
-            ],
-            $param
-        );
+        $this->param = $bag;
+        $this->param->set('hash_type', 'sha256');
     }
 
     public function password(string $password)
@@ -43,60 +41,54 @@ class Secure
         return password_needs_rehash($hash, PASSWORD_DEFAULT);
     }
 
-    public function setHash($type)
-    {
-        $this->param['hash_type'] = in_array($type, hash_algos()) ? $type : 'sha256';
-    }
-
     public function hash(string $string, string $type = '')
     {
-        $type = in_array($type, hash_algos()) ? $type : $this->param['hash_type'];
+        $type = in_array($type, hash_algos()) ? $type : $this->param->get('hash_type', 'sha256');
 
         return hash($type, $string, false);
     }
 
-    public function encode(string $string)
-    {
-        return base64_encode($string);
-    }
-
-    public function decode(string $string)
-    {
-        return base64_decode($string);
-    }
-
     /**
-     * Based on Codeigniter v3.1.0 helper/string_helper
+     * Generate 'random' code.
+     *
+     * @see https://github.com/bcit-ci/CodeIgniter/blob/develop/system/helpers/string_helper.php
+     *
+     * @param  string      $type
+     * @param  int|integer $length
+     *
+     * @return string
      */
-    public function randCode(string $type = 'alnum', int $length = 16)
+    public function generateCode(string $type = 'alnum', int $length = 16)
     {
-        switch ($type)
-        {
+        switch ($type) {
             case 'basic':
                 $result = mt_rand();
                 break;
+
             case 'alnum':
             case 'numeric':
             case 'alpha':
-                switch ($type)
-                {
+                switch ($type) {
                     case 'alpha':
                         $pool = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
                         break;
+
                     case 'alnum':
                         $pool = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
                         break;
+
                     case 'numeric':
                         $pool = '0123456789';
                         break;
                 }
                 $result = str_shuffle(str_repeat($pool, ceil($length / strlen($pool))));
                 break;
+
             case 'hash':
                 $result = $this->hash(uniqid(mt_rand(), true));
                 break;
         }
 
-        return substr($result, rand(0, (strlen($result)-$length)), $length);
+        return substr($result, rand(0, (strlen($result) - $length)), $length);
     }
 }
