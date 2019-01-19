@@ -198,7 +198,7 @@ return [
 // 'error_422'                 => 'Error occured, try again later!',
 // 'error_general'             => 'Error occured, try again later!',
 // 'error_invalid_action'      => 'Invalid action!',
-'error_csrf'             => 'Invalid or missing CSRF token!',
+'error_csrf'                => 'Invalid or missing CSRF token!',
 // 'error_ajax_req'            => 'AJAX request is required!',
 // 'error_ajax_post'           => 'AJAX Post request is required!',
 // 'error_ajax_post_json'      => 'AJAX Post request with JSON data is required!',
@@ -230,7 +230,7 @@ return [
 
 
 // Localize datetime
-'localize_datetime'     => [
+'localize_datetime'         => [
     'time'          => 'Time',
     'hour'          => 'Hour',
     'minute'        => 'Minute',
@@ -249,6 +249,10 @@ return [
     'day_long'      => ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'],
     'month_short'   => ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
     'month_long'    => ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
-]
+],
+
+// Footer
+'powered'                   => 'Powered by <a href="https://www.mochacms.org" target="_blank">Mocha</a>',
+'copyright'                 => '<a href="https://www.mochacms.org" target="_blank">Mocha</a> &copy; ' . (date('Y') == '2019' ? date('Y') : '2019-' . date('Y')) . '. All Right Reserved.',
 
 ];

@@ -131,10 +131,9 @@ class ResolverController extends ControllerResolver
         if (class_exists($namespace)) {
             array_shift($segments);
         } else {
-            if ($folder == $classname) {
-                $namespace = implode('\\', $parts);
-                $classname = $parts[3];
-            }
+            // if ($folder == $classname) {}
+            $namespace = implode('\\', $parts);
+            $classname = $parts[3];
 
             if (!class_exists($namespace)) {
                 throw new \InvalidArgumentException(sprintf('Cannot locate expected controller "%s" for route path "%s"', $classname, $path));

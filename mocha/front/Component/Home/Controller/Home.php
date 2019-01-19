@@ -15,7 +15,9 @@ class Home extends \Mocha\Controller
 {
     public function index()
     {
-        $data = $this->language->load('Component/Home/home');
+        $data = [];
+
+        $this->language->load('Component/Home/home');
 
         $this->document->setTitle($this->language->get('page_title'));
         $this->document->addNode('class_body', ['page-home']);
@@ -30,7 +32,9 @@ class Home extends \Mocha\Controller
 
     public function test()
     {
-        $data = $this->language->load('Component/Home/home');
+        $data = [];
+
+        $this->language->load('Component/Home/home');
 
         $this->document->setTitle($this->language->get('page_title'));
         $this->document->addNode('class_body', ['page-home']);

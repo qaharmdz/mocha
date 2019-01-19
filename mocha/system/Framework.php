@@ -165,7 +165,7 @@ class Framework
             $this->config->set('setting.server.debug', true);
         }
 
-        // ====== Environment replacement
+        // ====== Environment setting (possible to replace all config)
         if ($env = PATH_PUBLIC . '.env' && is_file($env)) {
             $this->config->load($env, 'env');
         }

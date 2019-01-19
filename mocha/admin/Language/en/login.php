@@ -18,7 +18,7 @@ return [
 'login'                 => 'Login',
 
 // Alert
-'alert_mail_pass'       => 'Account not match our records. Please check and try again.',
+'alert_mail_pass'       => 'Account not found. Please check and try again.',
 'alert_backend_access'  => 'You not have permission to access admin pages!',
 
 'alert_login'           => 'Login required to access page!',

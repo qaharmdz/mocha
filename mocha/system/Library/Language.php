@@ -52,7 +52,7 @@ class Language
 
     public function all()
     {
-        return $this->storage->all();
+        return $this->storage->get('vars');
     }
 
     public function load(string $filename, string $group = '')
@@ -78,16 +78,17 @@ class Language
             $this->storage->get('param.path.language') . $this->storage->get('param.active') . DS . $filepart . $file . '.php'
         ]);
 
-
         // Load file
+        $has_file  = false;
         $variables = [];
         foreach ($files as $item) {
             if (is_file($item)) {
+                $has_file  = true;
                 $variables = array_merge($variables, (array)require($item));
             }
         }
 
-        if (!$variables) {
+        if (!$has_file) {
             throw new \RuntimeException(sprintf('Language "%s" is not available', $filename));
         }
 

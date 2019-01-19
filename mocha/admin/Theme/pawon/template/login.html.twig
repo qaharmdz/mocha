@@ -1,17 +1,16 @@
 {% extends 'index.html.twig' %}
 
-
 {# Empty override #}
-{% block header %}{% endblock header %}
+{% block navbar %}{% endblock navbar %}
 {% block top %}{% endblock top %}
 {% block footer %}{% endblock footer %}
 {% block bottom %}{% endblock bottom %}
 
 {% block content %}
 <div class="uk-flex uk-flex-center uk-flex-middle" uk-height-viewport="expand:true">
-    <div class="uk-position-cover login-background">asd</div>
+    <div class="uk-position-cover login-background"></div>
 
-    <div class="uk-position-z-index">
+    <div class="login-container">
         <div class="uk-width-medium">
             <div class="uk-margin-bottom uk-text-center">
                 <img src="{{ mocha.config.get('setting.url_site') }}_asset/image/mocha-light.png" alt="Mocha logo" style="width:210px">
@@ -44,30 +43,21 @@
                     </div>
 
                     <div class="uk-text-right">
-                        <button class="uk-button uk-button-primary"><i class="uk-icon-lock"></i> Login</button>
+                        <button class="uk-button uk-button-primary"><i data-feather="log-in" width="18px" height="18px"></i> Login</button>
                     </div>
                 </form>
             </div>
 
-            <div class="uk-margin-top uk-text-mini uk-text-muted">Powered by <a href="https://www.mochacms.org" target="_blank">Mocha</a></div>
+            <div class="uk-margin-top uk-text-mini uk-text-muted">{{ mocha.i18n.get('powered') }}</div>
         </div>
     </div>
 </div>
 
 <style>
-.page-login {
-    background: #2c3ba5;
-    background: linear-gradient(154deg, #2c3ba5 0, #4a1173 75%);
-}
 .login-background {
-    z-index: 1;
-    opacity: 0.06;
     background: url("{{ mocha.config.get('setting.url_site') }}_asset/image/bg-login.png") center repeat;
-
-}
-.login-background + * {
-    z-index: 2;
-    position: relative;
 }
 </style>
+<script src="{{ mocha.config.get('setting.url_site') }}_asset/script/feather/feather.min.js?v=4.10.0"></script>
+<script>feather.replace();</script>
 {% endblock content %}

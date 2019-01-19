@@ -19,15 +19,13 @@
 {% endfor %}
 
     <link rel="stylesheet" href="{{ mocha.config.get('setting.url_site') }}_asset/style/uikit.sketsa{{ mocha.i18n.get('lang_dir') == 'rtl' ? '-rtl' }}.min.css?v=1.0.0-rc.25" media="all">
-    <link rel="stylesheet" href="{{ mocha.config.get('setting.url_site') }}_th{{ mocha.theme.codename }}/style/dummy.min.css?v={{ mocha.theme.version }}" media="all">
+    <link rel="stylesheet" href="{{ mocha.config.get('setting.url_site') }}_th{{ mocha.theme.codename }}/style/theme.css?v={{ mocha.theme.version }}" media="all">
 {% for style in mocha.document.getStyle %}
     <link rel="stylesheet" href="{{ style.href }}" media="{{ style.media }}">
 {% endfor %}
 
     <script src="{{ mocha.config.get('setting.url_site') }}_asset/script/jquery-3.3.1.min.js"></script>
     <script src="{{ mocha.config.get('setting.url_site') }}_asset/script/uikit.min.js?v=1.0.0-rc.25"></script>
-    <script src="{{ mocha.config.get('setting.url_site') }}_asset/script/uikit-icons.min.js?v=1.0.0-rc.25"></script>
-
 {% block head %}
 <script>
 var mocha = {
@@ -48,80 +46,211 @@ $.ajaxSetup({
 
 <body class="{{ mocha.document.getNode('class_body')|join(' ') }}">
 
-{% block header %}{% endblock header %}
+{% block navbar %}
+<div id="block-navbar" class="block-navbar">
+<div uk-sticky="sel-target: .uk-navbar-container; cls-active: uk-navbar-sticky">
+    <nav class="uk-navbar-container" uk-navbar="mode: click">
 
-{% block top %}{% endblock top %}
+        <div class="uk-navbar-left">
+            <div class="uk-display-inline uk-margin-small-left">
+                <a class="uk-navbar-toggle navbar-commander-icon" title="Navigation">
+                    <i data-feather="command" width="22px" height="22px"></i>
+                </a>
+                <div class="uk-width-400 navbar-commander" uk-dropdown="mode:click; offset:0; animation:uk-animation-slide-bottom-small;">
+                    <div class="uk-dropdown-grid uk-grid-collapse" uk-grid>
+                        <div class="uk-width-175">
+                            <div class="navbar-commander-group">
+                                <ul class="uk-nav uk-dropdown-nav" uk-switcher="connect:.navbar-commander-items">
+                                    <li><a class="commander-group-link">Components</a></li>
+                                    <li><a class="commander-group-link">Extensions</a></li>
+                                    <li><a class="commander-group-link">Tools</a></li>
+                                    <li><a class="commander-group-link">Accounts</a></li>
+                                    <li><a class="commander-group-link">System</a></li>
+                                    <li><a class="commander-group-link">Help</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="uk-width-expand">
+                            <div class="uk-switcher navbar-commander-items">
+                                <ul class="uk-nav uk-dropdown-nav">
+                                    <li><a href="{{ mocha.router.url('content') }}">Contents</a></li>
+                                </ul>
+                                <ul class="uk-nav uk-dropdown-nav">
+                                    <li><a href="{{ mocha.router.url('extension/manage') }}">Manages</a></li>
+                                    <li class="uk-nav-divider"></li>
+                                    <li><a href="{{ mocha.router.url('extension/module') }}">Modules</a></li>
+                                    <li><a href="{{ mocha.router.url('extension/plugin') }}">Plugins</a></li>
+                                    <li><a href="{{ mocha.router.url('extension/theme') }}">Themes</a></li>
+                                    <li><a href="{{ mocha.router.url('extension/language') }}">Languages</a></li>
+                                </ul>
+                                <ul class="uk-nav uk-dropdown-nav">
+                                    <li><a href="{{ mocha.router.url('tool/navigation') }}">Navigations</a></li>
+                                    <li><a href="{{ mocha.router.url('tool/url') }}">URL Manager</a></li>
+                                    <li><a href="{{ mocha.router.url('tool/media') }}">Media Manager</a></li>
+                                </ul>
+                                <ul class="uk-nav uk-dropdown-nav">
+                                    <li><a href="{{ mocha.router.url('account/user') }}">Users</a></li>
+                                    <li><a href="{{ mocha.router.url('account/role') }}">Roles</a></li>
+                                    <li class="uk-nav-header">Logs</li>
+                                    <li><a href="{{ mocha.router.url('account/activity') }}">Activities</a></li>
+                                </ul>
+                                <ul class="uk-nav uk-dropdown-nav">
+                                    <li class="uk-nav-header">Configuration</li>
+                                    <li><a href="{{ mocha.router.url('system/setting/site') }}">Site Setting</a></li>
+                                    <li><a href="{{ mocha.router.url('system/setting/server') }}">Server Setting</a></li>
+                                    <li><a href="{{ mocha.router.url('system/setting/local') }}">Localisation</a></li>
+                                    <li class="uk-nav-header">Logs</li>
+                                    <li><a href="{{ mocha.router.url('system/log/api') }}">API Logs</a></li>
+                                    <li><a href="{{ mocha.router.url('system/log/error') }}">Error Logs</a></li>
+                                </ul>
+                                <ul class="uk-nav uk-dropdown-nav">
+                                    <li><a href="#">Community</a></li>
+                                    <li><a href="#">Documentation</a></li>
+                                    <li><a href="{{ mocha.router.url('system/help/opensource') }}">Open Sources</a></li>
+                                    <li class="uk-nav-divider"></li>
+                                    <li><a href="{{ mocha.router.url('system/help/update') }}">Check for Updates</a></li>
+                                    <li><a href="#">Changelogs</a></li>
+                                    <li><a href="{{ mocha.router.url('system/help/about') }}">About Mocha</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <form class="uk-search navbar-search">
+                {# <a class="uk-search-icon" title="Search"></a> #}
+                <span class="uk-search-icon" uk-tooltip="pos:bottom" title="Search">
+                    <i data-feather="search" width="18px" height="18px"></i>
+                </span>
+                <input class="uk-search-input" type="search" placeholder="Search...">
+                {# <a class="uk-search-icon navbar-search-clear" title="Clear search" style="display:none">
+                    <i data-feather="x" width="18px" height="18px"></i>
+                </a>
+                <a class="uk-search-icon navbar-search-option" title="Search options">
+                    <i data-feather="sliders" width="18px" height="18px"></i>
+                </a> #}
+            </form>
+            <div class="uk-width-300 navbar-search-result" uk-dropdown="mode:click; offset:5; animation:uk-animation-slide-bottom-small;">
+                <ul class="uk-nav uk-dropdown-nav">
+                    <li><a href="#">Item</a></li>
+                    <li><a href="#">Item</a></li>
+                    <li class="uk-nav-header">Contents</li>
+                    <li><a class="uk-text-truncate">
+                        Lorem ipsum dolor sit amet, consectetur adipisicing elit..
+                        <div class="uk-text-meta uk-text-mini uk-text-truncate">Quod fugiat laudantium ipsam quisquam accusamus recusandae.</div>
+                    </a></li>
+                    <li><a href="#">Item</a></li>
+                    <li><a href="#">Item</a></li>
+                    <li><a href="#">Item</a></li>
+                    <li><a href="#">Item</a></li>
+                    <li class="uk-nav-header">Extensions</li>
+                    <li><a href="#">Item</a></li>
+                    <li><a href="#">Item</a></li>
+                    <li><a href="#">Item</a></li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="uk-navbar-right">
+            <a class="uk-navbar-toggle uk-visible@s" href="{{ mocha.config.get('setting.url_site') }}" target="_blank" title="View site">
+                <i data-feather="monitor" width="19px" height="19px"></i>
+            </a>
+
+            <div class="uk-display-inline uk-visible@s">
+                <a class="uk-navbar-toggle" title="Help">
+                    <i data-feather="plus" width="22px" height="22px"></i>
+                    <span class="dropdown-caret"></span>
+                </a>
+                <div uk-dropdown="mode:click; offset:0; pos:bottom-right; animation:uk-animation-slide-bottom-small;">
+                    <ul class="uk-nav uk-dropdown-nav">
+                        <li><a href="#">New Content Post</a></li>
+                        <li><a href="#">New Content Category</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="uk-display-inline">
+                <a class="uk-navbar-toggle uk-margin-small-right" title="Account">
+                    <i data-feather="user" width="20px" height="20px"></i>
+                    <span class="dropdown-caret"></span>
+                </a>
+                <div uk-dropdown="mode:click; offset:0; pos:bottom-right; animation:uk-animation-slide-bottom-small;">
+                    <ul class="uk-nav uk-dropdown-nav">
+                        <li><a href="#">Edit Account</a></li>
+                        <li><a href="#">Preference</a></li>
+                        <li class="uk-nav-divider"></li>
+                        <li><a href="{{ mocha.router.url('account/user/logout') }}">Logout</a></li>
+                    </ul>
+                </div>
+            </div>
+
+        </div>
+
+    </nav>
+</div>
+</div>
+{% endblock navbar %}
+
+{% block top %}
+<div id="block-top" class="block-top uk-hidden-">
+    <div class="uk-container uk-container-large">
+        {% set breadcrumbs = mocha.document.getNode('breadcrumb') %}
+        {% if breadcrumbs %}
+            <ul class="uk-breadcrumb uk-margin-remove">
+                {% for breadcrumb in breadcrumbs %}
+                    {% if breadcrumb.1 is defined %}
+                        <li><a href="{{ breadcrumb.1 }}">{{ breadcrumb.0 }}</a></li>
+                    {% else %}
+                        <li class="uk-disabled"><span>{{ breadcrumb.0 }}</span></li>
+                    {% endif %}
+                {% endfor %}
+            </ul>
+        {% endif %}
+    </div>
+</div>
+{% endblock top %}
 
 {% block content %}
-<div class="uk-container uk-margin-medium-top">
-    <div class="uk-grid" uk-grid>
-        <div class="uk-width-1-5 uk-hidden">
-            <div class="uk-card-panel uk-card-body">
-                Block position
-            </div>
-        </div>
-        <div class="uk-width-expand">
-            <div class="uk-card-panel uk-card-body">
-                {{ component }}
-            </div>
-        </div>
-        <div class="uk-width-1-4 uk-visible@m">
-            <div class="uk-card-panel uk-card-body">
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-            </div>
-        </div>
-    </div>
-    <div class="uk-grid" uk-grid>
-        <div class="uk-width-expand">
-            <table class="uk-table uk-table-striped uk-table-hover uk-table-middle">
-                <thead>
-                    <tr>
-                        <th class="uk-width-1-6">Table Heading</th>
-                        <th>Table Heading</th>
-                        <th class="uk-width-1-6 uk-text-center">Table Heading</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>Table Data</td>
-                        <td>Table Data</td>
-                        <td class="uk-text-center">Table Data</td>
-                    </tr>
-                    <tr>
-                        <td>Table Data</td>
-                        <td>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</td>
-                        <td class="uk-text-center">Table Data</td>
-                    </tr>
-                    <tr>
-                        <td>Table Data</td>
-                        <td>Table Data</td>
-                        <td class="uk-text-center">Table Data</td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-    </div>
-    <div class="uk-grid" uk-grid>
-        <div class="uk-width-expand">
-            <ul class="uk-list">
-                <li>{{ mocha.router.urlGenerate() }}</li>
-                <li>{{ mocha.router.urlGenerate('home') }}</li>
-                <li>{{ mocha.router.urlGenerate('blog/category/cid/1234') }}</li>
-                <li>{{ mocha.router.urlGenerate('blog/post', {'pid':2, 'cid':'12_13'}) }}</li>
-            </ul>
-        </div>
-    </div>
+<div id="block-content" class="block-content">
+    {{ component }}
 </div>
 {% endblock content %}
 
 {% block footer %}
+<div id="block-footer" class="block-footer uk-text-small uk-text-muted uk-text-center">
+    <div class="uk-container uk-container-large">
+        <div class="footer-content">
+            {{ mocha.i18n.get('copyright') }} <br>
+            Version {{ mocha.version }}
+        </div>
+    </div>
+</div>
+<a class="to-top uk-position-fixed uk-position-small uk-position-bottom-right" uk-totop uk-scroll='{"duration":500}' style="display:none"></a>
+<script>
+var toTop = $('.to-top');
+$(window).scroll(function() {
+    var scrollPosition = $(window).scrollTop();
+    if (scrollPosition >= 150 && scrollPosition <= 250) {
+        if (scrollPosition >= 200) {
+            toTop.fadeIn();
+        } else {
+            toTop.fadeOut();
+        }
+    }
+});
+</script>
 {% endblock footer %}
 
 {% block bottom %}
+<script src="{{ mocha.config.get('setting.url_site') }}_asset/script/feather/feather.min.js?v=4.10.0"></script>
+<script>feather.replace();</script>
+
 {% for script in mocha.document.getScript %}
 <script src="{{ script }}"></script>
 {% endfor %}
-<script src="{{ mocha.config.get('setting.url_site') }}_th{{ mocha.theme.codename }}/script/dummy.min.js?v={{ mocha.theme.version }}"></script>
+<script src="{{ mocha.config.get('setting.url_site') }}_th{{ mocha.theme.codename }}/script/theme.js?v={{ mocha.theme.version }}"></script>
+
 {% endblock bottom %}
 </body>
 </html>

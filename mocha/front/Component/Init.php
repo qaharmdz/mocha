@@ -106,8 +106,8 @@ class Init extends \Mocha\Controller
         // d($this->event);
         // d($this->event->getEmitters());
         // d($this->container()->keys());
-        // d($this->config->all());
-        // d($this->presenter->param->get('global'));
+        d($this->config->all());
+        d($this->presenter->param->get('global'));
 
         // d($this->session->all());
         // $this->session->set('foo', 'bar');

@@ -15,15 +15,30 @@ class Home extends \Mocha\Controller
 {
     public function index()
     {
-        $data = $this->language->load('Component/Home/home');
+        $data = [];
+
+        $this->language->load('Component/Home/home');
 
         $this->document->setTitle($this->language->get('page_title'));
         $this->document->addNode('class_body', ['page-home']);
 
+        if ($this->request->query->get('view')) {
+            if ($this->request->query->get('view') == 'listing') {
+                $this->document->addNode('class_body', ['layout-tab']);
+            }
+
+            $this->document->addNode('breadcrumb', [
+                ['Content'],
+                ['Posts', $this->router->url('content/post')],
+                ['Insert', $this->router->url('content/post/form/id/0')],
+                ['Edit #12', $this->router->url('content/post/form/id/12')]
+            ]);
+        }
+
         $data['content'] = $this->language->get('message');
 
         return $this->response->setContent($this->tool->render(
-            'Component/Home/home',
+            'Component/Home/' . $this->request->query->get('view', 'home'),
             $data
         ));
     }

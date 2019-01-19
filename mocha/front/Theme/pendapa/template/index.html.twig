@@ -81,10 +81,10 @@
     <div class="uk-grid" uk-grid>
         <div class="uk-width-expand">
             <ul class="uk-list">
-                <li>{{ mocha.router.urlGenerate() }}</li>
-                <li>{{ mocha.router.urlGenerate('home') }}</li>
-                <li>{{ mocha.router.urlGenerate('blog/category/cid/1234') }}</li>
-                <li>{{ mocha.router.urlGenerate('blog/post', {'pid':2, 'cid':'12_13'}) }}</li>
+                <li>{{ mocha.router.url() }}</li>
+                <li>{{ mocha.router.url('home') }}</li>
+                <li>{{ mocha.router.url('blog/category/cid/1234') }}</li>
+                <li>{{ mocha.router.url('blog/post', {'pid':2, 'cid':'12_13'}) }}</li>
             </ul>
         </div>
     </div>
@@ -98,7 +98,7 @@
 {#
 <script>
 $.ajax({
-    url  : "{{ mocha.router.urlGenerate('home/ping', {'id':2, 'ref':'home'}) }}",
+    url  : "{{ mocha.router.url('home/ping', {'id':2, 'ref':'home'}) }}",
     type : 'GET',
     data : {
         'foo' : 'bar',

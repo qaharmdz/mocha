@@ -9,9 +9,19 @@
  * Full copyright and license see LICENSE file or visit https://www.gnu.org/licenses/gpl-3.0.en.html.
  */
 
-return [
+namespace Mocha\Admin\Component\Account\Controller;
 
-'page_title'    => 'Home',
-'message'       => 'Component Home'
+class User extends \Mocha\Controller
+{
+    /**
+     * @see init::logout()
+     */
+    public function logout()
+    {
+        $this->user->logout();
 
-];
+        $this->session->flash->set('alert_logout', true);
+
+        return $this->response->redirect($this->router->url());
+    }
+}

@@ -23,7 +23,7 @@ class Init extends \Mocha\Controller
 
         // === Document
         $this->document->addNode('class_html', ['theme-' . $this->config->get('setting.site.theme_front')]);
-        $this->document->addNode('breadcrumb', ['Home', $this->router->urlGenerate()]);
+        $this->document->addNode('breadcrumb', [['Home', $this->router->url('home')]]);
 
         $this->presenter->param->add(
             $this->event->trigger(
@@ -66,8 +66,10 @@ class Init extends \Mocha\Controller
 
         // _route_path solved inside event middleware
         if (!$this->request->is('ajax')) {
-            $this->session->set('admin_login_forward', $this->router->urlGenerate($this->request->attributes->get('_route_path', 'home')));
+            $this->session->set('admin_login_forward', $this->router->url($this->request->attributes->get('_route_path', 'home')));
         }
+
+        $this->document->setTitle(' | Mocha', 'suffix');
 
         $data['component'] = $component->hasContent() ? $component->getContent() : 'Content is not available.';
 
@@ -96,12 +98,11 @@ class Init extends \Mocha\Controller
             ));
     }
 
-    // TODO: access through route_path user/logout
     public function logout()
     {
         $this->user->logout();
 
-        return $this->response->redirect($this->router->urlGenerate());
+        return $this->response->redirect($this->router->url());
     }
 
     protected function verifyAccess()
@@ -114,7 +115,8 @@ class Init extends \Mocha\Controller
         if ($this->request->is('post') && !$this->tool_secure->csrfValidate()) {
             $this->session->flash->set('error_csrf', $this->language->get('error_csrf'));
 
-            // Play it hard, remove all post
+            // Play it hard, remove all post after backup
+            $this->request->attributes->add('request_post', $this->request->post->all());
             $this->request->post->replace([]);
         }
     }

@@ -14,8 +14,8 @@ namespace Mocha\System\Tool;
 class Secure extends \Mocha\Controller
 {
     /**
-     * Remove unwanted characters.
-     * Example: [1]<>+=_`~ !–@#$;"\'\%   ^&*(\{)?}/2=\ -,./../*:|3
+     * Remove unwanted characters for filename and url alias
+     * Example: [1]<>+=_`~ !–@#$;"\'\%   ^&*(\{)?}/2=\ -,./../*:|3_-.#
      * Result: 1-_-2-3
      *
      * @param  string $data

@@ -1,0 +1,77 @@
+<div class="page-top">
+    <div class="uk-container uk-container-large">
+        <h1 class="uk-margin-remove">Content <span class="uk-text-lead uk-text-muted uk-visible@s">Tags</span></h1>
+
+        {# Not real tabs, designed to be looks like tab while per link will go to new page #}
+        <ul class="uk-flex-center- uk-flex-right uk-tab">
+            <li>
+                <a href="{{ mocha.router.url('content/post') }}" class="uk-visible@m">Posts</a>
+                <a href="{{ mocha.router.url('content/post') }}" class="uk-hidden@m" title="Posts"><i data-feather="file" width="20px" height="20px"></i></a>
+            </li>
+            <li>
+                <a href="{{ mocha.router.url('content/category') }}" class="uk-visible@m">Categories</a>
+                <a href="{{ mocha.router.url('content/category') }}" class="uk-hidden@m" title="Categories"><i data-feather="folder" width="20px" height="20px"></i></a>
+            </li>
+            <li class="uk-active">
+                <a href="{{ mocha.router.url('content/tag') }}" class="uk-visible@m">Tags</a>
+                <a href="{{ mocha.router.url('content/tag') }}" class="uk-hidden@m" title="Tags"><i data-feather="tag" width="20px" height="20px"></i></a>
+            </li>
+            <li>
+                <a href="{{ mocha.router.url('content/insight') }}" class="uk-visible@m">Insights</a>
+                <a href="{{ mocha.router.url('content/insight') }}" class="uk-hidden@m" title="Insights"><i data-feather="activity" width="20px" height="20px"></i></a>
+            </li>
+            <li>
+                <a href="{{ mocha.router.url('content/setting') }}" class="uk-visible@m">Settings</a>
+                <a href="{{ mocha.router.url('content/setting') }}" class="uk-hidden@m" title="Settings"><i data-feather="sliders" width="20px" height="20px"></i></a>
+            </li>
+        </ul>
+    </div>
+</div>
+
+<div class="page-content">
+    <div class="uk-container uk-container-large">
+
+        <div class="" uk-grid>
+            <div class="uk-width-expand">
+                <ul class="uk-subnav uk-subnav-divider">
+                    <li><a class="">All <span class="uk-label uk-background-gray" style="font-size:11px; padding:0 5px; margin-top:-2px;">16</span></a></li>
+                    <li><a class="">Publish <span class="uk-label uk-background-gray" style="font-size:11px; padding:0 5px; margin-top:-2px;">16</span></a></li>
+                    <li><a class="">Pending <span class="uk-label uk-background-gray" style="font-size:11px; padding:0 5px; margin-top:-2px;">16</span></a></li>
+                    <li><a class="">Draft <span class="uk-label uk-background-gray" style="font-size:11px; padding:0 5px; margin-top:-2px;">16</span></a></li>
+                    <li><a class="">Trash <span class="uk-label uk-background-gray" style="font-size:11px; padding:0 5px; margin-top:-2px;">16</span></a></li>
+                </ul>
+            </div>
+            <div class="uk-width-200 uk-text-right">
+                <button class="uk-button uk-button-primary"><i data-feather="plus" width="22px" height="22px"></i> Insert</button>
+            </div>
+        </div>
+
+        <table class="uk-table uk-table-striped uk-table-hover uk-table-middle">
+            <thead>
+                <tr>
+                    <th class="uk-width-1-6">Table Heading</th>
+                    <th>Table Heading</th>
+                    <th class="uk-width-1-6 uk-text-center">Table Heading</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Table Data</td>
+                    <td>Table Data</td>
+                    <td class="uk-text-center">Table Data</td>
+                </tr>
+                <tr>
+                    <td>Table Data</td>
+                    <td>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</td>
+                    <td class="uk-text-center">Table Data</td>
+                </tr>
+                <tr>
+                    <td>Table Data</td>
+                    <td>Table Data</td>
+                    <td class="uk-text-center">Table Data</td>
+                </tr>
+            </tbody>
+        </table>
+
+    </div>
+</div>

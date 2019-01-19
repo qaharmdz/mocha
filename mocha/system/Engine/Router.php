@@ -145,7 +145,7 @@ class Router
      *
      * @return string
      */
-    public function urlGenerate(string $path = '', array $params = [])
+    public function url(string $path = '', array $params = [])
     {
         if (!$path) {
             return $this->urlBuild('_base', $params);

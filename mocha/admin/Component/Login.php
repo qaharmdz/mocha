@@ -27,7 +27,7 @@ class Login extends \Mocha\Controller
         // === POST
         if ($this->request->is('post') && $this->validateForm()) {
             return $this->response->redirect(
-                $this->session->get('admin_login_forward', $this->router->urlGenerate('home')),
+                $this->session->get('admin_login_forward', $this->router->url('home')),
                 303
             );
         }
@@ -42,9 +42,8 @@ class Login extends \Mocha\Controller
         ];
 
         foreach ($alertSession as $key => $value) {
-            if ($this->session->get($key)) {
+            if ($this->session->flash->get($key)) {
                 ${'alert_'.$value} = $this->language->get($key);
-                $this->session->remove($key);
             }
         }
 
