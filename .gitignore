@@ -1,12 +1,15 @@
-
 _dev/
-temp/
+temp/*/
 vendor/
 
 public/_*
+public/config.php
 
 phpunit.xml
 *.log
+
+# Globally exclude files
+!index.html
 
 
 #--------------------------------------------------

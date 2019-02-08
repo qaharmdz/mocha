@@ -6,11 +6,11 @@ return [
     'system'    => [
         'database'          => [
             'host'          => 'localhost',
-            'db'            => 'mocha',
+            'db'            => '...',
             'username'      => 'root',
-            'password'      => 'password',
+            'password'      => '...',
             'prefix'        => 'mc_',
         ],
-        'public_key'        => 'd1e427b786de'
+        'public_key'        => '...'
     ]
 ];
