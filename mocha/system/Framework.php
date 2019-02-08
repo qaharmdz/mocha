@@ -57,7 +57,7 @@ class Framework
         $this->config->add(array_replace_recursive(
             [
                 'setting'       => [
-                    'local'     => [
+                    'locale'    => [
                         'timezone'      => 'UTC', // Timezone on display
                         'language'      => 'en',
                         'languages'     => [
@@ -66,7 +66,7 @@ class Framework
                             ]
                         ],
                     ],
-                    'site'    => [
+                    'site'      => [
                         'theme'         => 'base'
                     ],
                     'server'    => [
@@ -141,15 +141,15 @@ class Framework
 
         // Standardize PHP and database timezone MUST be UTC
         date_default_timezone_set('UTC');
-        $this->container['database']->rawQuery('SET time_zone="+00:00";');
+        $this->container['db']->rawQuery('SET time_zone="+00:00";');
 
         // ====== Update config
 
         // Load setting from database
-        foreach ($this->container['database']->where('`group`', 'setting')->get('setting') as $item) {
+        foreach ($this->container['db']->where('`group`', 'setting')->get('setting') as $item) {
             $this->config->set(
                 implode('.', [$item['group'], $item['type'], $item['key']]),
-                $item['serialized'] ? json_decode($item['value'], true) : $item['value']
+                $item['encoded'] ? json_decode($item['value'], true) : $item['value']
             );
         }
 
@@ -158,8 +158,8 @@ class Framework
         $this->config->set('setting.url_base', rtrim($this->config->get('setting.url_site') . $this->config->get('app.url_part'), '/.\\')  . '/');
 
         $this->config->set('setting.site.theme', $this->config->get('setting.site.theme_' . $this->config->get('app.folder')));
-        $this->config->set('setting.local.language', $this->config->get('setting.local.language_' . $this->config->get('app.folder')));
-        $this->config->set('setting.local.language_id', $this->config->get('setting.local.languages')[$this->config->get('setting.local.language')]['language_id']);
+        $this->config->set('setting.locale.language', $this->config->get('setting.locale.language_' . $this->config->get('app.folder')));
+        $this->config->set('setting.locale.language_id', $this->config->get('setting.locale.languages')[$this->config->get('setting.locale.language')]['language_id']);
 
         if (in_array($this->config->get('setting.server.environment'), ['dev', 'test'])) {
             $this->config->set('setting.server.debug', true);
@@ -175,7 +175,7 @@ class Framework
         // ====== TODO: Update serviceProvider, eventSubscriber, routeCollection list with plugins
         /*
         Use `key` to store plugin_id and check if plugin is enabled
-        d($this->container['database']->where('`group`', 'system')->get('setting'));
+        d($this->container['db']->where('`group`', 'system')->get('setting'));
          */
 
         // ====== Symlinks public assets
@@ -226,12 +226,12 @@ class Framework
         $this->container['router']->param->add([
             'routeDefaults'     => ['_locale' => 'en'],
             'routeRequirements' => ['_locale' => 'en'],
-            'buildLocale'       => count($this->config->get('setting.local.languages')) > 1
+            'buildLocale'       => count($this->config->get('setting.locale.languages')) > 1
         ]);
 
         $this->container['presenter']->param->add([
             'debug'     => $this->config->get('setting.server.debug'),
-            'timezone'  => $this->config->get('setting.local.timezone'),
+            'timezone'  => $this->config->get('setting.locale.timezone'),
             'theme'     => [
                 'default'   => $this->config->get('app.folder') == 'admin' ? 'pawon' : 'pendapa',
                 'active'    => $this->config->get('setting.site.theme')
@@ -244,7 +244,7 @@ class Framework
         ]);
 
         $this->container['language']->param([
-            'active'    => $this->config->get('setting.local.language'),
+            'active'    => $this->config->get('setting.locale.language'),
             'path'      => $this->config->get('system.path')
         ]);
         $this->container['language']->load('general');
@@ -291,7 +291,7 @@ class Framework
         $this->container['event']->addSubscriber(
             new EventListener\LocaleListener(
                 $this->container['request_stack'],
-                $this->config->get('setting.local.language'),
+                $this->config->get('setting.locale.language'),
                 $this->container['router_generator']
             )
         );
@@ -316,12 +316,12 @@ class Framework
 
     public function initRouter()
     {
-        $this->container['router']->param->set('routeDefaults', ['_locale' => $this->config->get('setting.local.language')]);
-        $this->container['router']->param->set('routeRequirements', ['_locale' => implode('|', array_keys($this->config->get('setting.local.languages')))]);
+        $this->container['router']->param->set('routeDefaults', ['_locale' => $this->config->get('setting.locale.language')]);
+        $this->container['router']->param->set('routeRequirements', ['_locale' => implode('|', array_keys($this->config->get('setting.locale.languages')))]);
 
         // Base
         $this->container['router']->addRoute('_base', '/', ['_controller' => $this->config->get('system.controller.default')]);
-        if (count($this->config->get('setting.local.languages')) > 1) {
+        if (count($this->config->get('setting.locale.languages')) > 1) {
             $this->container['router']->addRoute('_base_locale', '/{_locale}/', ['_controller' => $this->config->get('system.controller.default')]);
         }
 
@@ -331,7 +331,7 @@ class Framework
         }
 
         // Dynamic fallback
-        if (count($this->config->get('setting.local.languages')) > 1) {
+        if (count($this->config->get('setting.locale.languages')) > 1) {
             $this->container['router']->addRoute('_dynamic_locale', '/{_locale}/{_controller}', ['_controller' => $this->config->get('system.controller.default')], ['_controller' => '.*']);
         }
         $this->container['router']->addRoute('_dynamic', '/{_controller}', ['_controller' => $this->config->get('system.controller.default')], ['_controller' => '.*']);

@@ -203,7 +203,7 @@ class User
         $metas   = [];
         $results = $this->db->where('user_id', $users['user_id'])->get('user_meta');
         foreach ($results as $result) {
-            $metas[$result['attribute']] = $result['serialized'] ? json_decode($result['value'], true) : $result['value'];
+            $metas[$result['attribute']] = $result['encoded'] ? json_decode($result['value'], true) : $result['value'];
         }
 
         return !empty($users) ? array_merge($users, $metas) : null;

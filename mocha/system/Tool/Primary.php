@@ -11,8 +11,20 @@
 
 namespace Mocha\System\Tool;
 
+use \Mocha\Abstractor;
+
 class Primary extends \Mocha\Controller
 {
+    /**
+     * @var Mocha\System\Engine\Config
+     */
+    protected $bags;
+
+    public function __construct()
+    {
+        $this->bags = $this->parameterBag;
+    }
+
     /**
      * Load metadata file.
      * Info: $this in metadata is instance of this class.
@@ -37,7 +49,16 @@ class Primary extends \Mocha\Controller
         return $data;
     }
 
-    protected function load(string $path, array $args = [], string $extension = 'module')
+    /**
+     * Load and wrap controller with before/after event
+     *
+     * @param  string $path
+     * @param  array  $args
+     * @param  string $extension
+     *
+     * @return mixed
+     */
+    public function controller(string $path, array $args = [], string $eventName = null, string $extension = 'module')
     {
         $eventName = $eventName ?: $path;
 
@@ -66,7 +87,27 @@ class Primary extends \Mocha\Controller
     }
 
     /**
-     * [render description]
+     * Wrap abstractor with before/after event
+     *
+     * @param  string           $path
+     * @param  Abstractor|array $param
+     *
+     * @return mixed
+     */
+    public function abstractor(string $path, $param = [])
+    {
+        if ($param instanceof Abstractor && !$this->bags->has('abstractor.' . $path)) {
+            $this->bags->set('abstractor.' . $path, $param);
+        } else {
+            // TODO: wrap in event
+            $abstractor = explode('.', $path);
+
+            return $this->bags->get('abstractor.' . $abstractor[0])->{$abstractor[1]}(...$param);
+        }
+    }
+
+    /**
+     * Wrap presenter render with before/after event
      *
      * @param  string $template
      * @param  array  $vars

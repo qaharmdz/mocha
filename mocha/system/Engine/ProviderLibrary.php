@@ -20,7 +20,7 @@ class ProviderLibrary implements ServiceProviderInterface
     public function register(Container $container)
     {
         $container['database_param'] = [];
-        $container['database'] = function ($c) {
+        $container['db'] = function ($c) {
             try {
                 $db = new \Mysqlidb($c['database_param']);
                 $db->rawQuery('SET session group_concat_max_len = 102400;');
@@ -39,7 +39,7 @@ class ProviderLibrary implements ServiceProviderInterface
         };
 
         $container['user'] = function ($c) {
-            return new Library\User($c['database'], $c['secure'], $c['session']);
+            return new Library\User($c['db'], $c['secure'], $c['session']);
         };
 
         $container['language'] = function ($c) {

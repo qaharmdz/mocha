@@ -22,6 +22,7 @@ class Init extends \Mocha\Controller
         // TODO: plugin from url alias to route $this->request->setPathInfo('/home/test'); // sample to manipulate requested component
 
         // === Document
+
         $this->document->addNode('class_html', ['theme-' . $this->config->get('setting.site.theme_front')]);
         $this->document->addNode('breadcrumb', [['Home', $this->router->url('home')]]);
 
@@ -49,9 +50,10 @@ class Init extends \Mocha\Controller
         // === Component
 
         /**
-         * Component event middleware, see:
-         * - \Symfony\Component\HttpKernel\KernelEvents
-         * - \Symfony\Component\HttpKernel\HttpKernel
+         * Component event middleware
+         *
+         * @see \Symfony\Component\HttpKernel\KernelEvents
+         * @see \Symfony\Component\HttpKernel\HttpKernel
          *
          * @return \Mocha\System\Engine\Response $component
          */
@@ -87,6 +89,7 @@ class Init extends \Mocha\Controller
          */
 
         // === Presenter
+
         $template = $this->document->getNode('template_base', 'index');
 
         return $this->response

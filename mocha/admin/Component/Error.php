@@ -27,7 +27,7 @@ class Error extends \Mocha\Controller
             ->setStatusCode($exception->getStatusCode())
             ->setContent($this->tool->render('error', [
                 'title'    => '404 Not Found!',
-                'subtitle' => $exception->getMessage(),
+                'subtitle' => 'Unable to find the controller for path "' . $this->request->attributes->get('_controller') . '".',
                 'content'  => 'Lorem ipsum dolor sit amet, consectetur adipisicing elit.'
             ]));
     }
@@ -39,7 +39,11 @@ class Error extends \Mocha\Controller
 
         return $this->response
             ->setStatusCode($exception->getStatusCode())
-            ->setContent('<h1>Oops, bad thing happen!</h1><p>Message: <i>' . $exception->getMessage() . '</i></p>')
+            ->setContent(
+                '<h1>Oops, bad thing happen!</h1>' .
+                '<p>' . $exception->getMessage() . '</p>' .
+                '<p>At <i>' . str_replace(PATH_ROOT, '', $exception->getFile()) . '</i> line ' . $exception->getLine() . '.</p>'
+            )
             ->setOutput();
     }
 }

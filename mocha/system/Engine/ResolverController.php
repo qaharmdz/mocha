@@ -131,7 +131,6 @@ class ResolverController extends ControllerResolver
         if (class_exists($namespace)) {
             array_shift($segments);
         } else {
-            // if ($folder == $classname) {}
             $namespace = implode('\\', $parts);
             $classname = $parts[3];
 
