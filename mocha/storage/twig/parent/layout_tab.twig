@@ -1,0 +1,35 @@
+<div class="page-top">
+    <div class="uk-container uk-container-large">
+
+        {% block page_title %}
+        <h1 class="uk-margin-remove">
+            {{ mocha.i18n.get('page_title', 'Title') }}<span class="uk-text-lead uk-text-muted uk-margin-small-left uk-visible@m">{{ mocha.i18n.get('page_title_sub', '') }}</span>
+        </h1>
+        {% endblock %}
+
+        {% block page_nav %}
+        {% if navigations is defined %}
+            <ul class="uk-flex-center- uk-flex-right uk-tab">
+                {% for nav in navigations %}
+                    <li class="{{ nav.active ? 'uk-active' }}">
+                        <a href="{{ nav.url }}" class="{{ nav.icon is defined ? 'uk-visible@m' }}">{{ nav.title }}</a>
+                        {% if nav.icon is defined %}
+                            <a href="{{ nav.url }}" class="uk-hidden@m" title="{{ nav.title }}">
+                                <i data-feather="{{ nav.icon }}" width="{{ nav.icon_size }}" height="{{ nav.icon_size }}"></i>
+                            </a>
+                        {% endif %}
+                    </li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+        {% endblock %}
+    </div>
+</div>
+
+<div class="page-content">
+    <div class="uk-container uk-container-large">
+
+        {% block page_content %}...{% endblock %}
+
+    </div>
+</div>
