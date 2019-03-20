@@ -28,7 +28,7 @@ class Presenter
             'debug'     => false,
             'timezone'  => 'UTC',
             'file_ext'  => '.html.twig',
-            'global'    => [],
+            'global'    => [], // namespace 'mocha' at template file
             'theme'     => [
                 'default'   => '_',
                 'active'    => ''

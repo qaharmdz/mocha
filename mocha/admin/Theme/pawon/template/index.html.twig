@@ -18,20 +18,20 @@
     <link rel="{{ link.rel }}" href="{{ link.href }}" {{ link.hreflang ? 'hreflang="' ~ link.hreflang ~ '"' }} {{ link.type ? 'type="' ~ link.type ~ '"' }} {{ link.media ? 'type="' ~ link.media ~ '"' }}>
 {% endfor %}
 
-    <link rel="stylesheet" href="{{ mocha.config.get('setting.url_site') }}_asset/style/uikit.sketsa{{ mocha.i18n.get('lang_dir') == 'rtl' ? '-rtl' }}.min.css?v=1.0.0-rc.25" media="all">
+    <link rel="stylesheet" href="{{ mocha.config.get('setting.url_site') }}_asset/style/uikit.sketsa{{ mocha.i18n.get('lang_dir') == 'rtl' ? '-rtl' }}.min.css?v=3.0.2" media="all">
     <link rel="stylesheet" href="{{ mocha.config.get('setting.url_site') }}_th{{ mocha.theme.codename }}/style/theme.css?v={{ mocha.theme.version }}" media="all">
 {% for style in mocha.document.getStyle() %}
     <link rel="stylesheet" href="{{ style.href }}" media="{{ style.media }}">
 {% endfor %}
 
     <script src="{{ mocha.config.get('setting.url_site') }}_asset/script/jquery-3.3.1.min.js"></script>
-    <script src="{{ mocha.config.get('setting.url_site') }}_asset/script/uikit.min.js?v=1.0.0-rc.25"></script>
+    <script src="{{ mocha.config.get('setting.url_site') }}_asset/script/uikit.min.js?v=3.0.2"></script>
 {% block head %}
 <script>
 var mocha = {
     'version'   : '{{ mocha.version }}',
     'theme'     : {{ mocha.theme|json_encode() }},
-    'setting'   : {{ mocha.config.get('setting')|json_encode() }},
+    // 'setting'   : {{ mocha.config.get('setting')|json_encode() }},
     'i18n'      : {{ mocha.i18n.all()|json_encode() }},
 };
 console.log(mocha);
@@ -119,37 +119,51 @@ $.ajaxSetup({
                 </div>
 
                 <form class="uk-search navbar-search">
-                    {# <a class="uk-search-icon" title="Search"></a> #}
-                    <span class="uk-search-icon" uk-tooltip="pos:bottom" title="Search">
-                        <i data-feather="search" width="18px" height="18px"></i>
-                    </span>
-                    <input class="uk-search-input" type="search" placeholder="Search...">
-                    {# <a class="uk-search-icon navbar-search-clear" title="Clear search" style="display:none">
-                        <i data-feather="x" width="18px" height="18px"></i>
-                    </a>
+                    <div>
+                        <span class="uk-search-icon">
+                            <i data-feather="search" width="18px" height="18px"></i>
+                        </span>
+                        <input class="uk-search-input" type="search" placeholder="Search...">
+                        <a class="uk-search-icon navbar-search-clear" title="Clear search" style="display:none-">
+                            <i data-feather="x" width="12px" height="12px"></i>
+                        </a>
+                    </div>
+                    <div class="uk-width-300 navbar-search-result" uk-dropdown="mode:click; offset:5; animation:uk-animation-slide-bottom-small;">
+                        <ul class="uk-nav uk-dropdown-nav">
+                            <li><a href="#">Item</a></li>
+                            <li><a href="#">Item</a></li>
+                            <li class="uk-nav-header">Contents</li>
+                            <li><a class="uk-text-truncate">
+                                Lorem ipsum dolor sit amet, consectetur adipisicing elit..
+                                <div class="uk-text-meta uk-text-mini uk-text-truncate">Quod fugiat laudantium ipsam quisquam accusamus recusandae.</div>
+                            </a></li>
+                            <li><a href="#">Item</a></li>
+                            <li><a href="#">Item</a></li>
+                            <li><a href="#">Item</a></li>
+                            <li><a href="#">Item</a></li>
+                            <li class="uk-nav-header">Extensions</li>
+                            <li><a href="#">Item</a></li>
+                            <li><a href="#">Item</a></li>
+                            <li><a href="#">Item</a></li>
+                        </ul>
+                    </div>
+
                     <a class="uk-search-icon navbar-search-option" title="Search options">
                         <i data-feather="sliders" width="18px" height="18px"></i>
-                    </a> #}
+                    </a>
+                    <div class="uk-width-300 navbar-search-setting" uk-dropdown="mode:click; pos:bottom-right; offset:5; animation:uk-animation-slide-bottom-small;">
+                        <ul class="uk-nav uk-dropdown-nav">
+                            <li class="uk-nav-header">Search in</li>
+                            <li><a href="#">Item</a></li>
+                            <li><a href="#">Item</a></li>
+                            <li><a href="#">Item</a></li>
+                        </ul>
+
+                        <div class="uk-margin-top uk-text-right">
+                            <button class="uk-button uk-button-small uk-button-primary">Search</button>
+                        </div>
+                    </div>
                 </form>
-                <div class="uk-width-300 navbar-search-result" uk-dropdown="mode:click; offset:5; animation:uk-animation-slide-bottom-small;">
-                    <ul class="uk-nav uk-dropdown-nav">
-                        <li><a href="#">Item</a></li>
-                        <li><a href="#">Item</a></li>
-                        <li class="uk-nav-header">Contents</li>
-                        <li><a class="uk-text-truncate">
-                            Lorem ipsum dolor sit amet, consectetur adipisicing elit..
-                            <div class="uk-text-meta uk-text-mini uk-text-truncate">Quod fugiat laudantium ipsam quisquam accusamus recusandae.</div>
-                        </a></li>
-                        <li><a href="#">Item</a></li>
-                        <li><a href="#">Item</a></li>
-                        <li><a href="#">Item</a></li>
-                        <li><a href="#">Item</a></li>
-                        <li class="uk-nav-header">Extensions</li>
-                        <li><a href="#">Item</a></li>
-                        <li><a href="#">Item</a></li>
-                        <li><a href="#">Item</a></li>
-                    </ul>
-                </div>
             </div>
 
             <div class="uk-navbar-right">
@@ -243,6 +257,7 @@ $(window).scroll(function() {
 {% endblock footer %}
 
 {% block bottom %}
+<script src="{{ mocha.config.get('setting.url_site') }}_asset/script/uikit-icons.min.js"></script>
 <script src="{{ mocha.config.get('setting.url_site') }}_asset/script/feather/feather.min.js?v=4.10.0"></script>
 <script>feather.replace();</script>
 

@@ -11,7 +11,7 @@
 
 namespace Mocha\Admin\Component\System\Controller;
 
-use Mocha\Admin\Component\System\Abstractor;
+use Mocha\Admin\Component as C;
 
 class Setting extends \Mocha\Controller
 {
@@ -43,7 +43,7 @@ class Setting extends \Mocha\Controller
         $this->language->load('Component/System/setting');
         $this->language->load('Component/System/' . $page);
 
-        $this->tool->abstractor('setting', new Abstractor\Setting());
+        $this->tool->abstractor('setting', new C\System\Abstractor\Setting());
 
         //=== Document
 
@@ -71,22 +71,28 @@ class Setting extends \Mocha\Controller
         $data['form']           = $this->tool->abstractor('setting.getSettings', ['setting', $page]);
 
         if ($page === 'site') {
-            // $data['roles']      = $this->tool_abstract_role->getRoles();
-            // $data['form']['watermark_thumb'] = $this->image->resize($data['form']['watermark_image'], 150, 150, false);
+            $this->tool->abstractor('role', new C\Account\Abstractor\Role());
+
+            $data['roles'] = $this->tool->abstractor('role.getRoles');
 
             // TODO: check themes status at db extension
-            // $admin_themes = glob(DJOGLO['path']['app'] . 'theme/*', GLOB_ONLYDIR);
-            // foreach ($admin_themes as $admin_theme) {
-            //     if (is_file($admin_theme . '/metadata.json')) {
-            //         $data['admin_themes'][] = basename($admin_theme);
-            //     }
-            // }
-            // $front_themes = glob(DJOGLO['path']['root'] . 'front/theme/*', GLOB_ONLYDIR);
-            // foreach ($front_themes as $front_theme) {
-            //     if (is_file($front_theme . '/metadata.json')) {
-            //         $data['front_themes'][] = basename($front_theme);
-            //     }
-            // }
+            $data['admin_themes'] = [];
+            $admin_themes = glob(PATH_MOCHA . 'admin/Theme/*', GLOB_ONLYDIR);
+
+            foreach ($admin_themes as $admin_theme) {
+                if (is_file($admin_theme . '/metadata.php')) {
+                    $data['admin_themes'][] = basename($admin_theme);
+                }
+            }
+
+            $data['front_themes'] = [];
+            $front_themes = glob(PATH_MOCHA . 'front/Theme/*', GLOB_ONLYDIR);
+
+            foreach ($front_themes as $front_theme) {
+                if (is_file($front_theme . '/metadata.php')) {
+                    $data['front_themes'][] = basename($front_theme);
+                }
+            }
         }
 
         return $this->response->setContent($this->tool->render(

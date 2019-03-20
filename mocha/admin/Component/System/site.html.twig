@@ -1,38 +1,38 @@
-{% extends 'storage/twig/parent/layout_tab.twig' %}
+{% extends 'Component/System/setting.html.twig' %}
 
 {% block page_content %}
-
 <div class="uk-text-right">
     <button id="js-action-save" class="uk-button uk-button-success">{{ mocha.i18n.get('save') }}</button>
 </div>
 
 <div class="content-body">
     <form id="setting-form" action="{{ form_action }}" method="post" class="uk-form-horizontal uk-form-expand">
+        {{ mocha.tool_secure.csrfField() }}
 
         <fieldset class="uk-fieldset">
             <legend class="uk-legend">{{ mocha.i18n.get('metadata') }}</legend>
 
             <input type="hidden" value="site" name="setting_type">
 
-            <div class="uk-form-row">
+            <div class="uk-margin">
                 <label class="uk-form-label" for="site-name"><span class="uk-text-danger">*</span> {{ mocha.i18n.get('site_name') }}</label>
                 <div class="uk-form-controls">
                     <input type="text" id="site-name" name="site_name" class="uk-input uk-width-500@m" value="{{ form.site_name }}">
                 </div>
             </div>
-            <div class="uk-form-row">
+            <div class="uk-margin">
                 <label class="uk-form-label" for="meta-desc">{{ mocha.i18n.get('meta_description') }}</label>
                 <div class="uk-form-controls">
                     <textarea id="meta-desc" name="meta_desc" class="uk-textarea uk-width-500@m" rows="6">{{ form.meta_desc }}</textarea>
                 </div>
             </div>
-            <div class="uk-form-row">
+            <div class="uk-margin">
                 <label class="uk-form-label" for="meta-keyword">{{ mocha.i18n.get('meta_keywords') }}</label>
                 <div class="uk-form-controls">
                     <input type="text" id="meta-keyword" name="meta_keyword" class="uk-input uk-width-5-6@l" value="{{ form.meta_keyword }}">
                 </div>
             </div>
-            <div class="uk-form-row">
+            <div class="uk-margin">
                 <label class="uk-form-label" for="favicon">{{ mocha.i18n.get('favicon') }}</label>
                 <div class="uk-form-controls">
                     <input type="text" id="favicon" name="favicon" class="uk-input uk-width-150" value="{{ form.favicon }}">
@@ -43,7 +43,7 @@
         <fieldset class="uk-fieldset">
             <legend class="uk-legend">{{ mocha.i18n.get('account') }}</legend>
 
-            <div class="uk-form-row">
+            <div class="uk-margin">
                 <label class="uk-form-label">{{ mocha.i18n.get('registration') }}</label>
                 <div class="uk-form-controls">
                     <div class="uk-button-group uk-button-radio">
@@ -55,7 +55,7 @@
                     </div>
                 </div>
             </div>
-            <div class="uk-form-row">
+            <div class="uk-margin">
                 <label class="uk-form-label">{{ mocha.i18n.get('verification') }}</label>
                 <div class="uk-form-controls">
                     <div class="uk-button-group uk-button-radio">
@@ -68,7 +68,7 @@
                     <div class="uk-width-1-2 uk-float-right uk-text-help">{{ mocha.i18n.get('verification_info') }}</div>
                 </div>
             </div>
-            <div class="uk-form-row">
+            <div class="uk-margin">
                 <label class="uk-form-label" for="default-role">{{ mocha.i18n.get('default_role') }}</label>
                 <div class="uk-form-controls">
                     <select id="default-role" name="default_role" class="uk-select uk-width-200">
@@ -86,7 +86,7 @@
         <fieldset class="uk-fieldset">
             <legend class="uk-legend">{{ mocha.i18n.get('themes') }}</legend>
 
-            <div class="uk-form-row">
+            <div class="uk-margin">
                 <label class="uk-form-label" for="theme-front">{{ mocha.i18n.get('front_theme') }}</label>
                 <div class="uk-form-controls">
                     <select id="theme-front" name="theme_front" class="uk-select uk-width-1-4">
@@ -97,7 +97,7 @@
                 </div>
             </div>
 
-            <div class="uk-form-row">
+            <div class="uk-margin">
                 <label class="uk-form-label" for="theme-admin">{{ mocha.i18n.get('admin_theme') }}</label>
                 <div class="uk-form-controls">
                     <select id="theme-admin" name="theme_admin" class="uk-select uk-width-1-4">
@@ -109,57 +109,6 @@
             </div>
         </fieldset>
 
-        <fieldset class="uk-fieldset">
-            <legend class="uk-legend">{{ mocha.i18n.get('watermark') }}</legend>
-
-            <div class="uk-form-row">
-                <label class="uk-form-label">{{ mocha.i18n.get('status') }}</label>
-                <div class="uk-form-controls">
-                    <div class="uk-button-group uk-button-radio">
-                        <input type="radio" id="watermark-status-1" name="watermark" value="1" {{ form.watermark ? 'checked' }} hidden>
-                        <label for="watermark-status-1" class="uk-button uk-button-small uk-button-default uk-button-active-success">{{ mocha.i18n.get('enabled') }}</label>
-
-                        <input type="radio" id="watermark-status-0" name="watermark" value="0"{{ not form.watermark ? 'checked' }} hidden>
-                        <label for="watermark-status-0" class="uk-button uk-button-small uk-button-default uk-button-active-danger">{{ mocha.i18n.get('disabled') }}</label>
-                    </div>
-                </div>
-            </div>
-            <div class="uk-form-row">
-                <label class="uk-form-label">{{ mocha.i18n.get('image') }}</label>
-                <div class="uk-form-controls">
-                    <div data-dc-mediamanager>
-                        <div class="uk-thumbnail">
-                            <div class="transparent">
-                                <img src="{{ form.watermark_thumb }}" alt="{{ form.watermark_image }}" title="{{ form.watermark_image }}">
-                            </div>
-                        </div>
-                        <input type="hidden" name="watermark_image" value="{{ form.watermark_image }}">
-                    </div>
-                </div>
-            </div>
-            <div class="uk-form-row">
-                <label class="uk-form-label" for="watermark-position">{{ mocha.i18n.get('position') }}</label>
-                <div class="uk-form-controls">
-                    <select id="watermark-position" name="watermark_position" class="uk-select uk-width-200">
-                        <option value="center">{{ mocha.i18n.get('center') }}</option>
-                        <option value="top-left">{{ mocha.i18n.get('top_left') }}</option>
-                        <option value="top-center">{{ mocha.i18n.get('top_center') }}</option>
-                        <option value="top-right">{{ mocha.i18n.get('top_right') }}</option>
-                        <option value="bottom-left">{{ mocha.i18n.get('bottom_left') }}</option>
-                        <option value="bottom-center">{{ mocha.i18n.get('bottom_center') }}</option>
-                        <option value="bottom-right">{{ mocha.i18n.get('bottom_right') }}</option>
-                    </select>
-                </div>
-            </div>
-            <div class="uk-form-row">
-                <label class="uk-form-label" for="watermark-opacity">{{ mocha.i18n.get('opacity') }}</label>
-                <div class="uk-form-controls">
-                    <input type="number" step="0.1" min="0" max="1" id="watermark-opacity" name="watermark_opacity" class="uk-input uk-width-75" value="{{ form.watermark_opacity }}">
-                </div>
-            </div>
-        </fieldset>
-
     </form>
 </div>
-
 {% endblock %}

@@ -119,8 +119,8 @@ class Init extends \Mocha\Controller
             $this->session->flash->set('error_csrf', $this->language->get('error_csrf'));
 
             // Play it hard, remove all post after backup
-            $this->request->attributes->add('request_post', $this->request->post->all());
-            $this->request->post->replace([]);
+            // $this->request->attributes->add('request_post', $this->request->post->all());
+            // $this->request->post->replace([]);
         }
     }
 

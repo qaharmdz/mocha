@@ -1,0 +1,52 @@
+{% extends 'storage/twig/parent/layout_tab.twig' %}
+
+{% block page_content_bottom %}
+<script>
+$(document).ready(function()
+{
+    //=== Save
+    var settingForm = $('#setting-form');
+
+    $('#js-action-save').on('click', function() {
+        settingForm.ajaxSubmit({
+            dataType    : 'json',
+            beforeSend  : function(data) {
+                $('input, select, textarea').removeClass('uk-form-danger');
+                $('.uk-text-help.uk-text-danger').remove();
+
+                $.fn.mocha.notify({
+                    message : mocha.i18n.saving,
+                    timeout : 120000
+                });
+            },
+            success     : function(data) {
+                $.fn.mocha.notify({
+                    message : data.message ? data.message : mocha.i18n.success_save,
+                    icon    : '<span uk-icon=\'icon:check;ratio:1.5\'></span>',
+                    status  : 'success'
+                });
+            },
+            error       : function(xhr) {
+                /*
+                $.each(xhr.responseJSON, function(key, error) {
+                    if (error.element) {
+                        $(settingForm[0][error.element]).addClass('uk-form-danger');
+
+                        if (error.message) {
+                            $(settingForm[0][error.element]).closest('.uk-form-controls').append('<div class="uk-text-help uk-text-danger uk-margin-mini-top">' + error.message + '</div>');
+                        }
+                    }
+                });
+
+                $.fn.mocha.notify({
+                    message : xhr.responseJSON.notify ? xhr.responseJSON.notify : mocha.i18n.error_form,
+                    icon    : 'fa fa-exclamation',
+                    status  : 'danger'
+                });
+                 */
+            }
+        });
+    });
+});
+</script>
+{% endblock %}
