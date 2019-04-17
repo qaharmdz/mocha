@@ -28,7 +28,7 @@ class Error extends \Mocha\Controller
             ->setContent($this->tool->render('error', [
                 'title'    => '404 Not Found!',
                 'subtitle' => 'Unable to find the controller for path "' . $this->request->attributes->get('_controller') . '".',
-                'content'  => 'Lorem ipsum dolor sit amet, consectetur adipisicing elit.'
+                'content'  => ''
             ]));
     }
 

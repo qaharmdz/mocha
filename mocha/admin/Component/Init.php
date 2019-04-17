@@ -24,7 +24,7 @@ class Init extends \Mocha\Controller
         // === Document
 
         $this->document->addNode('class_html', ['theme-' . $this->config->get('setting.site.theme_front')]);
-        $this->document->addNode('breadcrumb', [['Home', $this->router->url('home')]]);
+        $this->document->addNode('breadcrumbs', [['Home', $this->router->url('home')]]);
 
         $this->presenter->param->add(
             $this->event->trigger(
@@ -66,7 +66,7 @@ class Init extends \Mocha\Controller
             return $this->event->trigger('init.component.output', [], $component->getOutput())->getOutput();
         }
 
-        // _route_path solved inside event middleware
+        // Forwarding after login
         if (!$this->request->is('ajax')) {
             $this->session->set('admin_login_forward', $this->router->url($this->request->attributes->get('_route_path', 'home')));
         }
@@ -89,7 +89,6 @@ class Init extends \Mocha\Controller
          */
 
         // === Presenter
-
         $template = $this->document->getNode('template_base', 'index');
 
         return $this->response

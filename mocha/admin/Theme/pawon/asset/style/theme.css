@@ -1,10 +1,14 @@
 html {
-    background: #f2f4f7;
+    background: #f2f2f2;
     min-width: 360px;
 }
 body {
     min-height: 100vh;
 }
+
+/* Sketsa override
+======================================================================== */
+
 /*.uk-container {
     padding-left: 30px;
     padding-right: 30px;
@@ -12,6 +16,26 @@ body {
 .uk-container-large {
     max-width: 1400px;
 }
+
+@media (min-width: 960px) {
+    .uk-breadcrumb {
+        margin-bottom: 20px;
+    }
+}
+
+.uk-nav-header {
+    font-size: 1.3em;
+}
+.uk-alert { /* Fix float inside alert */
+    overflow: hidden;
+}
+
+/* TODO: add to sketsa */
+.uk-divider-line {
+    border-top: 1px solid #d4d4d4;
+    border-bottom: 5px solid #f3f3f3;
+}
+
 
 /* Specific Page
 ======================================================================== */
@@ -99,7 +123,7 @@ body {
 ==================================== */
 
 .block-navbar .navbar-commander-icon {
-    color: rgba(255, 255, 255, .85);
+    color: rgba(255, 255, 255, .75);
     padding: 0 20px;
     background-color: rgba(0, 0, 0, 0.15);
 }
@@ -201,13 +225,13 @@ body {
 ======================================================================== */
 
 .block-top {
-    padding: 1px 0 2px;
-    background: #e8e9ea;
-    background: #e4e6e9;
-    border-bottom: 1px solid #d4d4d4;
+    font-size: 13px;
 }
-.block-top-space {
-    margin-top: 30px
+.block-top .uk-breadcrumb {
+    margin: 5px 0 25px;
+}
+.block-top .uk-breadcrumb > * > a {
+    font-size: 12px;
 }
 
 
@@ -224,39 +248,6 @@ body {
     padding:40px 0 50px;
     background: transparent;
 }
-
-
-/* Layout
-======================================================================== */
-
-/* Layout tab
-==================================== */
-.layout-tab .block-content {
-    background: #fff;
-    padding-bottom: 50px;
-    border-bottom: 1px solid #d4d4d4;
-}
-
-.layout-tab .page-top {
-    background: #f2f4f7; /* match html background */
-    padding-top: 30px;
-    margin-bottom: 30px;
-    border-bottom: 1px solid #d4d4d4;
-}
-.layout-tab .page-top .uk-tab {
-    margin-top: -40px; /* -25px; */
-    margin-bottom: -1px;
-}
-.layout-tab .page-top .uk-tab>* {
-    padding-left: 10px;
-}
-.layout-tab .page-top .uk-tab>*>a {
-    height: 24px;
-    font-size: 1rem;
-    padding: 12px 15px;
-}
-
-.layout-tab .page-content {}
 
 
 /* Misc

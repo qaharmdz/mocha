@@ -102,7 +102,9 @@ class Primary extends \Mocha\Controller
             // TODO: wrap in event
             $abstractor = explode('.', $path);
 
-            return $this->bags->get('abstractor.' . $abstractor[0])->{$abstractor[1]}(...$param);
+            if ($this->bags->has('abstractor.' . $abstractor[0])) {
+                return $this->bags->get('abstractor.' . $abstractor[0])->{$abstractor[1]}(...$param);
+            }
         }
     }
 

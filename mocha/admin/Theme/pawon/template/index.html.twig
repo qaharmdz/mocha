@@ -32,14 +32,9 @@ var mocha = {
     'version'   : '{{ mocha.version }}',
     'theme'     : {{ mocha.theme|json_encode() }},
     // 'setting'   : {{ mocha.config.get('setting')|json_encode() }},
-    'i18n'      : {{ mocha.i18n.all()|json_encode() }},
+    'i18n'      : {{ mocha.i18n.load('general')|json_encode() }},
 };
 console.log(mocha);
-$.ajaxSetup({
-    headers: {
-        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-    }
-});
 </script>
 {% endblock head %}
 </head>
@@ -178,6 +173,7 @@ $.ajaxSetup({
                     </a>
                     <div uk-dropdown="mode:click; offset:0; pos:bottom-right; animation:uk-animation-slide-bottom-small;">
                         <ul class="uk-nav uk-dropdown-nav">
+                            <li><a href="#">TODO: Change to shortcut</a></li>
                             <li><a href="#">New Content Post</a></li>
                             <li><a href="#">New Content Category</a></li>
                         </ul>
@@ -207,11 +203,11 @@ $.ajaxSetup({
 {% endblock navbar %}
 
 {% block top %}
-<div id="block-top" class="block-top uk-hidden-">
+<div id="block-top" class="block-top">
     <div class="uk-container uk-container-large">
-        {% set breadcrumbs = mocha.document.getNode('breadcrumb') %}
+        {% set breadcrumbs = mocha.document.getNode('breadcrumbs') %}
         {% if breadcrumbs %}
-            <ul class="uk-breadcrumb uk-margin-remove">
+            <ul class="uk-breadcrumb">
                 {% for breadcrumb in breadcrumbs %}
                     {% if breadcrumb.1 is defined %}
                         <li><a href="{{ breadcrumb.1 }}">{{ breadcrumb.0 }}</a></li>
@@ -227,7 +223,16 @@ $.ajaxSetup({
 
 {% block content %}
 <div id="block-content" class="block-content">
-    {{ component }}
+    <div class="uk-container uk-container-large">
+        {% for alert in mocha.document.getNode('alerts') %}
+            <div class="uk-alert-{{ alert.0 }}" uk-alert>
+                <a class="uk-alert-close" uk-close></a>
+                <p>{{ alert.1 }}</p>
+            </div>
+        {% endfor %}
+
+        {{ component }}
+    </div>
 </div>
 {% endblock content %}
 

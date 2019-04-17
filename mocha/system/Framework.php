@@ -179,6 +179,7 @@ class Framework
          */
 
         // ====== Symlinks public assets
+        // TODO: do not use symlinks, think a way to use actual folder
         if ($this->config->getBoolean('system.symlink.status', true)) {
             $symlinks = $this->config->get('system.symlink.path', [
                 $this->config->get('system.path.storage') . 'image' => PATH_PUBLIC . '_image',      // Uploaded image
