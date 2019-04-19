@@ -21,7 +21,8 @@
         "nesbot/carbon": "^2.5",
         "claviska/simpleimage": "^3.3",
         "phpfastcache/phpfastcache": "^7.0",
-        "joshcam/mysqli-database-class": "^2.9"
+        "joshcam/mysqli-database-class": "^2.9",
+        "respect/validation": "^1.1"
     },
     "require-dev": {
         "kint-php/kint": "^3.0",
