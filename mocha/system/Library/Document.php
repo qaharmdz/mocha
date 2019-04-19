@@ -95,12 +95,12 @@ class Document
             foreach ($this->data['asset'][$name] as $type => $assets) {
                 if ($type == 'style') {
                     foreach ($assets as $asset) {
-                        $this->setStyle($asset);
+                        $this->addStyle($asset);
                     }
                 }
                 if ($type == 'script') {
                     foreach ($assets as $asset) {
-                        $this->setScript($asset);
+                        $this->addScript($asset);
                     }
                 }
             }

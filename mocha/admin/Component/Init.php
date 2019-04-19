@@ -21,8 +21,10 @@ class Init extends \Mocha\Controller
             return $response->getOutput();
         }
 
+        $this->registerAsset(); // TODO: change to plugin init.start
+
         $data = $this->event->trigger('init.start', $data)->getData();
-        // TODO: plugin from url alias to route $this->request->setPathInfo('/home/test'); // sample to manipulate requested component
+        // TODO: plugin from url alias to route $this->request->setPathInfo('/home/view/form'); // sample to manipulate requested component
 
         // === Document
         $this->document->addNode('class_html', ['theme-' . $this->config->get('setting.site.theme_front')]);
@@ -176,4 +178,86 @@ class Init extends \Mocha\Controller
 
     }
 
+    private function registerAsset()
+    {
+        $this->document->addAsset('form', [
+            'script'    => [
+                $this->config->get('setting.url_site') . '_asset/script/form/form.min.js'
+            ]
+        ]);
+        /*
+        $this->document->addAsset('cookie', [
+            'script'    => [
+                $this->config->get('setting.url_site') . '_asset/script/cookie/cookie.min.js'
+            ]
+        ]);
+        $this->document->addAsset('datepicker', [
+            'script'    => [
+                $this->config->get('setting.url_site') . '_asset/script/jquery-ui/ui.core.min.js',
+                $this->config->get('setting.url_site') . '_asset/script/jquery-ui/datepicker.min.js'
+            ]
+        ]);
+        $this->document->addAsset('datetimepicker', [
+            'script'    => [
+                $this->config->get('setting.url_site') . '_asset/script/jquery-ui/ui.core.min.js',
+                $this->config->get('setting.url_site') . '_asset/script/jquery-ui/datepicker.min.js',
+                $this->config->get('setting.url_site') . '_asset/script/jquery-ui/addons/timepicker.min.js'
+            ]
+        ]);
+        $this->document->addAsset('ui-sortable', [
+            'script'    => [
+                $this->config->get('setting.url_site') . '_asset/script/jquery-ui/ui.core.min.js',
+                $this->config->get('setting.url_site') . '_asset/script/jquery-ui/widget.min.js',
+                $this->config->get('setting.url_site') . '_asset/script/jquery-ui/mouse.min.js',
+                $this->config->get('setting.url_site') . '_asset/script/jquery-ui/sortable.min.js',
+            ]
+        ]);
+        $this->document->addAsset('datatables', [
+            'script'    => [
+                $this->config->get('setting.url_site') . '_asset/script/datatables/dataTables.min.js',
+                $this->config->get('setting.url_site') . '_asset/script/datatables/dataTables.columnFilter.min.js',
+                $this->config->get('setting.url_site') . '_asset/script/datatables/dataTables.colVis.min.js',
+                $this->config->get('setting.url_site') . '_asset/script/dataTables.config.min.js',
+                $this->config->get('setting.url_site') . '_asset/script/typewatch/typewatch.min.js'
+            ]
+        ]);
+        $this->document->addAsset('ckeditor', [
+            'script'    => [
+                $this->config->get('setting.url_site') . '_asset/script/ckeditor.config.min.js',
+                $this->config->get('setting.url_site') . '_asset/script/ckeditor/ckeditor.js'
+            ]
+        ]);
+        $this->document->addAsset('select2', [
+            'style'     => [
+                $this->config->get('setting.url_site') . '_asset/script/select2/select2.min.css'
+            ],
+            'script'    => [
+                $this->config->get('setting.url_site') . '_asset/script/select2/select2.min.js'
+            ]
+        ]);
+        $this->document->addAsset('slugify', [
+            'script'    => [
+                $this->config->get('setting.url_site') . '_asset/script/speakingurl/speakingurl.min.js'
+            ]
+        ]);
+        $this->document->addAsset('simplyCountable', [
+            'script'    => [
+                $this->config->get('setting.url_site') . '_asset/script/simplyCountable/simplyCountable.min.js'
+            ]
+        ]);
+        $this->document->addAsset('jstree', [
+            'style'     => [
+                $this->config->get('setting.url_site') . '_asset/script/jstree/themes/style.min.css'
+            ],
+            'script'    => [
+                $this->config->get('setting.url_site') . '_asset/script/jstree/jstree.min.js'
+            ]
+        ]);
+        $this->document->addAsset('dropzone', [
+            'script'    => [
+                $this->config->get('setting.url_site') . '_asset/script/dropzone/dropzone.min.js'
+            ]
+        ]);
+         */
+    }
 }
