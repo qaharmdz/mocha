@@ -156,7 +156,7 @@ class Date
      *
      * @return string
      */
-    public function shiftUsertoUTC(string $datetime, array $options = null)
+    public function shiftToUTC(string $datetime, array $options = null)
     {
         $param = array_merge(
             [

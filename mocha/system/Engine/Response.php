@@ -67,7 +67,13 @@ class Response extends HttpFoundation\Response
      * 301 Permanently redirect from old url to new url.
      * 302 Forwarding to new url (temporary redirect).
      * 303 In response to a POST, redirect to new url with GET method. Redirect after form submission.
+     * 400 Bad request
      * 401 Unauthorized access
+     * 403 Forbidden, in response to permission issue
+     * 404 Not Found
+     * 412 Precondition failed
+     * 422 Unprocessable entity, in response to form validation
+     * 500 Internal server error
      *
      * @param  string $url     The URL should be a full URL, with schema etc.
      * @param  int    $status  The status code (302 by default).

@@ -15,16 +15,20 @@ class Init extends \Mocha\Controller
 {
     public function index($data = [])
     {
-        $this->verifyAccess();
-        $this->verifyPermission();
+        $response = $this->verifyAccess();
+
+        if ($response && $response->hasOutput()) {
+            return $response->getOutput();
+        }
 
         $data = $this->event->trigger('init.start', $data)->getData();
         // TODO: plugin from url alias to route $this->request->setPathInfo('/home/test'); // sample to manipulate requested component
 
         // === Document
-
         $this->document->addNode('class_html', ['theme-' . $this->config->get('setting.site.theme_front')]);
         $this->document->addNode('breadcrumbs', [['Home', $this->router->url('home')]]);
+
+        $this->document->applyAsset('form');
 
         $this->presenter->param->add(
             $this->event->trigger(
@@ -48,7 +52,6 @@ class Init extends \Mocha\Controller
         // d($this->presenter->param->get('global'));
 
         // === Component
-
         /**
          * Component event middleware
          *
@@ -57,6 +60,7 @@ class Init extends \Mocha\Controller
          *
          * @return \Mocha\System\Engine\Response $component
          */
+        // TODO: middleware "kernel.controller_arguments" to auto check view permission; change the component to error and pass new args
         $component = $this->event->trigger('init.component', [], $this->dispatcher->handle($this->request))->getOutput();
 
         if ($component->hasOutput()) {
@@ -66,19 +70,22 @@ class Init extends \Mocha\Controller
             return $this->event->trigger('init.component.output', [], $component->getOutput())->getOutput();
         }
 
-        // Forwarding after login
-        if (!$this->request->is('ajax')) {
-            $this->session->set('admin_login_forward', $this->router->url($this->request->attributes->get('_route_path', 'home')));
-        }
+        $data['component'] = $component->hasContent() ? $component->getContent() : 'Content is not available.';
+
+        // ===
 
         $this->document->setTitle(' | Mocha', 'suffix');
 
-        $data['component'] = $component->hasContent() ? $component->getContent() : 'Content is not available.';
+        // Forwarding after login
+        if (!$this->request->is('ajax')) {
+            $this->session->set('last_route', $this->router->url($this->request->query->get('route', 'home')));
+        }
 
         // === Block Layouts
-
         // Direct access controller, without event middleware
         /*
+        d($this->config->all());
+        d($this->event);
         TODO: at parent controller
             - $this->controller() load controller
             - $this->model(name, object) register model
@@ -96,7 +103,7 @@ class Init extends \Mocha\Controller
             ->setContent($this->tool->render(
                 $template,
                 $data,
-                'init.' . $template
+                'init.render.' . $template
             ));
     }
 
@@ -104,25 +111,69 @@ class Init extends \Mocha\Controller
     {
         $this->user->logout();
 
+        if ($this->request->is('ajax')) {
+            return $this->response->jsonOutput(['redirect' => $this->router->url()], 401);
+        }
+
         return $this->response->redirect($this->router->url());
     }
 
     protected function verifyAccess()
     {
-        if (!$this->user->isLogged()) {
-            $this->logout();
+        // Login page
+        if ($this->request->getPathInfo() === '/') {
+            return;
         }
 
-        // Validate all post must have csrf
+        switch (true) {
+            case !$this->user->isLogged():
+                $this->session->flash->set('alert_login', true);
+                return $this->logout();
+                break;
+
+            // All $_POST must have csrf
+            case $this->request->is('post') && !$this->tool_secure->csrfValidate():
+                if ($this->request->is('ajax')) {
+                    return $this->response->jsonOutput(['message' => $this->language->get('error_csrf')], 403);
+                }
+
+                $this->document->addNode('alerts', [
+                    ['warning', $this->language->get('error_csrf')],
+                ]);
+
+                return $this->response->redirect($this->session->get('last_route', $this->router->url('home')), 403);
+
+            // Force logout if last activity more than 'x' minute
+            case (time() - $this->session->get('user_activity')) > (60 * $this->config->get('setting.server.login_session', 120)):
+                $this->session->flash->set('alert_inactivity', 1);
+                return $this->logout();
+                break;
+
+            default:
+                // Prevent session fixation. Renew session id per 30 minute
+                if ((time() - $this->session->get('user_activity')) > (60 * 30)) {
+                    $this->session->migrate();
+                }
+
+                $this->session->set('user_activity', time());
+                break;
+        }
+
+        /*
+        // All $_POST must have csrf
         if ($this->request->is('post') && !$this->tool_secure->csrfValidate()) {
-            $this->session->flash->set('error_csrf', $this->language->get('error_csrf'));
+            if ($this->request->is('ajax')) {
+                return $this->response->jsonOutput(['message' => $this->language->get('error_csrf')], 403);
+            }
 
-            // Play it hard, remove all post after backup
-            // $this->request->attributes->add('request_post', $this->request->post->all());
-            // $this->request->post->replace([]);
+            $this->document->addNode('alerts', [
+                ['warning', $this->language->get('error_csrf')],
+            ]);
+
+            return $this->response->redirect($this->session->get('last_route', $this->router->url('home')), 403);
         }
+         */
+
     }
 
-    protected function verifyPermission()
-    {}
 }

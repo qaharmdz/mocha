@@ -272,7 +272,7 @@ class Framework
         if (!$this->container['session']->has('user_token')) {
             $this->container['session']->set(
                 'user_token',
-                $this->container['secure']->generateCode('hash', rand(16, 32))
+                $this->container['secure']->generateCode('hash', rand(12, 24))
             );
         }
 

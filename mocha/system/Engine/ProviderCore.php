@@ -21,8 +21,6 @@ class ProviderCore implements ServiceProviderInterface
 {
     public function register(Container $container)
     {
-        // TODO: change . with _
-
         // === Request
         $container['request_stack'] = function ($c) {
             return new HttpFoundation\RequestStack();

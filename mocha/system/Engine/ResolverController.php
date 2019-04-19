@@ -61,7 +61,7 @@ class ResolverController extends ControllerResolver
         if (!is_callable($request->attributes->get('_controller'))) {
             if (false !== $controller = $this->resolve($request->attributes->get('_controller'), $request->attributes->get('_route_params'))) {
                 $request->attributes->set('_controller', [new $controller['class'], $controller['method']]);
-                $request->attributes->set('_route_path', $controller['path']);
+                $request->query->set('route', $controller['path']);
                 $request->query->add($controller['arguments']);
             } else {
                 return false;
@@ -76,13 +76,13 @@ class ResolverController extends ControllerResolver
      *
      * @param  string $path
      * @param  array  $params
-     * @param  string $namespace
+     * @param  string $extension
      *
      * @return array|false
      */
-    public function resolve(string $path, array $params = [], string $namespace = 'component')
+    public function resolve(string $path, array $params = [], string $extension = 'component')
     {
-        $namespace = $this->param->get('namespace.' . $namespace);
+        $namespace = $this->param->get('namespace.' . $extension);
         $segments  = explode('/', trim($path, '/'));
 
         if (empty($segments[0])) {
@@ -102,7 +102,7 @@ class ResolverController extends ControllerResolver
                 'arguments' => $arguments
             ];
         } catch (\Exception $e) {
-            $this->log->warning($e->getMessage() . ' in ' . $e->getFile() . ' on line ' . $e->getLine());
+            $this->log->critical($e->getMessage() . ' in ' . $e->getFile() . ' on line ' . $e->getLine());
 
             return false;
         }
@@ -117,7 +117,7 @@ class ResolverController extends ControllerResolver
      */
     protected function resolveClass($path, $namespace, &$segments)
     {
-        $folder  = $classname  = ucwords(array_shift($segments));
+        $folder  = $classname = ucwords(array_shift($segments));
         $parts   = $_parts = [rtrim($namespace, '\\'), $folder, 'Controller', $classname];
         $segment = !empty($segments[0]) ? $segments[0] : '';
 

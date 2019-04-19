@@ -26,10 +26,7 @@ class Login extends \Mocha\Controller
 
         // === POST
         if ($this->request->is('post') && $this->validateForm()) {
-            return $this->response->redirect(
-                $this->session->get('admin_login_forward', $this->router->url('home')),
-                303
-            );
+            return $this->response->redirect($this->session->get('last_route', $this->router->url('home')), 303);
         }
 
         // === Alert
@@ -53,7 +50,6 @@ class Login extends \Mocha\Controller
         }
 
         // === Content
-
         $data['email']          = $this->request->post->get('email', '');
         $data['password']       = $this->request->post->get('password', '');
 
@@ -73,7 +69,7 @@ class Login extends \Mocha\Controller
             $this->error['alert_warning'] = $this->language->get('alert_mail_pass');
         }
 
-        if (empty($this->error) && !$this->user->hasAccess('backend')) {
+        if (empty($this->error) && !$this->user->hasPermission('backend')) {
             $this->error['alert_danger'] = $this->language->get('alert_backend_access');
         }
 

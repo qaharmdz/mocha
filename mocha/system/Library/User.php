@@ -123,7 +123,7 @@ class User
         ];
     }
 
-    public function hasAccess(string $access, string $route = '')
+    public function hasPermission(string $access, string $route = '')
     {
         $valid = $this->isSuperAdmin();
 
@@ -146,13 +146,13 @@ class User
             $this->get('email'),
             $this->get('created'),
 
-            // User environment
-            $this->getIp(),
+            // User session
+            $this->session->get('user_token'),
+
+            // Environment
+            $_SERVER['SERVER_SOFTWARE'],
             $_SERVER['HTTP_USER_AGENT'],
             $_SERVER['HTTP_ACCEPT_LANGUAGE'],
-
-            // User session
-            $this->session->get('user_token')
         ]));
     }
 
