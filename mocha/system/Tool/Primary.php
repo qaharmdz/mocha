@@ -55,25 +55,26 @@ class Primary extends \Mocha\Controller
      * @param  string $path
      * @param  array  $args
      * @param  string $extension
+     * @param  string $eventName
      *
      * @return mixed
      */
-    public function controller(string $path, array $args = [], string $eventName = null, string $extension = 'module')
+    public function controller(string $path, array $args = [], string $extension = 'component', string $eventName = '')
     {
-        $eventName = $eventName ?: $path;
+        $eventName = $eventName ?: $extension . '.' . $path;
 
         // Resolver
-        $controller = $this->resolver_controller->resolve($path, $args);
+        $controller = $this->resolver_controller->resolve($path, $args, $extension);
 
         /**
          * Event to manipulate arguments.
          *
          * @return \Mocha\System\Engine\EventBag $arguments
          */
-        $arguments = $this->event->trigger($eventName . '/before', $controller['arguments']);
+        $arguments = $this->event->trigger($eventName . '.before', $controller['arguments']);
 
         /**
-         * Dispatch module to get response.
+         * Dispatch to get response.
          *
          * @return \Mocha\System\Engine\Response $response
          */
@@ -83,7 +84,7 @@ class Primary extends \Mocha\Controller
         /**
          * This event allows you to modify or replace the content that will be replied.
          */
-        return $this->event->trigger($eventName . '/after', ['_response' => $response]);
+        return $this->event->trigger($eventName . '.after', ['_response' => $response]);
     }
 
     /**
@@ -119,12 +120,12 @@ class Primary extends \Mocha\Controller
      */
     public function render(string $template, array $vars = [], string $eventName = '')
     {
-        $eventName = ($eventName ?: $template) . '/render';
+        $eventName = ($eventName ?: $template) . '.render';
 
         // Event to manipulate twig variables
-        $data = $this->event->trigger($eventName . '/before', $vars)->getData();
+        $data = $this->event->trigger($eventName . '.before', $vars)->getData();
 
         // Event to manipulate render result
-        return $this->event->trigger($eventName . '/after', [], $this->presenter->render($template, $data))->getOutput();
+        return $this->event->trigger($eventName . '.after', [], $this->presenter->render($template, $data))->getOutput();
     }
 }
