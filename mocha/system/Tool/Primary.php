@@ -129,14 +129,29 @@ class Primary extends \Mocha\Controller
         return $this->event->trigger($eventName . '.after', [], $this->presenter->render($template, $data))->getOutput();
     }
 
-    public function errorAjax(string $message, int $status = 403)
+    /**
+     * Helper to throw error; catch by $.ajaxError at theme.js
+     *
+     * @param  string  $message
+     * @param  integer $status
+     *
+     * @return \Mocha\System\Engine\Response
+     */
+    public function errorAjax(string $message, integer $status = 403)
     {
         return $this->response->jsonOutput(['message' => $message], $status);
     }
 
+    /**
+     * Helper to throw "view" permission issue
+     *
+     * @param  string $message
+     *
+     * @return \Mocha\System\Engine\Response
+     */
     public function errorPermission(string $message)
     {
-        $this->document->setTitle($exception->getStatusCode() . ' Oops!');
+        $this->document->setTitle('403 Forbidden!');
         $this->document->addNode('class_body', ['page-error page-403']);
 
         return $this->response
@@ -144,7 +159,6 @@ class Primary extends \Mocha\Controller
             ->setContent(
                 '<h1>403 Forbidden!</h1>' .
                 '<p>' . ($message ?: 'You not have permission to access!') . '</p>'
-            )
-            ->setOutput();
+            );
     }
 }

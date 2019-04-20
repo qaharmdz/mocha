@@ -11,8 +11,20 @@
 
 namespace Mocha\Admin\Component;
 
+/**
+ * Application error handler
+ *
+ * @see  \Mocha\System\Framework  $config.system.controller.error
+ */
 class Error extends \Mocha\Controller
 {
+    /**
+     * @see    \Symfony\Component\HttpKernel\EventListener\ExceptionListener
+     *
+     * @param  \Exception $exception
+     *
+     * @return \Mocha\System\Engine\Response
+     */
     public function index($exception)
     {
         return $exception->getStatusCode() === 404 ? $this->notFound($exception) : $this->serviceError($exception);

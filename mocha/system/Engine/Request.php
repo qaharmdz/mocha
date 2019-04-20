@@ -95,9 +95,9 @@ class Request extends HttpFoundation\Request
     }
 
     /**
-     * General checker.
+     * Check request type
      *
-     * @param  mixed $check
+     * @param  string|array $check
      *
      * @return boolean
      */
