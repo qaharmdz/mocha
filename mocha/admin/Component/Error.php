@@ -15,7 +15,7 @@ class Error extends \Mocha\Controller
 {
     public function index($exception)
     {
-        return $exception->getStatusCode() == 404 ? $this->notFound($exception) : $this->serviceError($exception);
+        return $exception->getStatusCode() === 404 ? $this->notFound($exception) : $this->serviceError($exception);
     }
 
     protected function notFound($exception)

@@ -128,4 +128,23 @@ class Primary extends \Mocha\Controller
         // Event to manipulate render result
         return $this->event->trigger($eventName . '.after', [], $this->presenter->render($template, $data))->getOutput();
     }
+
+    public function errorAjax(string $message, int $status = 403)
+    {
+        return $this->response->jsonOutput(['message' => $message], $status);
+    }
+
+    public function errorPermission(string $message)
+    {
+        $this->document->setTitle($exception->getStatusCode() . ' Oops!');
+        $this->document->addNode('class_body', ['page-error page-403']);
+
+        return $this->response
+            ->setStatusCode(403)
+            ->setContent(
+                '<h1>403 Forbidden!</h1>' .
+                '<p>' . ($message ?: 'You not have permission to access!') . '</p>'
+            )
+            ->setOutput();
+    }
 }

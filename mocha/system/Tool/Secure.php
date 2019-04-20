@@ -50,19 +50,6 @@ class Secure extends \Mocha\Controller
         return htmlspecialchars($data, ENT_QUOTES, $charset);
     }
 
-    /**
-     * An alias to generate 'random' code.
-     *
-     * @param  string      $type
-     * @param  int|integer $length
-     *
-     * @return string
-     */
-    public function generateCode(string $type = 'alnum', int $length = 16)
-    {
-        return $this->secure->generateCode($type, $length);
-    }
-
     public function csrfToken()
     {
         return $this->user->fingerprint();
