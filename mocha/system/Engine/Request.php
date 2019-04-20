@@ -97,13 +97,23 @@ class Request extends HttpFoundation\Request
     /**
      * General checker.
      *
-     * @param  string $check
+     * @param  mixed $check
      *
      * @return boolean
      */
-    public function is(string $check)
+    public function is($type)
     {
-        switch (strtolower($check)) {
+        if (is_array($type)) {
+            $valid = true;
+            foreach ($type as $check) {
+                $valid = $this->is($check);
+                if (!$valid) { break; }
+            }
+
+            return $valid;
+        }
+
+        switch (strtolower($type)) {
             case 'post':
                 return $this->getMethod() == 'POST';
 
