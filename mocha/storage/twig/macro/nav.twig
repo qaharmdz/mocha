@@ -1,0 +1,44 @@
+{#
+ * Table of Content
+ * - dropdown
+ * - navside
+ *
+#}
+
+{% macro dropdown(navigations) %}
+    <ul class="uk-nav uk-dropdown-nav">
+        {% for navigation in navigations %}
+            {% if navigation.type == 'header' %}
+                <li class="uk-nav-header">{{ navigation.title }}</li>
+            {% elseif navigation.type == 'separator' %}
+                <li class="uk-nav-divider"></li>
+            {% else %}
+                <li class="{{ navigation.active ? 'uk-active' }}">
+                    <a href="{{ navigation.url }}" {{ navigation.type == 'out' ? 'target="_blank"' }}>
+                        {% if navigation.icon %}<i class="{{ navigation.icon }}"></i>{% endif %}
+                        {{ navigation.title }}
+                    </a>
+                </li>
+            {% endif %}
+        {% endfor %}
+    </ul>
+{% endmacro %}
+
+{% macro default(navigations) %}
+    <ul class="uk-nav uk-nav-default">
+        {% for navigation in navigations %}
+            {% if navigation.type == 'header' %}
+                <li class="uk-nav-header">{{ navigation.title }}</li>
+            {% elseif navigation.type == 'separator' %}
+                <li class="uk-nav-divider"></li>
+            {% else %}
+                <li class="{{ navigation.active ? 'uk-active' }}">
+                    <a href="{{ navigation.url }}" {{ navigation.type == 'out' ? 'target="_blank"' }}>
+                        {% if navigation.icon %}<i class="{{ navigation.icon }}"></i>{% endif %}
+                        {{ navigation.title }}
+                    </a>
+                </li>
+            {% endif %}
+        {% endfor %}
+    </ul>
+{% endmacro %}

@@ -56,6 +56,22 @@ class Document
         return $this->data['meta'] ?? [];
     }
 
+    public function addLink(string $rel, string $href, string $hreflang = '', string $type = '', string $media = '')
+    {
+        $this->data['link'][] = [
+            'rel'       => $rel,
+            'href'      => $href,
+            'hreflang'  => $hreflang,
+            'type'      => $type,
+            'media'     => $media
+        ];
+    }
+
+    public function getLink()
+    {
+        return $this->data['link'] ?? [];
+    }
+
     public function addStyle(string $href, $media = 'all')
     {
         $this->data['style'][$href] = [
@@ -81,7 +97,13 @@ class Document
 
     public function addAsset(string $name, array $asset)
     {
-        $this->data['asset'][$name] = $asset;
+        $default = [
+            'version' => '',
+            'script'  => [],
+            'style'   => []
+        ];
+
+        $this->data['asset'][$name] = array_replace_recursive($default, $asset);
     }
 
     public function getAsset(string $name)
@@ -92,36 +114,32 @@ class Document
     public function applyAsset(string $name)
     {
         if (!empty($this->data['asset'][$name])) {
+            $version = '';
+
             foreach ($this->data['asset'][$name] as $type => $assets) {
+                if (!$version) {
+                    $version = !empty($this->data['assetVersion']) ? $this->data['assetVersion'] : ($type == 'version' ? '?v=' . $assets : '');
+                }
+
                 if ($type == 'style') {
                     foreach ($assets as $asset) {
-                        $this->addStyle($asset);
+                        $this->addStyle($asset . $version);
                     }
                 }
                 if ($type == 'script') {
                     foreach ($assets as $asset) {
-                        $this->addScript($asset);
+                        $this->addScript($asset . $version);
                     }
                 }
             }
         }
     }
 
-    public function addLink(string $rel, string $href, string $hreflang = '', string $type = '', string $media = '')
+    public function assetVersion(string $version)
     {
-        $this->data['link'][] = [
-            'rel'       => $rel,
-            'href'      => $href,
-            'hreflang'  => $hreflang,
-            'type'      => $type,
-            'media'     => $media
-        ];
+        $this->data['assetVersion'] = '?v=' . $version;
     }
 
-    public function getLink()
-    {
-        return $this->data['link'] ?? [];
-    }
 
     /**
      * Node is general purpose storage.

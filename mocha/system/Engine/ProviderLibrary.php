@@ -28,7 +28,7 @@ class ProviderLibrary implements ServiceProviderInterface
                 $db->mysqli();
             } catch (Exception $e) {
                 throw new \RuntimeException();
-                exit('Can\'t get motivated without CAFFEINE |-_-|');
+                exit('Can\'t get motivated without Caffeine');
             }
 
             return \MysqliDb::getInstance();
@@ -56,5 +56,9 @@ class ProviderLibrary implements ServiceProviderInterface
         $container['date'] = function ($c) {
             return new Library\Date($c['date_carbon'], $c['parameterBag']);
         };
+
+        $container['valid'] = $container->factory(function ($c) {
+            return new \Respect\Validation\Validator();
+        });
     }
 }

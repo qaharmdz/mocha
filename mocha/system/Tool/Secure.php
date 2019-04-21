@@ -72,6 +72,10 @@ class Secure extends \Mocha\Controller
      */
     public function csrfValidate()
     {
-        return $this->request->post->get('csrf-token') === $this->csrfToken();
+        if ($valid = $this->request->post->get('csrf-token') === $this->csrfToken()) {
+            $this->request->post->remove('csrf-token');
+        }
+
+        return $valid;
     }
 }

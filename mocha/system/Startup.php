@@ -18,7 +18,7 @@ defined('MOCHA') or define('MOCHA', '1.0.0-a.1');
 
 if (is_file(PATH_PUBLIC . '.maintenance')) {
     // Emergency maintenance
-    exit('Espresso Machine Maintenance | Don\'t worry it\'s not forever!');
+    exit('Maintenance | Don\'t worry it\'s not forever!');
 }
 if (version_compare($php = PHP_VERSION, $req = '7.1.8', '<')) {
     exit(sprintf('You are running PHP %s, Mocha require at least <b>PHP %s</b> to run.', $php, $req));

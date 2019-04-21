@@ -60,9 +60,11 @@ class Framework
                     'locale'    => [
                         'timezone'      => 'UTC', // Timezone on display
                         'language'      => 'en',
-                        'languages'     => [
+                        'languages'     => [ // TODO: update the list with installed languages
                             'en' => [
-                                'language_id'    => 1
+                                'language_id' => 1,
+                                'code'        => 'en',
+                                'name'        => 'English'
                             ]
                         ],
                     ],
@@ -79,19 +81,19 @@ class Framework
                 'system'        => [
                     'version'       => MOCHA,
                     'database'      => [
-                        'charset'   => 'utf8',
-                        'port'      => 3306
+                        'charset'       => 'utf8',
+                        'port'          => 3306
                     ],
                     'namespace'     => [
-                        'component' => $config['app']['namespace'] . '\Component',
-                        'module'    => $config['app']['namespace'] . '\Module',
-                        'plugin'    => $config['app']['namespace'] . '\Plugin',
-                        'theme'     => $config['app']['namespace'] . '\Theme'
+                        'component'     => $config['app']['namespace'] . '\Component',
+                        'module'        => $config['app']['namespace'] . '\Module',
+                        'plugin'        => $config['app']['namespace'] . '\Plugin',
+                        'theme'         => $config['app']['namespace'] . '\Theme'
                     ],
                     'controller'    => [
-                        'init'      => $config['app']['namespace'] . '\Component\Init::index',
-                        'error'     => $config['app']['namespace'] . '\Component\Error::index',
-                        'default'   => $config['app']['controller'] ?? 'Home'
+                        'init'          => $config['app']['namespace'] . '\Component\Init::index',
+                        'error'         => $config['app']['namespace'] . '\Component\Error::index',
+                        'default'       => $config['app']['controller'] ?? 'Home'
                     ],
                     'path'          => [
                         'root'          => PATH_ROOT,
@@ -161,13 +163,18 @@ class Framework
         $this->config->set('setting.locale.language', $this->config->get('setting.locale.language_' . $this->config->get('app.folder')));
         $this->config->set('setting.locale.language_id', $this->config->get('setting.locale.languages')[$this->config->get('setting.locale.language')]['language_id']);
 
-        if (in_array($this->config->get('setting.server.environment'), ['dev', 'test'])) {
+        if ($this->config->get('setting.server.environment') != 'live') {
             $this->config->set('setting.server.debug', true);
         }
 
         // ====== Environment setting (possible to replace all config)
         if ($env = PATH_PUBLIC . '.env' && is_file($env)) {
             $this->config->load($env, 'env');
+        }
+
+        if (!$this->config->get('setting.server.debug')) {
+            // Disabled Kint in production (live) environment
+            \Kint::$enabled_mode = false;
         }
 
         // TODO: Update languages list

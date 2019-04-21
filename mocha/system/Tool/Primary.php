@@ -100,12 +100,16 @@ class Primary extends \Mocha\Controller
         if ($param instanceof Abstractor && !$this->bags->has('abstractor.' . $path)) {
             $this->bags->set('abstractor.' . $path, $param);
         } else {
-            // TODO: wrap in event
             $abstractor = explode('.', $path);
 
             if ($this->bags->has('abstractor.' . $abstractor[0])) {
+                // TODO: wrap in event .before
                 return $this->bags->get('abstractor.' . $abstractor[0])->{$abstractor[1]}(...$param);
+                // TODO: wrap in event .after
             }
+
+            $this->log->error(sprintf('Cannot locate expected tool abstractor path "%s"!', $path));
+            return false;
         }
     }
 
@@ -129,15 +133,32 @@ class Primary extends \Mocha\Controller
         return $this->event->trigger($eventName . '.after', [], $this->presenter->render($template, $data))->getOutput();
     }
 
+    public function compress($response)
+    {
+        $encodings = $this->request->getEncodings();
+
+        if (in_array('gzip', $encodings) && function_exists('gzencode')) {
+            $content = gzencode($response->getContent());
+            $response->setContent($content);
+            $response->headers->set('Content-encoding', 'gzip');
+        } elseif (in_array('deflate', $encodings) && function_exists('gzdeflate')) {
+            $content = gzdeflate($response->getContent());
+            $response->setContent($content);
+            $response->headers->set('Content-encoding', 'deflate');
+        }
+
+        return $response;
+    }
+
     /**
      * Helper to throw error; catch by $.ajaxError at theme.js
      *
      * @param  string  $message
-     * @param  integer $status
+     * @param  int     $status
      *
      * @return \Mocha\System\Engine\Response
      */
-    public function errorAjax(string $message, integer $status = 403)
+    public function errorAjax(string $message, int $status)
     {
         return $this->response->jsonOutput(['message' => $message], $status);
     }
