@@ -12,20 +12,22 @@
     ],
     "require": {
         "php": "^7.1.8",
+        "kint-php/kint": "^3.0",
         "pimple/pimple": "^3.2",
         "symfony/event-dispatcher": "^4.0",
         "symfony/http-foundation": "^4.0",
         "symfony/http-kernel": "^4.0",
         "symfony/routing": "^4.0",
         "twig/twig": "^2.5",
-        "nesbot/carbon": "^2.5",
-        "claviska/simpleimage": "^3.3",
-        "phpfastcache/phpfastcache": "^7.0",
+
         "joshcam/mysqli-database-class": "^2.9",
-        "respect/validation": "^1.1"
+        "nesbot/carbon": "^2.5",
+        "respect/validation": "^1.1",
+
+        "claviska/simpleimage": "^3.3",
+        "phpfastcache/phpfastcache": "^7.0"
     },
     "require-dev": {
-        "kint-php/kint": "^3.0",
         "kint-php/kint-twig": "^2.0",
         "phpunit/phpunit": "^7.0",
         "squizlabs/php_codesniffer": "^3.3"
