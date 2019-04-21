@@ -13,16 +13,18 @@ namespace Mocha\Admin\Component\Account\Abstractor;
 
 class User extends \Mocha\Abstractor
 {
-    public function getUsers()
-    {
-        $results = $this->db->where('status', 'enabled')
-                            ->get('user', null, ['user_id']);
+    // public function getUsers()
+    // {
+    //     $data    = [];
+    //     $results = $this->db->where('status', 'enabled')
+    //                         ->get('user', null, ['user_id']);
 
-        foreach ($results as $result) {
-            $user_metas = $this->tool_abstract_meta->get('user', $result['user_id']);
+    //     foreach ($results as $result) {
+    //         $user_metas = $this->tool_abstract_meta->get('user', $result['user_id']);
 
-            $data[$user_metas['firstname']] = array_merge($result, $user_metas);
-        }
-        ksort($data);
-    }
+    //         $data[$user_metas['firstname']] = array_merge($result, $user_metas);
+    //     }
+
+    //     ksort($data);
+    // }
 }

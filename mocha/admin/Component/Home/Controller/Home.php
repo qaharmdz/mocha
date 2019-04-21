@@ -25,7 +25,7 @@ class Home extends \Mocha\Controller
             ['primary', 'Sketsa all about UIkit custom theme, extra components and layout experiment.<br>Detailed information on UIkit usage please refer to it <a href="https://getuikit.com/docs/" target="_blank">documentation</a>.'],
             ['warning', 'First page</p><p>Second page'],
             ['danger uk-alert-small uk-alert-noclose', '<span class="uk-float-left" uk-icon="icon:warning;ratio:1.6"></span> <span class="uk-margin-medium-left uk-display-block">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Repellendus quisquam deleniti eos unde dolor.</span>'],
-            ['danger uk-background-red uk-contrast uk-alert-small uk-alert-noclose', '<span class="uk-float-left" uk-icon="icon:warning;ratio:1.6"></span> <span class="uk-margin-medium-left uk-display-block">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Repellendus quisquam deleniti eos unde dolor. Dicta corrupti ullam aperiam maiores, neque cum ut. Sapiente neque maxime odio debitis, aliquid, laudantium rem?</span>'],
+            ['danger uk-background-red uk-contrast uk-alert-small uk-alert-noclose', '<span class="uk-float-left"><i data-feather="alert-triangle" width="32px" height="32px"></i></span> <span class="uk-margin-medium-left uk-display-block">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Repellendus quisquam deleniti eos unde dolor. Dicta corrupti ullam aperiam maiores, neque cum ut. Sapiente neque maxime odio debitis, aliquid, laudantium rem?</span>'],
         ]);
 
         if ($this->request->query->get('view')) {

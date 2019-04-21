@@ -11,6 +11,19 @@
 
 return [
 
-'page_title'        => 'Locale',
+'page_title'        => 'Locale Setting',
+
+'front_language'        => 'Front Language',
+'admin_language'        => 'Admin Language',
+
+'date_time'             => 'Date & Time',
+'timezone'              => 'Timezone',
+'date_format'           => 'Date Format',
+'time_format'           => 'Time Format',
+'readable_format'       => 'Readable Format',
+'custom'                => 'custom',
+
+'readable_format_info'  => 'Change date (under 3 days) to readable format.<br>Ex: 2 days 5 hours ago',
+
 
 ];

@@ -4,7 +4,6 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="csrf-token" content="{{ mocha.tool_secure.csrfToken() }}">
 {% if mocha.secure %}
     <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
 {% endif %}
@@ -29,10 +28,11 @@
 {% block head %}
 <script>
 var mocha = {
-    'version'   : '{{ mocha.version }}',
-    'theme'     : {{ mocha.theme|json_encode() }},
-    // 'setting'   : {{ mocha.config.get('setting')|json_encode() }},
-    'i18n'      : {{ mocha.i18n.load('general')|json_encode() }},
+    'version'     : '{{ mocha.version }}',
+    'theme'       : {{ mocha.theme|json_encode() }},
+    'setting'     : {{ mocha.config.get('setting')|json_encode() }},
+    'i18n'        : {{ mocha.i18n.load('general')|json_encode() }},
+    'formChanged' : false
 };
 console.log(mocha);
 </script>
@@ -51,7 +51,7 @@ console.log(mocha);
                     <a class="uk-navbar-toggle navbar-commander-icon" title="Navigation">
                         <i data-feather="command" width="22px" height="22px"></i>
                     </a>
-                    <div class="uk-width-400 navbar-commander" uk-dropdown="mode:click; offset:0; animation:uk-animation-slide-bottom-small;">
+                    <div class="uk-width-400 navbar-commander" uk-dropdown="mode:click; offset:0;">
                         <div class="uk-dropdown-grid uk-grid-collapse" uk-grid>
                             <div class="uk-width-175">
                                 <div class="navbar-commander-group">
@@ -86,15 +86,16 @@ console.log(mocha);
                                     <ul class="uk-nav uk-dropdown-nav">
                                         <li><a href="{{ mocha.router.url('account/user') }}">Users</a></li>
                                         <li><a href="{{ mocha.router.url('account/role') }}">Roles</a></li>
-                                        <li class="uk-nav-header">Logs</li>
+                                        <li class="uk-nav-divider"></li>
                                         <li><a href="{{ mocha.router.url('account/activity') }}">Activities</a></li>
                                     </ul>
                                     <ul class="uk-nav uk-dropdown-nav">
-                                        <li class="uk-nav-header">Settings</li>
-                                        <li><a href="{{ mocha.router.url('system/setting/site') }}">Site</a></li>
-                                        <li><a href="{{ mocha.router.url('system/setting/server') }}">Server</a></li>
-                                        <li><a href="{{ mocha.router.url('system/setting/locale') }}">Locale</a></li>
-                                        <li class="uk-nav-header">Logs</li>
+                                        {# <li class="uk-nav-header">Settings</li> #}
+                                        <li><a href="{{ mocha.router.url('system/setting/site') }}">Site Setting</a></li>
+                                        <li><a href="{{ mocha.router.url('system/setting/locale') }}">Locale Setting</a></li>
+                                        <li><a href="{{ mocha.router.url('system/setting/server') }}">Server Setting</a></li>
+                                        <li class="uk-nav-divider"></li>
+                                        {# <li class="uk-nav-header">Logs</li> #}
                                         <li><a href="{{ mocha.router.url('system/log/api') }}">API Logs</a></li>
                                         <li><a href="{{ mocha.router.url('system/log/error') }}">Error Logs</a></li>
                                     </ul>
@@ -118,12 +119,12 @@ console.log(mocha);
                         <span class="uk-search-icon">
                             <i data-feather="search" width="18px" height="18px"></i>
                         </span>
-                        <input class="uk-search-input" type="search" placeholder="Search...">
+                        <input class="uk-search-input" type="search" placeholder="TODO: Search...">
                         <a class="uk-search-icon navbar-search-clear" title="Clear search" style="display:none-">
                             <i data-feather="x" width="12px" height="12px"></i>
                         </a>
                     </div>
-                    <div class="uk-width-300 navbar-search-result" uk-dropdown="mode:click; offset:5; animation:uk-animation-slide-bottom-small;">
+                    <div class="uk-width-300 navbar-search-result" uk-dropdown="mode:click; offset:5;">
                         <ul class="uk-nav uk-dropdown-nav">
                             <li><a href="#">Item</a></li>
                             <li><a href="#">Item</a></li>
@@ -146,7 +147,7 @@ console.log(mocha);
                     <a class="uk-search-icon navbar-search-option" title="Search options">
                         <i data-feather="sliders" width="18px" height="18px"></i>
                     </a>
-                    <div class="uk-width-300 navbar-search-setting" uk-dropdown="mode:click; pos:bottom-right; offset:5; animation:uk-animation-slide-bottom-small;">
+                    <div class="uk-width-300 navbar-search-setting" uk-dropdown="mode:click; pos:bottom-right; offset:5;">
                         <ul class="uk-nav uk-dropdown-nav">
                             <li class="uk-nav-header">Search in</li>
                             <li><a href="#">Item</a></li>
@@ -167,11 +168,11 @@ console.log(mocha);
                 </a>
 
                 <div class="uk-display-inline uk-visible@s">
-                    <a class="uk-navbar-toggle" title="Help">
-                        <i data-feather="plus" width="22px" height="22px"></i>
+                    <a class="uk-navbar-toggle" title="Shortcut">
+                        <i data-feather="link-2" width="19px" height="19px"></i>
                         <span class="dropdown-caret"></span>
                     </a>
-                    <div uk-dropdown="mode:click; offset:0; pos:bottom-right; animation:uk-animation-slide-bottom-small;">
+                    <div uk-dropdown="mode:click; offset:0; pos:bottom-right;">
                         <ul class="uk-nav uk-dropdown-nav">
                             <li><a href="#">TODO: Change to shortcut</a></li>
                             <li><a href="#">New Content Post</a></li>
@@ -185,7 +186,7 @@ console.log(mocha);
                         <i data-feather="user" width="20px" height="20px"></i>
                         <span class="dropdown-caret"></span>
                     </a>
-                    <div uk-dropdown="mode:click; offset:0; pos:bottom-right; animation:uk-animation-slide-bottom-small;">
+                    <div uk-dropdown="mode:click; offset:0; pos:bottom-right;">
                         <ul class="uk-nav uk-dropdown-nav">
                             <li><a href="#">Edit Account</a></li>
                             <li><a href="#">Preference</a></li>
@@ -262,7 +263,7 @@ $(window).scroll(function() {
 {% endblock footer %}
 
 {% block bottom %}
-<script src="{{ mocha.config.get('setting.url_site') }}_asset/script/uikit-icons.min.js"></script>
+<script src="{{ mocha.config.get('setting.url_site') }}_asset/script/uikit-icons.min.js?v=3.0.2"></script>
 <script src="{{ mocha.config.get('setting.url_site') }}_asset/script/feather/feather.min.js?v=4.10.0"></script>
 <script>feather.replace();</script>
 

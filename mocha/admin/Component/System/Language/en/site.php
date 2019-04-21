@@ -11,7 +11,7 @@
 
 return [
 
-'page_title'        => 'Site',
+'page_title'            => 'Site Setting',
 
 'metadata'              => 'Metadata',
 'site_name'             => 'Site Name',

@@ -1,5 +1,108 @@
-{% extends 'storage/twig/parent/layout_tab.twig' %}
+<div class="page-top uk-child-width-1-2" uk-grid>
+    <div>
+        <h1 class="page-title">{{ mocha.i18n.get('page_title') }}</h1>
+    </div>
+    <div class="uk-text-right uk-padding-mini-top">
+        <button id="js-action-save" class="uk-button uk-button-success">{{ mocha.i18n.get('save') }}</button>
+    </div>
+</div>
 
-{% block page_content %}
-{{ mocha.i18n.get('page_title') }} <br>
-{% endblock %}
+<form id="setting-form" action="{{ form_action }}" method="post" class="uk-form-horizontal uk-form-expand uk-margin" data-mc-form-monitor>
+    <div class="page-content uk-card-panel uk-card-body uk-margin uk-margin-hover">
+
+        {{ mocha.tool_secure.csrfField() }}
+        <input type="hidden" value="locale" name="setting_type">
+
+        <fieldset class="uk-fieldset">
+            <legend class="uk-legend">{{ mocha.i18n.get('language') }}</legend>
+
+            <div class="uk-margin">
+                <label class="uk-form-label" for="language-front">{{ mocha.i18n.get('front_language') }}</label>
+                <div class="uk-form-controls">
+                    <select id="language-front" name="language_front" class="uk-select uk-width-200">
+                        {% for language in languages %}
+                            <option value="{{ language.code }}" {{ form.language_front == language.code ? 'selected' }}>{{ language.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+            <div class="uk-margin">
+                <label class="uk-form-label" for="language-admin">{{ mocha.i18n.get('admin_language') }}</label>
+                <div class="uk-form-controls">
+                    <select id="language-admin" name="language_admin" class="uk-select uk-width-200">
+                        {% for language in languages %}
+                            <option value="{{ language.code }}" {{ form.language_admin == language.code ? 'selected' }}>{{ language.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+        </fieldset>
+
+        <fieldset class="uk-fieldset">
+            <legend class="uk-legend">{{ mocha.i18n.get('date_time') }}</legend>
+
+            <div class="uk-margin">
+                <label class="uk-form-label" for="timezone">{{ mocha.i18n.get('timezone') }}</label>
+                <div class="uk-form-controls">
+                    <select id="timezone" name="timezone" class="uk-select uk-width-250" data-dc-select2>
+                        {% for timezone in timezones %}
+                            <option value="{{ timezone }}" {{ form.timezone == timezone ? 'selected' }}>{{ timezone }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+            <div class="uk-margin">
+                <label class="uk-form-label" for="datetime-format">{{ mocha.i18n.get('date_format') }}</label>
+                <div class="uk-form-controls">
+                    <div class="uk-width-300">
+                        {% for format in date_formats %}
+                            <label class="uk-display-block uk-margin-small">
+                                <input type="radio" name="date_format" value="{{ format }}" class="uk-radio" {{ form.date_format == format and not form.date_custom_in ? 'checked' }}>
+                                <span class="uk-width-100 uk-display-inline-block">{{ format }}</span>
+                                <span class="uk-text-meta">{{ 'now'|date(format) }}</span>
+                            </label>
+                        {% endfor %}
+                        <label class="uk-display-block">
+                            <input type="radio" name="date_format" value="#custom" class="uk-radio" {{ form.date_custom_in ? 'checked' }}>
+                            <span class="uk-width-100 uk-display-inline-block">{{ mocha.i18n.get('custom') }}</span>
+                            <input type="text" name="date_custom" class="uk-input uk-form-small uk-width-100" placeholder="{{ date_formats.0 }}" value="{{ form.date_custom }}">
+                        </label>
+                    </div>
+                </div>
+            </div>
+            <div class="uk-margin">
+                <label class="uk-form-label" for="datetime-format">{{ mocha.i18n.get('time_format') }}</label>
+                <div class="uk-form-controls">
+                    <div class="uk-width-1-3">
+                        {% for format in time_formats %}
+                            <label class="uk-display-block uk-margin-small">
+                                <input type="radio" name="time_format" value="{{ format }}" class="uk-radio" {{ form.time_format == format and not form.time_custom_in ? 'checked' }}>
+                                <span class="uk-width-100 uk-display-inline-block">{{ format }}</span>
+                                <span class="uk-text-meta">{{ 'now'|date(format) }}</span>
+                            </label>
+                        {% endfor %}
+                        <label class="uk-display-block">
+                            <input type="radio" name="time_format" value="#custom" class="uk-radio" {{ form.time_custom_in ? 'checked' }}>
+                            <span class="uk-width-100 uk-display-inline-block">{{ mocha.i18n.get('custom') }}</span>
+                            <input type="text" name="time_custom" class="uk-input uk-form-small uk-width-100" placeholder="{{ time_formats.0 }}" value="{{ form.time_custom }}">
+                        </label>
+                    </div>
+                </div>
+            </div>
+            <div class="uk-margin">
+                <label class="uk-form-label">{{ mocha.i18n.get('readable_format') }}</label>
+                <div class="uk-form-controls">
+                    <div class="uk-button-group uk-button-radio">
+                        <input type="radio" id="date-readable-1" name="date_readable" value="1" {{ form.date_readable ? 'checked' }} hidden>
+                        <label for="date-readable-1" class="uk-button uk-button-small uk-button-default uk-button-active-success">{{ mocha.i18n.get('enabled') }}</label>
+
+                        <input type="radio" id="date-readable-0" name="date_readable" value="0" {{ not form.date_readable ? 'checked' }} hidden>
+                        <label for="date-readable-0" class="uk-button uk-button-small uk-button-default uk-button-active-danger">{{ mocha.i18n.get('disabled') }}</label>
+                    </div>
+                    <div class="uk-width-2-5@m uk-float-right uk-text-meta">{{ mocha.i18n.get('readable_format_info') }}</div>
+                </div>
+            </div>
+        </fieldset>
+
+    </div>
+</form>

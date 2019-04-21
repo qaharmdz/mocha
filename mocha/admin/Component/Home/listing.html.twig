@@ -1,5 +1,4 @@
 <div class="page-top">
-
     <div uk-grid>
         <div class="uk-width-expand">
             <h1 class="uk-margin-remove">Content <span class="uk-text-lead uk-text-muted uk-visible@s">Tags</span></h1>
@@ -11,11 +10,17 @@
                     <a href="{{ mocha.router.url('content/post') }}" title="Posts">
                         <span class="uk-visible@m">Posts</span>
                         <span class="uk-hidden@m"><i data-feather="file" width="20px" height="20px"></i></span>
+                        <span class="uk-hidden@m"><span uk-icon='icon:file-text'></span></i></span>
                     </a>
                 </li>
                 <li>
-                    <a href="{{ mocha.router.url('content/category') }}" class="uk-visible@m">Categories</a>
-                    <a href="{{ mocha.router.url('content/category') }}" class="uk-hidden@m" title="Categories"><i data-feather="folder" width="20px" height="20px"></i></a>
+                    <a href="{{ mocha.router.url('content/category') }}" title="Categories">
+                        <span class="uk-visible@m">Categories</span>
+                        <span class="uk-hidden@m"><i data-feather="folder" width="20px" height="20px"></i></span>
+                        <span class="uk-hidden@m"><span uk-icon='icon:folder'></span></i></span>
+                        <span class="uk-hidden@m"><span uk-icon='icon:tag'></span></i></span>
+                        <span class="uk-hidden@m"><span uk-icon='icon:settings'></span></i></span>
+                    </a>
                 </li>
                 <li class="uk-active">
                     <a href="{{ mocha.router.url('content/tag') }}" class="uk-visible@m">Tags</a>
@@ -34,7 +39,7 @@
     </div>
 </div>
 
-<div class="page-content uk-card-panel uk-card-body uk-grid-margin">
+<div class="page-content uk-card-panel uk-card-body uk-margin">
 
     <div uk-grid>
         <div class="uk-width-expand">

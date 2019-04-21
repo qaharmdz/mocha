@@ -20,18 +20,19 @@ class Init extends \Mocha\Controller
 {
     public function index($data = [])
     {
+        $this->event->trigger('init.alpha')->getData();
+        // TODO: plugin from url alias to route $this->request->setPathInfo('/home/view/form'); // sample to manipulate requested component
+
         $response = $this->verifyAccess();
 
         if ($response && $response->hasOutput()) {
             return $response->getOutput();
         }
 
-        $this->registerAsset(); // TODO: change to plugin init.start
-
-        $data = $this->event->trigger('init.start', $data)->getData();
-        // TODO: plugin from url alias to route $this->request->setPathInfo('/home/view/form'); // sample to manipulate requested component
-
         // === Document
+        $this->event->trigger('init.document')->getData();
+        $this->registerAsset(); // TODO: change to plugin init.document
+
         $this->document->addNode('class_html', ['theme-' . $this->config->get('setting.site.theme_front')]);
         $this->document->addNode('breadcrumbs', [['Home', $this->router->url('home')]]);
 
@@ -59,6 +60,8 @@ class Init extends \Mocha\Controller
         // d($this->presenter->param->get('global'));
 
         // === Component
+        $data = $this->event->trigger('init.content', $data)->getData();
+
         /**
          * Component event middleware
          *
@@ -68,7 +71,7 @@ class Init extends \Mocha\Controller
          * @return \Mocha\System\Engine\Response $component
          */
         // TODO: middleware "kernel.controller_arguments" to auto check view permission; change the component to error and pass new args
-        $component = $this->event->trigger('init.component', [], $this->dispatcher->handle($this->request))->getOutput();
+        $component = $this->event->trigger('init.component.response', [], $this->dispatcher->handle($this->request))->getOutput();
 
         if ($component->hasOutput()) {
             /**
@@ -100,18 +103,30 @@ class Init extends \Mocha\Controller
 
         d($this->controllerResolver->resolve('home', []));
         d($this->controllerResolver->resolve('cool/app', [], 'module'));
+        d($this->event->getEmitters());
          */
 
         // === Presenter
         $template = $this->document->getNode('template_base', 'index');
+        $response = $this->response
+                        ->setStatusCode($component->getStatusCode())
+                        ->setContent($this->tool->render(
+                            $template,
+                            $data,
+                            'init.' . $template
+                        ));
 
-        return $this->response
-            ->setStatusCode($component->getStatusCode())
-            ->setContent($this->tool->render(
-                $template,
-                $data,
-                'init.render.' . $template
-            ));
+        /**
+         * @return \Mocha\System\Engine\Response $response
+         */
+        $response = $this->event->trigger('init.omega', [], $response)->getOutput();
+
+        if (!$this->config->get('setting.server.debug') && $this->config->get('setting.server.compression', 4)) {
+            $response = $this->tool->compress($response);
+        }
+
+
+        return $response;
     }
 
     public function logout()
@@ -130,6 +145,11 @@ class Init extends \Mocha\Controller
         // Login page
         if ($this->request->getPathInfo() === '/') {
             return;
+        }
+
+        // Config setting.server.debug is "true" in environment: dev and test
+        if ($this->config->get('setting.server.debug')) {
+            $this->config->set('setting.server.login_session', (60 * 6));
         }
 
         switch (true) {
@@ -151,7 +171,7 @@ class Init extends \Mocha\Controller
                 return $this->response->redirect($this->session->get('last_route', $this->router->url('home')), 403);
 
             // Force logout if last activity more than 'x' minute
-            case (time() - $this->session->get('user_activity')) > (60 * $this->config->get('setting.server.login_session', 120)):
+            case (time() - $this->session->get('user_activity')) > (60 * $this->config->get('setting.server.login_session')):
                 $this->session->flash->set('alert_inactivity', 1);
                 return $this->logout();
                 break;
@@ -165,27 +185,12 @@ class Init extends \Mocha\Controller
                 $this->session->set('user_activity', time());
                 break;
         }
-
-        /*
-        // All $_POST must have csrf
-        if ($this->request->is('post') && !$this->tool_secure->csrfValidate()) {
-            if ($this->request->is('ajax')) {
-                return $this->response->jsonOutput(['message' => $this->language->get('error_csrf')], 403);
-            }
-
-            $this->document->addNode('alerts', [
-                ['warning', $this->language->get('error_csrf')],
-            ]);
-
-            return $this->response->redirect($this->session->get('last_route', $this->router->url('home')), 403);
-        }
-         */
-
     }
 
     private function registerAsset()
     {
         $this->document->addAsset('form', [
+            'version'   => '4.22.0',
             'script'    => [
                 $this->config->get('setting.url_site') . '_asset/script/form/form.min.js'
             ]

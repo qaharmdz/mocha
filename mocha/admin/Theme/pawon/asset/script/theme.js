@@ -16,7 +16,7 @@ window.onbeforeunload = function() {
 
 // AJAX error handler
 $(document).ajaxError(function(event, jqxhr, settings, exception) {
-    if (mocha.setting.server.environment === 'dev') {
+    if (mocha.setting.server.debug) {
         console.warn('# Mocha debug: ' + jqxhr.status + ' ' + exception, jqxhr, settings);
     }
     if (jqxhr.status === 401) { // Unauthorized, login require

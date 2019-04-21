@@ -1,5 +1,163 @@
-{% extends 'storage/twig/parent/layout_tab.twig' %}
+<div class="page-top uk-child-width-1-2" uk-grid>
+    <div>
+        <h1 class="page-title">{{ mocha.i18n.get('page_title') }}</h1>
+    </div>
+    <div class="uk-text-right uk-padding-mini-top">
+        <button id="js-action-save" class="uk-button uk-button-success">{{ mocha.i18n.get('save') }}</button>
+    </div>
+</div>
 
-{% block page_content %}
-{{ mocha.i18n.get('page_title') }} <br>
-{% endblock %}
+<form id="setting-form" action="{{ form_action }}" method="post" class="uk-form-horizontal uk-form-expand uk-margin" data-mc-form-monitor>
+    <div class="page-content uk-card-panel uk-card-body uk-margin uk-margin-hover">
+
+        {{ mocha.tool_secure.csrfField() }}
+        <input type="hidden" value="server" name="setting_type">
+
+        <fieldset class="uk-fieldset">
+            <legend class="uk-legend">{{ mocha.i18n.get('general') }}</legend>
+
+            <div class="uk-margin">
+                <label class="uk-form-label">{{ mocha.i18n.get('environment') }}</label>
+                <div class="uk-form-controls">
+                    <div class="uk-button-group uk-button-radio">
+                        <input type="radio" id="environment-live" name="environment" value="live" {{ form.environment == 'live' ? 'checked' }} hidden>
+                        <label for="environment-live" class="uk-button uk-button-small uk-button-default uk-button-active-primary">{{ mocha.i18n.get('production') }}</label>
+
+                        <input type="radio" id="environment-dev" name="environment" value="dev" {{ form.environment == 'dev' ? 'checked' }} hidden>
+                        <label for="environment-dev" class="uk-button uk-button-small uk-button-default uk-button-active-warning">{{ mocha.i18n.get('development') }}</label>
+                    </div>
+                    <div class="uk-width-2-5@m uk-float-right uk-text-meta">{{ mocha.i18n.get('environment_info') }}</div>
+                </div>
+            </div>
+            <div class="uk-margin">
+                <label class="uk-form-label">{{ mocha.i18n.get('maintenance') }}</label>
+                <div class="uk-form-controls">
+                    <div class="uk-button-group uk-button-radio">
+                        <input type="radio" id="maintenance-1" name="maintenance" value="1" {{ form.maintenance ? 'checked' }} hidden>
+                        <label for="maintenance-1" class="uk-button uk-button-small uk-button-default uk-button-active-success">{{ mocha.i18n.get('enabled') }}</label>
+
+                        <input type="radio" id="maintenance-0" name="maintenance" value="0" {{ not form.maintenance ? 'checked' }} hidden>
+                        <label for="maintenance-0" class="uk-button uk-button-small uk-button-default uk-button-active-danger">{{ mocha.i18n.get('disabled') }}</label>
+                    </div>
+                    <div class="uk-width-2-5@m uk-float-right uk-text-meta">{{ mocha.i18n.get('maintenance_info') }}</div>
+                </div>
+            </div>
+            <div class="uk-margin">
+                <label class="uk-form-label">{{ mocha.i18n.get('url_alias') }}</label>
+                <div class="uk-form-controls">
+                    <div class="uk-button-group uk-button-radio">
+                        <input type="radio" id="seo-status-1" name="alias_route" value="1" {{ form.alias_route ? 'checked' }} hidden>
+                        <label for="seo-status-1" class="uk-button uk-button-small uk-button-default uk-button-active-success">{{ mocha.i18n.get('enabled') }}</label>
+
+                        <input type="radio" id="seo-status-0" name="alias_route" value="0" {{ not form.alias_route ? 'checked' }} hidden>
+                        <label for="seo-status-0" class="uk-button uk-button-small uk-button-default uk-button-active-danger">{{ mocha.i18n.get('disabled') }}</label>
+                    </div>
+                </div>
+            </div>
+            <div class="uk-margin">
+                <label class="uk-form-label" for="compression">{{ mocha.i18n.get('output_compress') }}</label>
+                <div class="uk-form-controls">
+                    <input type="number" min="0" max="9" id="compression" name="compression" class="uk-input uk-width-75" value="{{ form.compression }}">
+                    <div class="uk-width-2-5@m uk-float-right uk-text-meta">{{ mocha.i18n.get('output_compress_info') }}</div>
+                </div>
+            </div>
+        </fieldset>
+
+        <fieldset class="uk-fieldset">
+            <legend class="uk-legend">{{ mocha.i18n.get('security') }}</legend>
+
+            <div class="uk-margin">
+                <label class="uk-form-label" for="login-session">{{ mocha.i18n.get('login_session') }}</label>
+                <div class="uk-form-controls">
+                    <input type="number" min="5" id="login-session" name="login_session" class="uk-input uk-width-75" placeholder="120" value="{{ form.login_session }}">
+                    <span class="uk-text-small uk-margin-small-left">{{ mocha.i18n.get('minute') }}</span>
+                    <div class="uk-width-2-5@m uk-float-right uk-text-meta">{{ mocha.i18n.get('login_session_info') }}</div>
+                </div>
+            </div>
+        </fieldset>
+
+    </div>
+
+    <div class="page-content uk-card-panel uk-card-body uk-margin uk-margin-hover">
+
+        <fieldset class="uk-fieldset">
+            <legend class="uk-legend">{{ mocha.i18n.get('email') }}</legend>
+
+            <div class="uk-margin">
+                <label class="uk-form-label" for="mail-protocol">{{ mocha.i18n.get('mail_protocol') }}</label>
+                <div class="uk-form-controls">
+                    <select id="mail-protocol" name="mail_protocol" class="uk-select uk-width-150">
+                        <option value="php" {{ form.mail_protocol == 'php' ? 'selected' }}>{{ mocha.i18n.get('php') }}</option>
+                        <option value="smtp" {{ form.mail_protocol == 'smtp' ? 'selected' }}>{{ mocha.i18n.get('smtp') }}</option>
+                    </select>
+                </div>
+            </div>
+            <div class="uk-margin">
+                <label class="uk-form-label" for="smtp-hostname">{{ mocha.i18n.get('smtp_host') }}</label>
+                <div class="uk-form-controls">
+                    <input type="text" id="smtp-hostname" name="smtp_hostname" class="uk-input uk-width-200" value="{{ form.smtp_hostname }}">
+                </div>
+            </div>
+            <div class="uk-margin">
+                <label class="uk-form-label" for="smtp-port">{{ mocha.i18n.get('smtp_port') }}</label>
+                <div class="uk-form-controls">
+                    <input type="number" id="smtp-port" name="smtp_port" class="uk-input uk-width-75" placeholder="587" value="{{ form.smtp_port }}">
+                </div>
+            </div>
+            <div class="uk-margin">
+                <label class="uk-form-label" for="smtp-username">{{ mocha.i18n.get('smtp_username') }}</label>
+                <div class="uk-form-controls">
+                    <input type="text" id="smtp-username" name="smtp_username" class="uk-input uk-width-200" value="{{ form.smtp_username }}">
+                </div>
+            </div>
+            <div class="uk-margin">
+                <label class="uk-form-label" for="smtp-password">{{ mocha.i18n.get('smtp_password') }}</label>
+                <div class="uk-form-controls">
+                    <input type="password" id="smtp-password" name="smtp_password"  class="uk-input uk-width-200" value="{{ form.smtp_password }}">
+                </div>
+            </div>
+        </fieldset>
+
+        <fieldset class="uk-fieldset">
+            <legend class="uk-legend">{{ mocha.i18n.get('cache') }}</legend>
+
+            <div class="uk-margin">
+                <label class="uk-form-label">{{ mocha.i18n.get('cache_status') }}</label>
+                <div class="uk-form-controls">
+                    <div class="uk-button-group uk-button-radio">
+                        <input type="radio" id="cache-status-1" name="cache" value="1" {{ form.cache ? 'checked' }} hidden>
+                        <label for="cache-status-1" class="uk-button uk-button-small uk-button-default uk-button-active-success">{{ mocha.i18n.get('enabled') }}</label>
+
+                        <input type="radio" id="cache-status-0" name="cache" value="0" {{ not form.cache ? 'checked' }} hidden>
+                        <label for="cache-status-0" class="uk-button uk-button-small uk-button-default uk-button-active-danger">{{ mocha.i18n.get('disabled') }}</label>
+                    </div>
+                </div>
+            </div>
+            <div class="uk-margin">
+                <label class="uk-form-label" for="cache-driver">{{ mocha.i18n.get('cache_driver') }}</label>
+                <div class="uk-form-controls">
+                    <select id="cache-driver" name="cache_driver" class="uk-select uk-width-200">
+                        <option value="Files" {{ form.cache_driver == 'Files' ? 'selected' }}>Files</option>
+                        {% if ext_memcache %}
+                            <option value="Memcache" {{ form.cache_driver == 'Memcache' ? 'selected' }}>Memcache</option>
+                        {% endif %}
+                        {% if ext_memcached %}
+                            <option value="Memcached" {{ form.cache_driver == 'Memcached' ? 'selected' }}>Memcached</option>
+                        {% endif %}
+                        {% if ext_xcache %}
+                            <option value="Xcache" {{ form.cache_driver == 'Xcache' ? 'selected' }}>Xcache</option>
+                        {% endif %}
+                    </select>
+                </div>
+            </div>
+            <div class="uk-margin">
+                <label class="uk-form-label" for="cache-expire">{{ mocha.i18n.get('cache_expire') }}</label>
+                <div class="uk-form-controls">
+                    <input type="number" min="5" id="cache-expire" name="cache_expire" class="uk-input uk-width-75" placeholder="120" value="{{ form.cache_expire }}">
+                    <span class="uk-text-small uk-margin-small-left">{{ mocha.i18n.get('minute') }}</span>
+                </div>
+            </div>
+        </fieldset>
+
+    </div>
+</form>

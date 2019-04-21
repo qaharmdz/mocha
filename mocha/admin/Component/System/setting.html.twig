@@ -1,6 +1,18 @@
-{% extends 'storage/twig/parent/layout_tab.twig' %}
+{% import 'storage/twig/macro/nav.twig' as nav %}
 
-{% block page_content_bottom %}
+<div uk-grid>
+    <div class="uk-width-175 uk-visible@l">
+        {{ nav.default(navigations) }}
+    </div>
+
+    <div class="uk-width-expand">
+        {% block page_content %}
+            {{ page_form }}
+        {% endblock %}
+    </div>
+</div>
+
+{% block page_bottom %}
 <script>
 $(document).ready(function()
 {
@@ -12,7 +24,7 @@ $(document).ready(function()
             dataType    : 'json',
             beforeSend  : function(data) {
                 $('input, select, textarea').removeClass('uk-form-danger');
-                $('.uk-text-help.uk-text-danger').remove();
+                $('.uk-text-meta.uk-text-danger').remove();
 
                 $.fn.mocha.notify({
                     message : mocha.i18n.saving,
@@ -20,6 +32,8 @@ $(document).ready(function()
                 });
             },
             success     : function(data) {
+                mocha.formChanged = false;
+
                 $.fn.mocha.notify({
                     message : data.message ? data.message : mocha.i18n.success_save,
                     icon    : '<span uk-icon=\'icon:check;ratio:1.5\'></span>',
@@ -27,23 +41,21 @@ $(document).ready(function()
                 });
             },
             error       : function(xhr) {
-                /*
                 $.each(xhr.responseJSON, function(key, error) {
                     if (error.element) {
                         $(settingForm[0][error.element]).addClass('uk-form-danger');
 
                         if (error.message) {
-                            $(settingForm[0][error.element]).closest('.uk-form-controls').append('<div class="uk-text-help uk-text-danger uk-margin-mini-top">' + error.message + '</div>');
+                            $(settingForm[0][error.element]).closest('.uk-form-controls').append('<div class="uk-text-meta uk-text-danger uk-margin-mini-top">' + error.message + '</div>');
                         }
                     }
                 });
 
                 $.fn.mocha.notify({
                     message : xhr.responseJSON.notify ? xhr.responseJSON.notify : mocha.i18n.error_form,
-                    icon    : 'fa fa-exclamation',
+                    icon    : '<span uk-icon=\'icon:warning;ratio:1.5\'></span>',
                     status  : 'danger'
                 });
-                 */
             }
         });
     });

@@ -11,11 +11,16 @@
 
 return [
 
-'page_title'        => 'System Setting',
-'page_title_sub'    => 'System Setting',
+'page_title'            => 'System Setting',
 
-'nav_site'          => 'Site',
-'nav_server'        => 'Server',
-'nav_locale'        => 'Locale',
+'nav_setting'           => 'Settings',
+'nav_setting_site'      => 'Site',
+'nav_setting_server'    => 'Server',
+'nav_setting_locale'    => 'Locale',
+'nav_logs'              => 'Logs',
+'nav_log_api'           => 'API',
+'nav_log_error'         => 'Error',
+
+'success_save_setting'  => 'Successfully modified setting!',
 
 ];

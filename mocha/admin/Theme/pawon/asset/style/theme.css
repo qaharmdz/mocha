@@ -26,14 +26,51 @@ body {
 .uk-nav-header {
     font-size: 1.3em;
 }
-.uk-alert { /* Fix float inside alert */
+/* Fix float */
+.uk-margin,
+.uk-alert {
     overflow: hidden;
 }
 
-/* TODO: add to sketsa */
+/* Playground
+==================================== */
+.uk-margin-hover .uk-margin {
+    padding: 10px 24px;
+    margin: 0 -24px !important;
+}
+.uk-margin-hover .uk-margin:hover {
+    background: #f8f8f8;
+}
+
+/* TODO: Update sketsa source
+==================================== */
+.uk-card-panel {
+    box-shadow: 0 3px 1px -2px rgba(0,0,0,.1), 0 2px 2px 0 rgba(0,0,0,.1), 0 1px 5px 0 rgba(0,0,0,.1);
+}
+
 .uk-divider-line {
     border-top: 1px solid #d4d4d4;
     border-bottom: 5px solid #f3f3f3;
+}
+
+.uk-button-group.uk-button-radio > .uk-button:nth-child(n+2),
+.uk-button-group.uk-button-radio > div:nth-child(n+2) .uk-button {
+    margin-left: 0;
+}
+.uk-button-group.uk-button-radio > .uk-button:nth-child(n+3),
+.uk-button-group.uk-button-radio > div:nth-child(n+3) .uk-button {
+    margin-left: -1px;
+    border-left-width: 0;
+}
+
+.uk-button-radio input[type=radio]:checked+.uk-button {
+    text-shadow: 0 -1px 0 rgba(0,0,0,.1);
+}
+
+@media (min-width: 960px) {
+    .uk-form-controls .uk-text-meta {
+        margin-top: 0;
+    }
 }
 
 
@@ -229,9 +266,6 @@ body {
 }
 .block-top .uk-breadcrumb {
     margin: 5px 0 25px;
-}
-.block-top .uk-breadcrumb > * > a {
-    font-size: 12px;
 }
 
 

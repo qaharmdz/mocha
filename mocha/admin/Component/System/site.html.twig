@@ -1,18 +1,20 @@
-{% extends 'Component/System/setting.html.twig' %}
-
-{% block page_content %}
-<div class="uk-text-right">
-    <button id="js-action-save" class="uk-button uk-button-success">{{ mocha.i18n.get('save') }}</button>
+<div class="page-top uk-child-width-1-2" uk-grid>
+    <div>
+        <h1 class="page-title">{{ mocha.i18n.get('page_title') }}</h1>
+    </div>
+    <div class="uk-text-right uk-padding-mini-top">
+        <button id="js-action-save" class="uk-button uk-button-success">{{ mocha.i18n.get('save') }}</button>
+    </div>
 </div>
 
-<div class="content-body">
-    <form id="setting-form" action="{{ form_action }}" method="post" class="uk-form-horizontal uk-form-expand">
+<form id="setting-form" action="{{ form_action }}" method="post" class="uk-form-horizontal uk-form-expand uk-margin" data-mc-form-monitor>
+    <div class="page-content uk-card-panel uk-card-body uk-margin uk-margin-hover">
+
         {{ mocha.tool_secure.csrfField() }}
+        <input type="hidden" value="site" name="setting_type">
 
         <fieldset class="uk-fieldset">
             <legend class="uk-legend">{{ mocha.i18n.get('metadata') }}</legend>
-
-            <input type="hidden" value="site" name="setting_type">
 
             <div class="uk-margin">
                 <label class="uk-form-label" for="site-name"><span class="uk-text-danger">*</span> {{ mocha.i18n.get('site_name') }}</label>
@@ -65,7 +67,7 @@
                         <input type="radio" id="user-verification-0" name="user_verification" value="0" {{ not form.user_verification ? 'checked' }} hidden>
                         <label for="user-verification-0" class="uk-button uk-button-small uk-button-default uk-button-active-danger">{{ mocha.i18n.get('disabled') }}</label>
                     </div>
-                    <div class="uk-width-1-2 uk-float-right uk-text-help">{{ mocha.i18n.get('verification_info') }}</div>
+                    <div class="uk-width-2-5@m uk-float-right uk-text-meta">{{ mocha.i18n.get('verification_info') }}</div>
                 </div>
             </div>
             <div class="uk-margin">
@@ -78,7 +80,7 @@
                             {% endif %}
                         {% endfor %}
                     </select>
-                    <div class="uk-width-1-2 uk-float-right uk-text-help">{{ mocha.i18n.get('default_role_info') }}</div>
+                    <div class="uk-width-2-5@m uk-float-right uk-text-meta">{{ mocha.i18n.get('default_role_info') }}</div>
                 </div>
             </div>
         </fieldset>
@@ -109,6 +111,5 @@
             </div>
         </fieldset>
 
-    </form>
-</div>
-{% endblock %}
+    </div>
+</form>
