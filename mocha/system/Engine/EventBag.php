@@ -11,7 +11,6 @@
 
 namespace Mocha\System\Engine;
 
-// use Symfony\Component\HttpFoundation;
 use Symfony\Component\EventDispatcher;
 
 /**
@@ -25,9 +24,9 @@ class EventBag extends EventDispatcher\Event
     protected $name;
 
     /**
-     * @var array Readonly initial data passed to event.
+     * @var array Read only initial data passed to event.
      */
-    protected $defaultParam;
+    protected $default;
 
     /**
      * @var \Symfony\Component\HttpFoundation\ParameterBag
@@ -39,6 +38,15 @@ class EventBag extends EventDispatcher\Event
      */
     public $output;
 
+    /**
+     * Single event emitter can have multiple listeners
+     * Property $data and $output might be used or modificated by all listeners
+     * While $default always contain the original data
+     *
+     * @param string $eventName
+     * @param array  $param
+     * @param string $output
+     */
     public function __construct(string $eventName, array $param = [], $output = '')
     {
         $this->name   = $eventName;
@@ -46,8 +54,8 @@ class EventBag extends EventDispatcher\Event
         $this->output = $output;
 
         // All event have chance to access initial data
-        if ($this->defaultParam === null) {
-            $this->defaultParam = array_merge(
+        if ($this->default === null) {
+            $this->default = array_merge(
                 $this->data->all(),
                 ['_output' => $this->output]
             );
@@ -71,7 +79,7 @@ class EventBag extends EventDispatcher\Event
      */
     public function getDefault()
     {
-        return $this->defaultParam;
+        return $this->default;
     }
 
     /**
