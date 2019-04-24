@@ -33,7 +33,16 @@ class Init extends \Mocha\Controller
         $this->event->trigger('init.document')->getData();
         $this->registerAsset(); // TODO: change to plugin init.document
 
-        $this->document->addNode('class_html', ['theme-' . $this->config->get('setting.site.theme_front')]);
+        $this->document->addNode('class_html', [
+            'lang-'  . $this->language->get('lang_code'),
+            'lang-'  . $this->language->get('lang_dir'),
+            'debug-' . $this->config->get('setting.server.debug'),
+            'env-'   . $this->config->get('setting.server.environment'),
+        ]);
+        $this->document->addNode('class_body', [
+            'path-'  . $this->tool_secure->sanitizeChar($this->request->getPathInfo()),
+            'theme-' . $this->config->get('setting.site.theme_admin'),
+        ]);
         $this->document->addNode('breadcrumbs', [['Home', $this->router->url('home')]]);
 
         $this->document->applyAsset('form');

@@ -149,7 +149,7 @@ class Document
         $node = $this->data['node'][$name] ?? [];
 
         if (is_array($node)) {
-            $this->data['node'][$name] = array_merge($node, $value);
+            $this->data['node'][$name] = array_unique(array_merge($node, $value), SORT_REGULAR);
         }
     }
 
