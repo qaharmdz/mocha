@@ -24,7 +24,7 @@ class ResolverController extends ControllerResolver
     /**
      * @var \Psr\Log\LoggerInterface
      */
-    protected $log;
+    protected $logger;
 
     /**
      * @var \Symfony\Component\HttpFoundation\ParameterBag
@@ -35,8 +35,8 @@ class ResolverController extends ControllerResolver
     {
         parent::__construct($logger);
 
-        $this->log   = $logger;
-        $this->param = $bag;
+        $this->logger = $logger;
+        $this->param  = $bag;
 
         $this->param->add([
             'namespace'     => [
@@ -102,7 +102,7 @@ class ResolverController extends ControllerResolver
                 'arguments' => $arguments
             ];
         } catch (\Exception $e) {
-            $this->log->critical($e->getMessage() . ' in ' . $e->getFile() . ' on line ' . $e->getLine());
+            $this->logger->critical($e->getMessage() . ' in ' . $e->getFile() . ' on line ' . $e->getLine());
 
             return false;
         }

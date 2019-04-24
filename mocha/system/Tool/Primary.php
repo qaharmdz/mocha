@@ -108,7 +108,7 @@ class Primary extends \Mocha\Controller
                 // TODO: wrap in event .after
             }
 
-            $this->log->error(sprintf('Cannot locate expected tool abstractor path "%s"!', $path));
+            $this->logger->error(sprintf('Cannot locate expected tool abstractor path "%s"!', $path));
             return false;
         }
     }

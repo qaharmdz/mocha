@@ -308,7 +308,7 @@ class Framework
             $this->container['event']->addSubscriber(
                 new EventListener\ExceptionListener(
                     $this->config->get('system.controller.error'),
-                    $this->container['log'],
+                    $this->container['logger'],
                     $this->config->get('setting.server.debug')
                 )
             );

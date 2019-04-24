@@ -56,7 +56,7 @@ class ProviderCore implements ServiceProviderInterface
             return new Event();
         };
         $container['resolver_controller'] = function ($c) {
-            return new ResolverController($c['log'], $c['parameterBag']);
+            return new ResolverController($c['logger'], $c['parameterBag']);
         };
         $container['resolver_argument'] = function ($c) {
             return new HttpKernel\Controller\ArgumentResolver();
@@ -91,8 +91,9 @@ class ProviderCore implements ServiceProviderInterface
         };
 
         $container['log_output'] = 'php://stderr';
-        $container['log'] = function ($c) {
-            return new HttpKernel\Log\Logger(\Psr\Log\LogLevel::DEBUG, $c['log_output']);
+        $container['logger'] = function ($c) {
+            // Log level information see \Psr\Log\LoggerInterface.php
+            return new HttpKernel\Log\Logger(\Psr\Log\LogLevel::INFO, $c['log_output']);
         };
 
         $container['presenter'] = function ($c) {
