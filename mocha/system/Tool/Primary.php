@@ -69,9 +69,9 @@ class Primary extends \Mocha\Controller
         /**
          * Event to manipulate arguments.
          *
-         * @return \Mocha\System\Engine\EventBag $arguments
+         * @return array
          */
-        $arguments = $this->event->trigger($eventName . '.before', $controller['arguments']);
+        $arguments = $this->event->trigger($eventName . '.before', $controller['arguments'])->getData();
 
         /**
          * Dispatch to get response.
@@ -80,11 +80,14 @@ class Primary extends \Mocha\Controller
          */
         $response = call_user_func_array([new $controller['class'], $controller['method']], $arguments);
 
-
         /**
-         * This event allows you to modify or replace the content that will be replied.
+         * This event allows you to modify or replace the returned data.
          */
-        return $this->event->trigger($eventName . '.after', ['_response' => $response]);
+        if (is_array($response)) {
+            return $this->event->trigger($eventName . '.after', $response)->getData();
+        } else {
+            return $this->event->trigger($eventName . '.after', [], $response)->getOutput();
+        }
     }
 
     /**
@@ -126,10 +129,16 @@ class Primary extends \Mocha\Controller
     {
         $eventName = ($eventName ?: $template) . '.render';
 
-        // Event to manipulate twig variables
+        /**
+         * Event to manipulate twig variables.
+         *
+         * @return array
+         */
         $data = $this->event->trigger($eventName . '.before', $vars)->getData();
 
-        // Event to manipulate render result
+        /**
+         * Event to manipulate render result.
+         */
         return $this->event->trigger($eventName . '.after', [], $this->presenter->render($template, $data))->getOutput();
     }
 
