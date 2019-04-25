@@ -3,6 +3,8 @@
  * http://learn.jquery.com/plugins/advanced-plugin-concepts/
  */
 
+'use strict';
+
 /*
  * Global Defaults
  * ======================================================================== */
@@ -53,7 +55,7 @@ UIkit.dropdown('.uk-dropdown', {
     $.fn.mocha = {}; // global namespace
 
     /**
-     * @depedency UIkit.modal
+     * @depedency UIkit.notification
      *
      * # Usage
      * $.fn.mocha.notify({
@@ -84,9 +86,53 @@ UIkit.dropdown('.uk-dropdown', {
         message     : '',
         icon        : '<span uk-spinner></span>',
         status      : '',   // primary, success, warning, danger
-        timeout     : 5000, // 3 second
+        timeout     : 5000,
         pos         : 'top-center',
         clear       : true
+    };
+
+    /**
+     * @depedency UIkit.modal
+     *
+     * # Usage
+     * $.fn.mocha.confirm({
+     *     title        : 'Heading',
+     *     message      : 'Message here',
+     *     onConfirm    : function() { ... }
+     * });
+     *
+     * # Override global setter
+     * $.extend($.fn.mocha.confirm.defaults, {
+     *     labelOk      : 'Yes, I'm sure',
+     *     labelCancel  : 'Cancel',
+     *     onConfirm    : function() {}
+     * });
+     * - or -
+     * $.fn.mocha.confirm.defaults.onConfirm = function() {};
+     */
+    $.fn.mocha.confirm = function(options) {
+        var opt     = $.extend({}, $.fn.mocha.confirm.defaults, options),
+            content = (opt.title ? '<h2 class="uk-modal-title">' + opt.title + '</h2>' : '') + '<div>' + opt.message + '</div>';
+
+        UIkit.notification.closeAll();
+        UIkit.modal.confirm(content, {
+            bgClose     : false,
+            escClose    : false,
+            stack       : true,
+            labels      : {
+                ok      : opt.labelOk,
+                cancel  : opt.labelCancel
+            }
+        }, 'uk-width-450@s uk-modal-confirm').then(opt.onConfirm, opt.onCancel);
+    };
+
+    $.fn.mocha.confirm.defaults = {
+        title       : '',
+        message     : mocha.i18n.are_you_sure,
+        labelOk     : mocha.i18n.yes_sure,
+        labelCancel : mocha.i18n.cancel,
+        onConfirm   : function() {},
+        onCancel    : function() {}
     };
 
 })(jQuery);
@@ -98,7 +144,7 @@ UIkit.dropdown('.uk-dropdown', {
 
 /**
  * For new created element retrigger IIDE
- * Ex: $(document).trigger('IIDE.form');
+ * Ex: $(document).trigger('IIDE.form_monitor');
  *
  */
 $(document).ready(function()
@@ -120,7 +166,7 @@ $(document).ready(function()
 $(document).on('IIDE.init IIDE.form_monitor', function(event)
 {
     /**
-     * Monitor change on child input
+     * Monitor form input change
      *
      * @usage
      * <div data-mc-form-monitor>..</div>
