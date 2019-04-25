@@ -182,7 +182,7 @@ class Primary extends \Mocha\Controller
     public function errorPermission(string $message)
     {
         $this->document->setTitle('403 Forbidden!');
-        $this->document->addNode('class_body', ['page-error page-403']);
+        $this->document->addNode('class_body', ['path-error status-403']);
 
         return $this->response
             ->setStatusCode(403)

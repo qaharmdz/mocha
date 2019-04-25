@@ -22,7 +22,7 @@ class Login extends \Mocha\Controller
 
         // === Document
         $this->document->setTitle($this->language->get('page_title'));
-        $this->document->addNode('class_body', ['page-login']);
+        $this->document->addNode('class_body', ['path-login']);
 
         // === POST
         if ($this->request->is('post') && $this->validateForm()) {

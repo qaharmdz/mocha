@@ -20,7 +20,6 @@ class Home extends \Mocha\Controller
         $this->language->load('Component/Home/home');
 
         $this->document->setTitle($this->language->get('page_title'));
-        $this->document->addNode('class_body', ['page-home']);
 
         $data['content'] = $this->language->get('message');
 
@@ -37,7 +36,6 @@ class Home extends \Mocha\Controller
         $this->language->load('Component/Home/home');
 
         $this->document->setTitle($this->language->get('page_title'));
-        $this->document->addNode('class_body', ['page-home']);
 
         $data['content'] = 'Method test';
 

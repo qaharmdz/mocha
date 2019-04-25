@@ -20,7 +20,6 @@ class Home extends \Mocha\Controller
         $this->language->load('Component/Home/home');
 
         $this->document->setTitle($this->language->get('page_title'));
-        $this->document->addNode('class_body', ['page-home']);
         $this->document->addNode('alerts', [
             ['primary', 'Sketsa all about UIkit custom theme, extra components and layout experiment.<br>Detailed information on UIkit usage please refer to it <a href="https://getuikit.com/docs/" target="_blank">documentation</a>.'],
             ['warning', 'First page</p><p>Second page'],

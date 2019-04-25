@@ -48,8 +48,6 @@ class Setting extends \Mocha\Controller
 
         //=== Document
         $this->document->setTitle($this->language->get('page_title'));
-        $this->document->addNode('class_body', ['page-system-' . $page, 'com-system', 'layout-sidebar']);
-
         $this->document->addNode('breadcrumbs', [
             [$this->language->get('system')],
             [$this->language->get('nav_setting')],

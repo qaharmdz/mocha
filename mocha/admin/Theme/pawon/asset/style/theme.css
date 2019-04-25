@@ -80,7 +80,7 @@ body {
 /* Login
 ==================================== */
 
-.page-login {
+.path-login {
     min-height: auto;
     background: #292b6b;
     background: linear-gradient(154deg, #2c388e 0, #292b6b 75%);
@@ -104,16 +104,15 @@ body {
 /* Error
 ==================================== */
 
-.page-error .block-content {
-    background: #fff;
+.path-error .block-content {
     padding: 100px 0 150px;
-    border-bottom: 1px solid #d4d4d4;
 }
-.page-error h1 {
+.path-error h1 {
     font-size: 5rem;
 }
-.page-error h2 {
+.path-error h2 {
     margin-top: 20px;
+    font-size: 1.8rem;
 }
 
 

@@ -33,7 +33,7 @@ class Error extends \Mocha\Controller
     protected function notFound($exception)
     {
         $this->document->setTitle('404 Not Found!');
-        $this->document->addNode('class_body', ['page-error page-404']);
+        $this->document->addNode('class_body', ['path-error code-404']);
 
         return $this->response
             ->setStatusCode($exception->getStatusCode())
@@ -47,7 +47,7 @@ class Error extends \Mocha\Controller
     protected function serviceError($exception)
     {
         $this->document->setTitle($exception->getStatusCode() . ' Oops!');
-        $this->document->addNode('class_body', ['page-error page-500']);
+        $this->document->addNode('class_body', ['path-error code-500']);
 
         return $this->response
             ->setStatusCode($exception->getStatusCode())
