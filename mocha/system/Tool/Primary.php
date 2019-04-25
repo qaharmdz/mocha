@@ -128,6 +128,7 @@ class Primary extends \Mocha\Controller
     public function render(string $template, array $vars = [], string $eventName = '')
     {
         $eventName = ($eventName ?: $template) . '.render';
+        $vars['_template'] = $template;
 
         /**
          * Event to manipulate twig variables.
@@ -139,7 +140,7 @@ class Primary extends \Mocha\Controller
         /**
          * Event to manipulate render result.
          */
-        return $this->event->trigger($eventName . '.after', [], $this->presenter->render($template, $data))->getOutput();
+        return $this->event->trigger($eventName . '.after', [], $this->presenter->render($data['_template'], $data))->getOutput();
     }
 
     public function compress($response)
