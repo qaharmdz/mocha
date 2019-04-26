@@ -22,6 +22,7 @@ class ProviderTool implements ServiceProviderInterface
         $tools = [
             'tool'          => 'Mocha\System\Tool\Primary',
             'tool_secure'   => 'Mocha\System\Tool\Secure',
+            'tool_utility'  => 'Mocha\System\Tool\Utility',
         ];
 
         foreach ($tools as $key => $class) {

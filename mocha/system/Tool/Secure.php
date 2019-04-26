@@ -13,43 +13,6 @@ namespace Mocha\System\Tool;
 
 class Secure extends \Mocha\Controller
 {
-    /**
-     * Remove unwanted characters for filename and url alias
-     * Example: [1]<>+=_`~ !–@#$;"\'\%   ^&*(\{)?}/2=\ -,./../*:|3_-.#
-     * Result: 1-_-2-3
-     *
-     * @param  string $data
-     * @param  string $glue
-     * @param  string $trim
-     *
-     * @return string
-     */
-    public function sanitizeChar(string $data, $glue = '-', $trim = '_-.')
-    {
-        return trim(preg_replace('/[\>\<\+\?\&\"\'\`\/\\\:\;\s\–\-\,\.\{\}\(\)\[\]\~\!\@\^\*\|\$\#\%\=\r\n\t]+/', $glue, $data), $trim);
-    }
-
-    /**
-     * Convert special characters to HTML entities.
-     *
-     * @param  string|array $data
-     * @param  string       $charset
-     *
-     * @return mixed
-     */
-    public function htmlEscape($data, $charset = 'UTF-8')
-    {
-        if (is_array($data)) {
-            foreach ($data as $key => $value) {
-                $data[$key] = html_escape($value);
-            }
-
-            return $data;
-        }
-
-        return htmlspecialchars($data, ENT_QUOTES, $charset);
-    }
-
     public function csrfToken()
     {
         return $this->user->fingerprint();
