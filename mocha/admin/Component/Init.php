@@ -40,10 +40,11 @@ class Init extends \Mocha\Controller
             'env-'   . $this->config->get('setting.server.environment'),
         ]);
         $this->document->addNode('class_body', [
-            'path-'  . $this->tool_secure->sanitizeChar($this->request->getPathInfo()),
+            'path-'  . $this->tool_utility->sanitizeChar($this->request->getPathInfo()),
             'theme-' . $this->config->get('setting.site.theme_admin'),
         ]);
         $this->document->addNode('breadcrumbs', [['Home', $this->router->url('home')]]);
+        $this->document->addNode('alerts', $this->session->flash->get('alerts'));
 
         $this->document->applyAsset('form');
 
@@ -181,7 +182,7 @@ class Init extends \Mocha\Controller
 
             // Force logout if last activity more than 'x' minute
             case (time() - $this->session->get('user_activity')) > (60 * $this->config->get('setting.server.login_session')):
-                $this->session->flash->set('alert_inactivity', 1);
+                $this->session->flash->set('alert_inactivity', true);
                 return $this->logout();
                 break;
 

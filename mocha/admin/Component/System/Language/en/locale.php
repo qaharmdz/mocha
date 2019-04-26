@@ -11,7 +11,7 @@
 
 return [
 
-'page_title'        => 'Locale Setting',
+'page_title'            => 'Locale Setting',
 
 'front_language'        => 'Front Language',
 'admin_language'        => 'Admin Language',
@@ -24,6 +24,5 @@ return [
 'custom'                => 'custom',
 
 'readable_format_info'  => 'Change date (under 3 days) to readable format.<br>Ex: 2 days 5 hours ago',
-
 
 ];

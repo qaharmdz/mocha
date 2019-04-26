@@ -27,6 +27,7 @@
     <script src="{{ mocha.config.get('setting.url_site') }}_asset/script/uikit.min.js?v=3.0.2"></script>
 {% block head %}
 <script>
+'use strict';
 var mocha = {
     'version'     : '{{ mocha.version }}',
     'theme'       : {{ mocha.theme|json_encode() }},
@@ -96,8 +97,7 @@ console.log(mocha);
                                         <li><a href="{{ mocha.router.url('system/setting/server') }}">Server Setting</a></li>
                                         <li class="uk-nav-divider"></li>
                                         {# <li class="uk-nav-header">Logs</li> #}
-                                        <li><a href="{{ mocha.router.url('system/log/api') }}">API Logs</a></li>
-                                        <li><a href="{{ mocha.router.url('system/log/error') }}">Error Logs</a></li>
+                                        <li><a href="{{ mocha.router.url('system/log') }}">Error Logs</a></li>
                                     </ul>
                                     <ul class="uk-nav uk-dropdown-nav">
                                         <li><a href="#">Community</a></li>
@@ -114,7 +114,7 @@ console.log(mocha);
                     </div>
                 </div>
 
-                <form class="uk-search navbar-search">
+                <form class="uk-search navbar-search" hidden>
                     <div>
                         <span class="uk-search-icon">
                             <i data-feather="search" width="18px" height="18px"></i>
@@ -226,7 +226,7 @@ console.log(mocha);
 <div id="block-content" class="block-content">
     <div class="uk-container uk-container-large">
         {% for alert in mocha.document.getNode('alerts') %}
-            <div class="uk-alert-{{ alert.0 }}" uk-alert>
+            <div class="uk-alert-{{ alert.0 }} uk-alert-small" uk-alert>
                 <a class="uk-alert-close" uk-close></a>
                 <p>{{ alert.1 }}</p>
             </div>

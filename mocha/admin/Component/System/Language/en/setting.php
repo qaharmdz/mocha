@@ -17,10 +17,13 @@ return [
 'nav_setting_site'      => 'Site',
 'nav_setting_server'    => 'Server',
 'nav_setting_locale'    => 'Locale',
-'nav_logs'              => 'Logs',
-'nav_log_api'           => 'API',
-'nav_log_error'         => 'Error',
+// 'nav_tool'              => 'Tools',
+// 'nav_tool_task'         => 'Task Manager',
+'nav_maintenance'       => 'Maintenance',
+'nav_mtc_sysinfo'       => 'System Information',
+'nav_mtc_error'         => 'Error Logs',
 
+// Notification
 'success_save_setting'  => 'Successfully modified setting!',
 
 ];

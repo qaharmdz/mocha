@@ -56,15 +56,7 @@ class Setting extends \Mocha\Controller
 
         //=== Content
         $data['page_form']      = $this->form($page);
-        $data['navigations']    = [
-            ['type' => 'header', 'title' => $this->language->get('nav_setting'),        'url' => '', 'active' => false, 'icon' => ''],
-            ['type' => 'in',     'title' => $this->language->get('nav_setting_site'),   'url' => $this->router->url('system/setting/site'),   'active' => $page === 'site',   'icon' => ''],
-            ['type' => 'in',     'title' => $this->language->get('nav_setting_locale'), 'url' => $this->router->url('system/setting/locale'), 'active' => $page === 'locale', 'icon' => ''],
-            ['type' => 'in',     'title' => $this->language->get('nav_setting_server'), 'url' => $this->router->url('system/setting/server'), 'active' => $page === 'server', 'icon' => ''],
-            ['type' => 'header', 'title' => $this->language->get('nav_logs'),           'url' => '', 'active' => false, 'icon' => ''],
-            ['type' => 'in',     'title' => $this->language->get('nav_log_api'),        'url' => $this->router->url('system/log/api'),        'active' => $page === 'api',    'icon' => ''],
-            ['type' => 'in',     'title' => $this->language->get('nav_log_error'),      'url' => $this->router->url('system/log/error'),      'active' => $page === 'error',  'icon' => ''],
-        ];
+        $data['navigations']    = $this->navigation($page);
 
         // === Presenter
         return $this->response->setContent($this->tool->render(
@@ -178,6 +170,21 @@ class Setting extends \Mocha\Controller
         $this->tool->abstractor('setting.update', ['setting', $data['type'], $post]);
 
         return $this->response->jsonOutput($data);
+    }
+
+    public function navigation($page)
+    {
+        $this->language->load('Component/System/setting');
+
+        return [
+            ['type' => 'header', 'title' => $this->language->get('nav_setting'),        'url' => '', 'active' => false, 'icon' => ''],
+            ['type' => 'in',     'title' => $this->language->get('nav_setting_site'),   'url' => $this->router->url('system/setting/site'),   'active' => $page === 'site',    'icon' => ''],
+            ['type' => 'in',     'title' => $this->language->get('nav_setting_locale'), 'url' => $this->router->url('system/setting/locale'), 'active' => $page === 'locale',  'icon' => ''],
+            ['type' => 'in',     'title' => $this->language->get('nav_setting_server'), 'url' => $this->router->url('system/setting/server'), 'active' => $page === 'server',  'icon' => ''],
+            ['type' => 'header', 'title' => $this->language->get('nav_maintenance'),    'url' => '', 'active' => false, 'icon' => ''],
+            ['type' => 'in',     'title' => $this->language->get('nav_mtc_sysinfo'),    'url' => $this->router->url('system/sysinfo'),        'active' => $page === 'sysinfo', 'icon' => ''],
+            ['type' => 'in',     'title' => $this->language->get('nav_mtc_error'),      'url' => $this->router->url('system/log'),            'active' => $page === 'log',     'icon' => ''],
+        ];
     }
 
     protected function validateForm($post)

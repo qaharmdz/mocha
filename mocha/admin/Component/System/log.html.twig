@@ -1,0 +1,53 @@
+{% import 'storage/twig/macro/nav.twig' as nav %}
+
+<div uk-grid>
+    <div class="uk-width-175 uk-visible@l">
+        {{ nav.default(navigations) }}
+    </div>
+
+    <div class="uk-width-expand">
+        <div class="page-top uk-child-width-1-2" uk-grid>
+            <div>
+                <h1 class="page-title">{{ mocha.i18n.get('page_title') }}</h1>
+            </div>
+            <div class="uk-text-right uk-padding-mini-top">
+                <a href="{{ mocha.router.url('system/log/download') }}" class="uk-button uk-button-primary"><i class="fa fa-download fa-fw"></i> {{ mocha.i18n.get('download') }}</a>
+                <button id="js-action-clear" class="uk-button uk-button-danger uk-margin-small-left"><i class="fa fa-eraser fa-fw"></i> {{ mocha.i18n.get('clear') }}</button>
+            </div>
+        </div>
+
+        <div class="page-content uk-card-panel uk-card-body uk-margin uk-margin-hover">
+            <textarea id="log-content"class="uk-textarea uk-width-1 uk-height-viewport" style="min-height:75vh;white-space:pre;" readonly cols="30" rows="10">{{ log_content }}</textarea>
+        </div>
+
+    </div>
+</div>
+
+{% block page_bottom %}
+<script>
+$(document).ready(function()
+{
+    $('#js-action-clear').on('click', function() {
+        $.fn.mocha.confirm({
+            title       : '{{ mocha.i18n.get("are_you_sure") }}',
+            message     : '{{ mocha.i18n.get("confirm_clear") }}',
+            onConfirm   : function() {
+                $.fn.mocha.notify({
+                    message : window.mocha.i18n.processing,
+                    timeout : 120000
+                });
+
+                $.get('{{ mocha.router.url("system/log/clear") }}', function(data) {
+                    $.fn.mocha.notify({
+                        message : data.message,
+                        icon    : '<span uk-icon=\'icon:check;ratio:1.5\'></span>',
+                        status  : 'success'
+                    });
+                    $('#log-content').val('');
+                });
+            }
+        });
+    });
+});
+</script>
+{% endblock %}
