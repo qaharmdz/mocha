@@ -37,7 +37,8 @@
             "Mocha\\Admin\\": "admin",
             "Mocha\\Front\\": "front",
             "Mocha\\System\\": "system",
-            "Mocha\\Setup\\": "setup"
+            "Mocha\\Setup\\": "setup",
+            "": "vendor"
         },
         "files": [
             "system/Engine/Abstractor.php",

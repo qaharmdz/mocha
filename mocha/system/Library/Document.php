@@ -111,7 +111,7 @@ class Document
         return $this->data['asset'][$name] ?? [];
     }
 
-    public function applyAsset(string $name)
+    public function loadAsset(string $name)
     {
         if (!empty($this->data['asset'][$name])) {
             $version = '';
