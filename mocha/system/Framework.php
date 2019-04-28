@@ -172,7 +172,7 @@ class Framework
             $this->config->load($env, 'env');
         }
 
-        if (!$this->config->get('setting.server.debug')) {
+        if (!$this->config->get('setting.server.debug') && class_exists('Kint\Kint')) {
             // Disabled Kint in production (live) environment
             \Kint::$enabled_mode = false;
         }
