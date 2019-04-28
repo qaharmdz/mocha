@@ -54,6 +54,8 @@ class Setting extends \Mocha\Controller
             [$this->language->get('nav_setting_' . $page), $this->router->url('system/setting/' . $page)]
         ]);
 
+        $this->document->loadAsset('select2');
+
         //=== Content
         $data['page_form']      = $this->form($page);
         $data['navigations']    = $this->navigation($page);

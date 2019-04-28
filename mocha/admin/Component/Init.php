@@ -46,7 +46,7 @@ class Init extends \Mocha\Controller
         $this->document->addNode('breadcrumbs', [['Home', $this->router->url('home')]]);
         $this->document->addNode('alerts', $this->session->flash->get('alerts'));
 
-        $this->document->applyAsset('form');
+        $this->document->loadAsset('form');
 
         $this->presenter->param->add(
             $this->event->trigger(
