@@ -1,4 +1,14 @@
 /**
+ * This file is part of Mocha package.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ *
+ * Released under GPL version 3 or any later version.
+ * Full copyright and license see LICENSE file or visit https://www.gnu.org/licenses/gpl-3.0.en.html.
+ */
+
+/**
  * https://learn.jquery.com/plugins/basic-plugin-creation/
  * http://learn.jquery.com/plugins/advanced-plugin-concepts/
  */
@@ -45,6 +55,17 @@ $(document).ajaxError(function(event, jqxhr, settings, exception) {
 UIkit.dropdown('.uk-dropdown', {
     animation: ['uk-animation-slide-bottom-small']
 });
+
+//=== 3rd Plugins default setting
+if (jQuery().select2) {
+    $.fn.select2.defaults.set('theme', 'mocha');
+    $.fn.select2.defaults.set('language', {
+        noResults    : function() { return mocha.i18n.no_result; },
+        errorLoading : function() { return mocha.i18n.no_data; },
+        loadingMore  : function() { return mocha.i18n.load_more; },
+        searching    : function() { return mocha.i18n.processing; }
+    });
+}
 
 
 /*
@@ -182,3 +203,28 @@ $(document).on('IIDE.init IIDE.form_monitor', function(event)
         });
     });
 });
+
+$(document).on('IIDE.init IIDE.select2', function(event)
+{
+    /**
+     * @depedency jQuery Select2
+     *
+     * @usage
+     * <select data-mc-select2></select>
+     * <select data-mc-select2='{"tags":true}' multiple></select>
+     */
+    $('[data-mc-select2]').each(function() {
+        var element = this,
+            opt     = $.extend({
+                tags        : false,
+                placeholder : mocha.i18n.select_
+            }, $(element).data('mc-select2'));
+
+        $(element).select2({
+            tags            : opt.tags,
+            tokenSeparators : opt.tags ? [','] : [],
+            closeOnSelect   : opt.tags ? false : true
+        });
+    });
+});
+

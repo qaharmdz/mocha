@@ -247,7 +247,9 @@ class Init extends \Mocha\Controller
                 $this->config->get('setting.url_site') . '_asset/script/ckeditor/ckeditor.js'
             ]
         ]);
+        */
         $this->document->addAsset('select2', [
+            'version'   => 'v4.0.6-rc.1',
             'style'     => [
                 $this->config->get('setting.url_site') . '_asset/script/select2/select2.min.css'
             ],
@@ -255,6 +257,7 @@ class Init extends \Mocha\Controller
                 $this->config->get('setting.url_site') . '_asset/script/select2/select2.min.js'
             ]
         ]);
+        /*
         $this->document->addAsset('slugify', [
             'script'    => [
                 $this->config->get('setting.url_site') . '_asset/script/speakingurl/speakingurl.min.js'

@@ -44,7 +44,7 @@
             <div class="uk-margin">
                 <label class="uk-form-label" for="timezone">{{ mocha.i18n.get('timezone') }}</label>
                 <div class="uk-form-controls">
-                    <select id="timezone" name="timezone" class="uk-select uk-width-250" data-dc-select2>
+                    <select id="timezone" name="timezone" class="uk-select uk-width-250" data-mc-select2>
                         {% for timezone in timezones %}
                             <option value="{{ timezone }}" {{ form.timezone == timezone ? 'selected' }}>{{ timezone }}</option>
                         {% endfor %}

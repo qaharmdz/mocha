@@ -73,8 +73,9 @@ class Log extends \Mocha\Controller
         if (is_file($file) && filesize($file) > 0) {
             $handle = fopen($file, 'w');
             fclose($handle);
-            $data['message'] = $this->language->get('success_clear');
         }
+
+        $data['message'] = $this->language->get('success_clear');
 
         return $this->response->jsonOutput($data);
     }
