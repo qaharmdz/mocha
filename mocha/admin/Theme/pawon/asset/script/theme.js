@@ -16,17 +16,41 @@
 'use strict';
 
 /*
+ * Table of Content:
+ *
+ * # Global Defaults
+ *   - Form change confirmation
+ *   - AJAX error handler
+ *   - UIkit components
+ *   - 3rd Plugins default setting
+ *
+ * # Plugins
+ *   - $.fn.mocha.notify()
+ *   - $.fn.mocha.confirm()
+ *
+ * # IIDE (Immediate Invoked Data Expressions)
+ *   - data-mc-form-monitor
+ *   - data-mc-select2
+ *
+ * # Function
+ *   - fullEncodeURIComponent
+ *   - getURLParam
+ *   - euid (Element unique id)
+ *
+ * ======================================================================== */
+
+/*
  * Global Defaults
  * ======================================================================== */
 
-// Form change confirmation
+//=== Form change confirmation
 window.onbeforeunload = function() {
     if (mocha.formChanged) {
         return mocha.i18n.confirm_change;
     }
 };
 
-// AJAX error handler
+//=== AJAX error handler
 $(document).ajaxError(function(event, jqxhr, settings, exception) {
     if (mocha.setting.server.debug) {
         console.warn('# Mocha debug: ' + jqxhr.status + ' ' + exception, jqxhr, settings);
@@ -51,7 +75,7 @@ $(document).ajaxError(function(event, jqxhr, settings, exception) {
     }
 });
 
-// UIkit components
+//=== UIkit components
 UIkit.dropdown('.uk-dropdown', {
     animation: ['uk-animation-slide-bottom-small']
 });
@@ -228,3 +252,49 @@ $(document).on('IIDE.init IIDE.select2', function(event)
     });
 });
 
+
+/*
+ * Functions
+ * ======================================================================== */
+
+/**
+ * Encode string to adhere RFC 3986 (which reserves !, ', (, ), and *) Uniform Resource Identifier (URI)
+ *
+ * @see https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/encodeURIComponent
+ */
+function fullEncodeURIComponent(str) {
+    return encodeURIComponent(str).replace(/[!'()*]/g, function(c) {
+        return '%' + c.charCodeAt(0).toString(16);
+    });
+}
+
+/**
+ * Get URL parameter
+ *
+ * @see https://stackoverflow.com/a/901144
+ */
+function getURLParam(name, url) {
+    if (!url) url = window.location.href;
+
+    name = name.replace(/[\[\]]/g, "\\$&");
+    var regex   = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
+        results = regex.exec(url);
+
+    if (!results) { return null; }
+    if (!results[2]) { return ''; }
+
+    return decodeURIComponent(results[2].replace(/\+/g, " "));
+}
+
+/**
+ * Element unique id
+ *
+ * @see https://stackoverflow.com/a/2117523
+ */
+function euid(format) {
+    var euid = format ? format : 'mc-xxx-xxxxxx';
+
+    return euid.replace(new RegExp('x', 'g'), function() {
+        return (Math.floor(Math.random() * 10));
+    });
+}
