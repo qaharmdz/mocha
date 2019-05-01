@@ -1,5 +1,6 @@
 <IfModule mod_autoindex.c>
     Options -Indexes
+    ErrorDocument 403 "Restricted access"
 </IfModule>
 
 <IfModule mod_rewrite.c>
