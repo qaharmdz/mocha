@@ -1,14 +1,15 @@
 _dev/
 temp/*/
-vendor/
+mocha/system/vendor/
 
-public/_*
 public/config.php
+public/storage/cache/*
 
 phpunit.xml
 *.log
 
 # Globally exclude files
+!README
 !index.html
 
 

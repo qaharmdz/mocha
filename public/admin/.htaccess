@@ -1,5 +1,6 @@
 <IfModule mod_autoindex.c>
     Options -Indexes
+    ErrorDocument 403 "Restricted access"
 </IfModule>
 
 <IfModule mod_rewrite.c>
@@ -8,6 +9,7 @@
 
     RewriteCond %{REQUEST_FILENAME} !-f
     RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteCond %{REQUEST_URI} !.*\.(ico|gif|jpg|jpeg|png|js|css)
 
     RewriteRule ^(.*)$ index.php [L,QSA]
 </IfModule>

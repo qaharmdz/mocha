@@ -1,0 +1,3 @@
+# Composer PSR4-autoload Fallback
+
+Purposely used to include 3rd library by extension without involvement of Composer command.
