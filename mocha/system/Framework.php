@@ -185,34 +185,6 @@ class Framework
         d($this->container['db']->where('`group`', 'system')->get('setting'));
          */
 
-        // ====== Symlinks public assets
-        // TODO: do not use symlinks, think a way to use actual folder
-        if ($this->config->getBoolean('system.symlink.status', false)) {
-            $symlinks = $this->config->get('system.symlink.path', [
-                $this->config->get('system.path.storage') . 'image' => PATH_PUBLIC . '_image',      // Uploaded image
-                $this->config->get('system.path.temp') . 'image'    => PATH_PUBLIC . '_images',     // Cache and resized image
-                $this->config->get('system.path.asset')  => PATH_PUBLIC . '_asset',      // General asset
-                $this->config->get('system.path.theme') . $this->config->get('setting.site.theme_admin') . DS . 'asset' => PATH_PUBLIC . '_th' . $this->config->get('setting.site.theme_admin'),
-                $this->config->get('system.path.theme') . $this->config->get('setting.site.theme_front') . DS . 'asset' => PATH_PUBLIC . '_th' .$this->config->get('setting.site.theme_front')
-            ]);
-
-            foreach ($symlinks as $real => $link) {
-                if (file_exists($real) && (!is_link($link) || readlink($link) != $real)) {
-                    try {
-                        if (file_exists($link)) {
-                            @unlink($link);
-                        }
-
-                        if (!file_exists($link)) {
-                            symlink($real, $link);
-                        }
-                    } catch (\Exception $e) {
-                        exit('DEPRESSO | The feeling you get when you run out of coffee!');
-                    }
-                }
-            }
-        }
-
         return $this;
     }
 
