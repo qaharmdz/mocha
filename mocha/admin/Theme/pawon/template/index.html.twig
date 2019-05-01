@@ -17,15 +17,15 @@
     <link rel="{{ link.rel }}" href="{{ link.href }}" {{ link.hreflang ? 'hreflang="' ~ link.hreflang ~ '"' }} {{ link.type ? 'type="' ~ link.type ~ '"' }} {{ link.media ? 'type="' ~ link.media ~ '"' }}>
 {% endfor %}
 
-    <link rel="stylesheet" href="{{ mocha.config.get('setting.url_site') }}_asset/style/uikit.sketsa{{ mocha.i18n.get('lang_dir') == 'rtl' ? '-rtl' }}.min.css?v=3.0.2" media="all">
+    <link rel="stylesheet" href="{{ mocha.config.get('setting.url_site') }}asset/style/uikit.sketsa{{ mocha.i18n.get('lang_dir') == 'rtl' ? '-rtl' }}.min.css?v=3.0.2" media="all">
 {% for style in mocha.document.getStyle() %}
     <link rel="stylesheet" href="{{ style.href }}" media="{{ style.media }}">
 {% endfor %}
-    <link rel="stylesheet" href="{{ mocha.config.get('setting.url_site') }}_asset/style/mocha.plugin.css?v={{ mocha.theme.version }}" media="all">
-    <link rel="stylesheet" href="{{ mocha.config.get('setting.url_site') }}_th{{ mocha.theme.codename }}/style/theme.css?v={{ mocha.theme.version }}" media="all">
+    <link rel="stylesheet" href="{{ mocha.config.get('setting.url_site') }}asset/style/mocha.plugin.css?v={{ mocha.theme.version }}" media="all">
+    <link rel="stylesheet" href="{{ mocha.config.get('setting.url_site') }}asset/theme/{{ mocha.theme.codename }}/style/theme.css?v={{ mocha.theme.version }}" media="all">
 
-    <script src="{{ mocha.config.get('setting.url_site') }}_asset/script/jquery-3.3.1.min.js"></script>
-    <script src="{{ mocha.config.get('setting.url_site') }}_asset/script/uikit.min.js?v=3.0.2"></script>
+    <script src="{{ mocha.config.get('setting.url_site') }}asset/script/jquery-3.3.1.min.js"></script>
+    <script src="{{ mocha.config.get('setting.url_site') }}asset/script/uikit.min.js?v=3.0.2"></script>
 {% block head %}
 <script>
 'use strict';
@@ -264,14 +264,14 @@ $(window).scroll(function() {
 {% endblock footer %}
 
 {% block bottom %}
-<script src="{{ mocha.config.get('setting.url_site') }}_asset/script/uikit-icons.min.js?v=3.0.2"></script>
-<script src="{{ mocha.config.get('setting.url_site') }}_asset/script/feather/feather.min.js?v=4.10.0"></script>
+<script src="{{ mocha.config.get('setting.url_site') }}asset/script/uikit-icons.min.js?v=3.0.2"></script>
+<script src="{{ mocha.config.get('setting.url_site') }}asset/script/feather/feather.min.js?v=4.10.0"></script>
 <script>feather.replace();</script>
 
 {% for script in mocha.document.getScript() %}
 <script src="{{ script }}"></script>
 {% endfor %}
-<script src="{{ mocha.config.get('setting.url_site') }}_th{{ mocha.theme.codename }}/script/theme.js?v={{ mocha.theme.version }}"></script>
+<script src="{{ mocha.config.get('setting.url_site') }}asset/theme/{{ mocha.theme.codename }}/script/theme.js?v={{ mocha.theme.version }}"></script>
 
 {% endblock bottom %}
 </body>

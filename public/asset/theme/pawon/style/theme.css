@@ -31,7 +31,7 @@ body {
 }
 .login-background {
     z-index: 1;
-    opacity: 0.045;
+    opacity: 0.06;
 }
 .login-container {
     z-index: 2;
