@@ -22,7 +22,7 @@
     <link rel="stylesheet" href="{{ style.href }}" media="{{ style.media }}">
 {% endfor %}
     <link rel="stylesheet" href="{{ mocha.config.get('setting.url_site') }}asset/style/mocha.plugin.css?v={{ mocha.theme.version }}" media="all">
-    <link rel="stylesheet" href="{{ mocha.config.get('setting.url_site') }}asset/theme/{{ mocha.theme.codename }}/style/theme.css?v={{ mocha.theme.version }}" media="all">
+    <link rel="stylesheet" href="{{ mocha.config.get('setting.url_site') }}asset/theme/{{ mocha.theme.codename }}/theme.css?v={{ mocha.theme.version }}" media="all">
 
     <script src="{{ mocha.config.get('setting.url_site') }}asset/script/jquery-3.3.1.min.js"></script>
     <script src="{{ mocha.config.get('setting.url_site') }}asset/script/uikit.min.js?v=3.0.2"></script>
@@ -271,7 +271,7 @@ $(window).scroll(function() {
 {% for script in mocha.document.getScript() %}
 <script src="{{ script }}"></script>
 {% endfor %}
-<script src="{{ mocha.config.get('setting.url_site') }}asset/theme/{{ mocha.theme.codename }}/script/theme.js?v={{ mocha.theme.version }}"></script>
+<script src="{{ mocha.config.get('setting.url_site') }}asset/theme/{{ mocha.theme.codename }}/theme.js?v={{ mocha.theme.version }}"></script>
 
 {% endblock bottom %}
 </body>
