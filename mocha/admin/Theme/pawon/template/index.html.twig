@@ -29,7 +29,7 @@
 {% block head %}
 <script>
 'use strict';
-var mocha = {
+const mocha = {
     'version'     : '{{ mocha.version }}',
     'theme'       : {{ mocha.theme|json_encode() }},
     'setting'     : {{ mocha.config.get('setting')|json_encode() }},
