@@ -58,7 +58,7 @@ $(document).ajaxError(function(event, jqxhr, settings, exception) {
     if (jqxhr.status === 401) { // Unauthorized, login require
         window.location.replace(jqxhr.responseText);
     } else {
-        var data = jqxhr.responseJSON ? jqxhr.responseJSON : JSON.parse(jqxhr.responseText);
+        let data = jqxhr.responseJSON ? jqxhr.responseJSON : JSON.parse(jqxhr.responseText);
 
         if (jqxhr.status.toString().length === 3 && data.message) {
             if (jqxhr.status === 404) {
@@ -112,7 +112,7 @@ if (jQuery().select2) {
      * $.fn.mocha.notify.defaults.timeout = 3500; // 3.5 second close
      */
     $.fn.mocha.notify = function(options) {
-        var opt = $.extend({}, $.fn.mocha.notify.defaults, options);
+        const opt = $.extend({}, $.fn.mocha.notify.defaults, options);
 
         if (opt.clear) { UIkit.notification.closeAll(); }
         if (!opt.message) { return; }
@@ -156,8 +156,8 @@ if (jQuery().select2) {
      * $.fn.mocha.confirm.defaults.onConfirm = function() {};
      */
     $.fn.mocha.confirm = function(options) {
-        var opt     = $.extend({}, $.fn.mocha.confirm.defaults, options),
-            content = (opt.title ? '<h2 class="uk-modal-title">' + opt.title + '</h2>' : '') + '<div>' + opt.message + '</div>';
+        const opt     = $.extend({}, $.fn.mocha.confirm.defaults, options),
+              content = (opt.title ? '<h2 class="uk-modal-title">' + opt.title + '</h2>' : '') + '<div>' + opt.message + '</div>';
 
         UIkit.notification.closeAll();
         UIkit.modal.confirm(content, {
@@ -217,7 +217,7 @@ $(document).on('IIDE.init IIDE.form_monitor', function(event)
      * <div data-mc-form-monitor>..</div>
      */
     $('[data-mc-form-monitor]').each(function() {
-        var element = this,
+        let element = this,
             opt     = $.extend({
                 target : 'input, select, textarea',
             }, $(element).data('mc-form-monitor'));
@@ -238,7 +238,7 @@ $(document).on('IIDE.init IIDE.select2', function(event)
      * <select data-mc-select2='{"tags":true}' multiple></select>
      */
     $('[data-mc-select2]').each(function() {
-        var element = this,
+        let element = this,
             opt     = $.extend({
                 tags        : false,
                 placeholder : mocha.i18n.select_
@@ -277,7 +277,7 @@ function getURLParam(name, url) {
     if (!url) url = window.location.href;
 
     name = name.replace(/[\[\]]/g, "\\$&");
-    var regex   = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
+    let regex   = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
         results = regex.exec(url);
 
     if (!results) { return null; }
@@ -292,7 +292,7 @@ function getURLParam(name, url) {
  * @see https://stackoverflow.com/a/2117523
  */
 function euid(format) {
-    var euid = format ? format : 'mc-xxx-xxxxxx';
+    let euid = format ? format : 'mc-xxx-xxxxxx';
 
     return euid.replace(new RegExp('x', 'g'), function() {
         return (Math.floor(Math.random() * 10));
