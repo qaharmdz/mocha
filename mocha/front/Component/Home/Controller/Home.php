@@ -11,7 +11,9 @@
 
 namespace Mocha\Front\Component\Home\Controller;
 
-class Home extends \Mocha\Controller
+use Mocha\Controller;
+
+class Home extends Controller
 {
     public function index()
     {

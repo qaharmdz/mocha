@@ -11,7 +11,9 @@
 
 namespace Mocha\System\Tool;
 
-class Secure extends \Mocha\Controller
+use Mocha\Controller;
+
+class Secure extends Controller
 {
     public function csrfToken()
     {

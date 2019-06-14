@@ -11,12 +11,14 @@
 
 namespace Mocha\Admin\Component;
 
+use Mocha\Controller;
+
 /**
  * Application entrance handler
  *
  * @see  \Mocha\System\Framework  $config.system.controller.init
  */
-class Init extends \Mocha\Controller
+class Init extends Controller
 {
     public function index($data = [])
     {

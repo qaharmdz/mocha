@@ -11,7 +11,9 @@
 
 namespace Mocha\Admin\Component\Account\Controller;
 
-class User extends \Mocha\Controller
+use Mocha\Controller;
+
+class User extends Controller
 {
     /**
      * @see init::logout()

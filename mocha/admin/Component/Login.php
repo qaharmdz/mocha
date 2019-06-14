@@ -11,7 +11,9 @@
 
 namespace Mocha\Admin\Component;
 
-class Login extends \Mocha\Controller
+use Mocha\Controller;
+
+class Login extends Controller
 {
     protected $error =[];
 

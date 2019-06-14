@@ -11,7 +11,9 @@
 
 namespace Mocha\System\Tool;
 
-class Utility extends \Mocha\Controller
+use Mocha\Controller;
+
+class Utility extends Controller
 {
     /**
      * Remove unwanted characters for filename,  url alias etc
@@ -52,8 +54,6 @@ class Utility extends \Mocha\Controller
 
     /**
      * Format bytes to readable unit
-     *
-     * @link   https://stackoverflow.com/a/2510459
      *
      * @param  integer $bytes
      * @param  integer $precision

@@ -11,9 +11,10 @@
 
 namespace Mocha\System\Tool;
 
-use \Mocha\Abstractor;
+use Mocha\Controller;
+use Mocha\Abstractor;
 
-class Primary extends \Mocha\Controller
+class Primary extends Controller
 {
     /**
      * @var Mocha\System\Engine\Config

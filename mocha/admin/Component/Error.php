@@ -11,12 +11,15 @@
 
 namespace Mocha\Admin\Component;
 
+use Mocha\Controller;
+
+
 /**
  * Application error handler
  *
  * @see  \Mocha\System\Framework  $config.system.controller.error
  */
-class Error extends \Mocha\Controller
+class Error extends Controller
 {
     /**
      * @see    \Symfony\Component\HttpKernel\EventListener\ExceptionListener

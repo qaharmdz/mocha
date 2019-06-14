@@ -11,7 +11,9 @@
 
 namespace Mocha\Front\Component;
 
-class Init extends \Mocha\Controller
+use Mocha\Controller;
+
+class Init extends Controller
 {
     public function index()
     {

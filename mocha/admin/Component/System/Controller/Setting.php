@@ -11,9 +11,10 @@
 
 namespace Mocha\Admin\Component\System\Controller;
 
-use Mocha\Admin\Component as C;
+use Mocha\Controller;
+use Mocha\Admin\Component;
 
-class Setting extends \Mocha\Controller
+class Setting extends Controller
 {
     protected $error = [];
 
@@ -44,7 +45,7 @@ class Setting extends \Mocha\Controller
         $this->language->load('Component/System/setting');
         $this->language->load('Component/System/' . $page);
 
-        $this->tool->abstractor('setting', new C\System\Abstractor\Setting());
+        $this->tool->abstractor('setting', new Component\System\Abstractor\Setting());
 
         //=== Document
         $this->document->setTitle($this->language->get('page_title'));
@@ -74,7 +75,7 @@ class Setting extends \Mocha\Controller
         $data['form']           = $this->tool->abstractor('setting.getSettings', ['setting', $page]);
 
         if ($page === 'site') {
-            $this->tool->abstractor('role', new C\Account\Abstractor\Role());
+            $this->tool->abstractor('role', new Component\Account\Abstractor\Role());
 
             $data['roles'] = $this->tool->abstractor('role.getRoles');
 
@@ -143,7 +144,7 @@ class Setting extends \Mocha\Controller
             'message' => sprintf($this->language->get('success_save_setting'))
         ];
 
-        $this->tool->abstractor('setting', new C\System\Abstractor\Setting());
+        $this->tool->abstractor('setting', new Component\System\Abstractor\Setting());
 
         unset($post['setting_type']);
 

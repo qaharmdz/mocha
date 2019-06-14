@@ -11,7 +11,9 @@
 
 namespace Mocha\Front\Component;
 
-class Error extends \Mocha\Controller
+use Mocha\Controller;
+
+class Error extends Controller
 {
     public function index($exception)
     {
