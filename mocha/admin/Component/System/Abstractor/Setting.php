@@ -42,7 +42,7 @@ class Setting extends \Mocha\Abstractor
         return $output;
     }
 
-    public function update($group, $type, $data)
+    public function update(string $group, string $type, array $data)
     {
         $this->db->where('`group`', $group)
                  ->where('type', $type)
