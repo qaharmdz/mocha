@@ -54,7 +54,7 @@ class Log extends Controller
         }
 
         $file = $this->config->get('system.path.temp') . 'log' . DS . $this->config->get('setting.server.log_error');
-        $mask = $this->tool_utility->sanitizeChar(strtolower($this->config->get('setting.site.site_name'))) . '_' . $this->config->get('setting.server.log_error');
+        $mask = $this->tool_utility->sanitizeChar($this->config->get('setting.site.site_name')) . '-' . $this->config->get('setting.server.log_error');
 
         if (is_file($file)) {
             return $this->response->fileOutput($file, $mask);
