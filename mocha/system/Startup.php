@@ -43,8 +43,8 @@ $_SERVER['HTTPS'] = $_https;
 
 // Configuration
 $config = array_replace_recursive(
-    require_once PATH_PUBLIC . 'config.php',    // public/config
-    ['app' => $config_app]                      // public/index.php
+    require_once PATH_PUBLIC . 'config.php',    // public/config.php
+    ['app' => $config_app]                      // public/index.php | public/admin/index.php
 );
 
 $config['setting']['url_site'] = $config['setting']['url_site'];

@@ -103,10 +103,10 @@ class Framework
                         'plugin'        => $config['app']['path'] . 'Plugin' . DS,
                         'language'      => $config['app']['path'] . 'Language' . DS,
                         'theme'         => $config['app']['path'] . 'Theme' . DS,
-                        'asset'         => PATH_MOCHA . 'asset' . DS,
+                        'asset'         => PATH_MOCHA . 'asset'   . DS,
                         'storage'       => PATH_MOCHA . 'storage' . DS,
-                        'system'        => PATH_MOCHA . 'system' . DS,
-                        'temp'          => PATH_MOCHA . 'temp' . DS,
+                        'system'        => PATH_MOCHA . 'system'  . DS,
+                        'temp'          => PATH_MOCHA . 'temp'    . DS,
                     ],
                     'headers'       => [ // Additional response headers
                         'Referrer-Policy'        => 'no-referrer-when-downgrade',

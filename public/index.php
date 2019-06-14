@@ -12,10 +12,11 @@
 require_once 'path.php';
 
 $config_app = [
-    'folder'    => 'front',
-    'url_part'  => '',
-    'path'      => PATH_MOCHA . 'front' . DS,
-    'namespace' => 'Mocha\Front'
+    'folder'     => 'front',
+    'url_part'   => '',
+    'path'       => PATH_MOCHA . 'front' . DS,
+    'namespace'  => 'Mocha\Front',
+    'controller' => 'Home'
 ];
 
 require_once PATH_MOCHA . 'system' . DS . 'Startup.php';

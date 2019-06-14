@@ -94,7 +94,7 @@ class Init extends \Mocha\Controller
 
         // ===
 
-        $this->document->setTitle(' | Mocha', 'suffix');
+        $this->document->setTitle(' | ' . $this->config->get('setting.site.site_name'), 'suffix');
 
         // Forwarding after login
         if (!$this->request->is('ajax')) {

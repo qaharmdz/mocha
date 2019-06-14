@@ -1,10 +1,10 @@
 {
-    "name": "qaharmdz/mocha",
-    "description": "Pragmatic Content Management",
-    "keywords": ["cms","pac"],
-    "homepage": "https://github.com/qaharmdz/mocha",
-    "license": "GPL-3.0-or-later",
-    "authors": [
+    "name"        : "qaharmdz/mocha",
+    "description" : "Pragmatic Content Management",
+    "keywords"    : ["cms","pac"],
+    "homepage"    : "https://github.com/qaharmdz/mocha",
+    "license"     : "GPL-3.0-or-later",
+    "authors"     : [
         {
             "name": "Mudzakkir",
             "email": "qaharmdz@gmail.com"
