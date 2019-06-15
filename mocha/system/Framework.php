@@ -69,7 +69,9 @@ class Framework
                         ],
                     ],
                     'site'      => [
-                        'theme'         => 'base'
+                        'theme'         => '',
+                        'theme_admin'   => 'pawon',
+                        'theme_front'   => 'pendapa'
                     ],
                     'server'    => [
                         'environment'   => 'live',

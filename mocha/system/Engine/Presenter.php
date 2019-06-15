@@ -30,7 +30,7 @@ class Presenter
             'file_ext'  => '.html.twig',
             'global'    => [], // namespace 'mocha' at template file
             'theme'     => [
-                'default'   => '_',
+                'default'   => '',
                 'active'    => ''
             ],
             'path'      => [
