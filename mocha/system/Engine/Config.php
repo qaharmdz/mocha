@@ -138,7 +138,7 @@ class Config extends ParameterBag
                 $this->setDot($key, $value);
             }
 
-            return;
+            return null;
         }
 
         $items = &$this->parameters;

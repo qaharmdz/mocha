@@ -156,7 +156,7 @@ class Init extends Controller
     {
         // Login page
         if ($this->request->getPathInfo() === '/') {
-            return;
+            return null;
         }
 
         // Config setting.server.debug is "true" in environment: dev and test
