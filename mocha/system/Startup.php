@@ -12,7 +12,7 @@
 namespace Mocha\System;
 
 mb_internal_encoding('UTF-8');
-ini_set('display_errors', 0);
+ini_set('display_errors', 1);
 
 defined('MOCHA') or define('MOCHA', '1.0.0-a.1');
 

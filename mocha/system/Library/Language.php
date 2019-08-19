@@ -24,6 +24,13 @@ class Language
     {
         $this->storage = $bag;
 
+        /**
+         * Language locale use lowercase of:
+         * - "ISO 639-1" language code prefix http://www.loc.gov/standards/iso639-2/php/code_list.php
+         * - "ISO 3166-1 Alpha-2" country code suffix https://en.wikipedia.org/wiki/ISO_3166-1
+         * - Example: "en_us"
+         * - Exception of default language, which is only "en"
+         */
         $this->storage->add([
             'param'     => [
                 'default'   => 'en',

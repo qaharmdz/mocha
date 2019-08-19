@@ -51,7 +51,7 @@ console.log(mocha);
             <div class="uk-navbar-left">
                 <div class="uk-display-inline uk-margin-small-left">
                     <a class="uk-navbar-toggle navbar-commander-icon" title="Navigation">
-                        <i data-feather="command" width="22px" height="22px"></i>
+                        <i data-feather="command" style="margin-top:-2px"></i>
                     </a>
                     <div class="uk-width-400 navbar-commander" uk-dropdown="mode:click; offset:0;">
                         <div class="uk-dropdown-grid uk-grid-collapse" uk-grid>
@@ -115,17 +115,17 @@ console.log(mocha);
                     </div>
                 </div>
 
-                <form class="uk-search navbar-search" hidden>
+                <form class="uk-search navbar-search" hidden->
                     <div>
                         <span class="uk-search-icon">
-                            <i data-feather="search" width="18px" height="18px"></i>
+                            <i data-feather="search" width="16px" height="16px"></i>
                         </span>
                         <input class="uk-search-input" type="search" placeholder="TODO: Search...">
                         <a class="uk-search-icon navbar-search-clear" title="Clear search" style="display:none-">
                             <i data-feather="x" width="12px" height="12px"></i>
                         </a>
                     </div>
-                    <div class="uk-width-300 navbar-search-result" uk-dropdown="mode:click; offset:5;">
+                    <div class="uk-width-300 navbar-search-result" uk-dropdown="mode:click; offset:4;">
                         <ul class="uk-nav uk-dropdown-nav">
                             <li><a href="#">Item</a></li>
                             <li><a href="#">Item</a></li>
@@ -146,9 +146,9 @@ console.log(mocha);
                     </div>
 
                     <a class="uk-search-icon navbar-search-option" title="Search options">
-                        <i data-feather="sliders" width="18px" height="18px"></i>
+                        <i data-feather="sliders" width="16px" height="16px"></i>
                     </a>
-                    <div class="uk-width-300 navbar-search-setting" uk-dropdown="mode:click; pos:bottom-right; offset:5;">
+                    <div class="uk-width-300 navbar-search-setting" uk-dropdown="mode:click; pos:bottom-right; offset:4;">
                         <ul class="uk-nav uk-dropdown-nav">
                             <li class="uk-nav-header">Search in</li>
                             <li><a href="#">Item</a></li>
@@ -165,12 +165,12 @@ console.log(mocha);
 
             <div class="uk-navbar-right">
                 <a class="uk-navbar-toggle uk-visible@s" href="{{ mocha.config.get('setting.url_site') }}" target="_blank" title="View site">
-                    <i data-feather="monitor" width="19px" height="19px"></i>
+                    <i data-feather="monitor" width="20px" height="20px"></i>
                 </a>
 
                 <div class="uk-display-inline uk-visible@s" hidden>
                     <a class="uk-navbar-toggle" title="Shortcut">
-                        <i data-feather="link-2" width="19px" height="19px"></i>
+                        <i data-feather="link-2" width="20px" height="20px"></i>
                         <span class="dropdown-caret"></span>
                     </a>
                     <div uk-dropdown="mode:click; offset:0; pos:bottom-right;">

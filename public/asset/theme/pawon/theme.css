@@ -9,7 +9,8 @@
  */
 
 html {
-    background: #f2f2f2;
+    background: #f3f4f5;
+    background: #e6ecf0;
     min-width: 360px;
 }
 body {
@@ -176,7 +177,7 @@ body {
 .navbar-search .uk-search-input {
     color: rgba(0,0,0,.6);
     height: 27px;
-    padding-left: 30px;
+    padding-left: 28px;
     padding-right: 6px;
     background: rgba(255, 255, 255, .3);
     border: none;
