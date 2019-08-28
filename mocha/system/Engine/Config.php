@@ -64,7 +64,6 @@ class Config extends ParameterBag
     public function has($keys)
     {
         return $this->hasDot($keys);
-
     }
 
     /**

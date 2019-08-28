@@ -107,7 +107,9 @@ class Request extends HttpFoundation\Request
             $valid = true;
             foreach ($type as $check) {
                 $valid = $this->is($check);
-                if (!$valid) { break; }
+                if (!$valid) {
+                    break;
+                }
             }
 
             return $valid;

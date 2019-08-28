@@ -13,7 +13,6 @@ namespace Mocha\Admin\Component;
 
 use Mocha\Controller;
 
-
 /**
  * Application error handler
  *
