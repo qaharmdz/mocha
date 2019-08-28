@@ -23,7 +23,7 @@ return [
 'security'              => 'Security',
 'login_session'         => 'Login Session',
 
-'environment_info'      => 'Development environment: display error, 6 hours login session, disable cache and compression, strict template variables and enable Kint debugging tool.',
+'environment_info'      => 'Development environment: display error, x6 regular login session, disable cache and compression, strict template variables and enable Kint debugging tool.',
 'maintenance_info'      => 'Front site show maintenance message for non logged in backend user.',
 'output_compress_info'  => 'Compress server output make efficient transfer to browser. Compression value between 0 - 9.',
 'login_session_info'    => 'Logged out user after a set period of inactivity.',

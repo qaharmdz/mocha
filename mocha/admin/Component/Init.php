@@ -161,7 +161,7 @@ class Init extends Controller
 
         // Config setting.server.debug is "true" in environment: dev and test
         if ($this->config->get('setting.server.debug')) {
-            $this->config->set('setting.server.login_session', (60 * 6));
+            $this->config->set('setting.server.login_session', ($this->config->get('setting.server.login_session') * 6));
         }
 
         switch (true) {
