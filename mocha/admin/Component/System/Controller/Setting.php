@@ -179,15 +179,20 @@ class Setting extends Controller
     {
         $this->language->load('Component/System/setting');
 
-        return [
-            ['type' => 'header', 'title' => $this->language->get('nav_setting'),        'url' => '', 'active' => false, 'icon' => ''],
-            ['type' => 'in',     'title' => $this->language->get('nav_setting_site'),   'url' => $this->router->url('system/setting/site'),   'active' => $page === 'site',    'icon' => ''],
-            ['type' => 'in',     'title' => $this->language->get('nav_setting_locale'), 'url' => $this->router->url('system/setting/locale'), 'active' => $page === 'locale',  'icon' => ''],
-            ['type' => 'in',     'title' => $this->language->get('nav_setting_server'), 'url' => $this->router->url('system/setting/server'), 'active' => $page === 'server',  'icon' => ''],
-            ['type' => 'header', 'title' => $this->language->get('nav_maintenance'),    'url' => '', 'active' => false, 'icon' => ''],
-            ['type' => 'in',     'title' => $this->language->get('nav_mtc_sysinfo'),    'url' => $this->router->url('system/sysinfo'),        'active' => $page === 'sysinfo', 'icon' => ''],
-            ['type' => 'in',     'title' => $this->language->get('nav_mtc_error'),      'url' => $this->router->url('system/log'),            'active' => $page === 'log',     'icon' => ''],
+        $navigations = [
+            100 => ['type' => 'header', 'title' => $this->language->get('nav_setting'),        'url' => '', 'active' => false, 'icon' => ''],
+            101 => ['type' => 'in',     'title' => $this->language->get('nav_setting_site'),   'url' => $this->router->url('system/setting/site'),   'active' => $page === 'site',    'icon' => ''],
+            102 => ['type' => 'in',     'title' => $this->language->get('nav_setting_locale'), 'url' => $this->router->url('system/setting/locale'), 'active' => $page === 'locale',  'icon' => ''],
+            103 => ['type' => 'in',     'title' => $this->language->get('nav_setting_server'), 'url' => $this->router->url('system/setting/server'), 'active' => $page === 'server',  'icon' => ''],
+            900 => ['type' => 'header', 'title' => $this->language->get('nav_maintenance'),    'url' => '', 'active' => false, 'icon' => ''],
+            901 => ['type' => 'in',     'title' => $this->language->get('nav_mtc_sysinfo'),    'url' => $this->router->url('system/sysinfo'),        'active' => $page === 'sysinfo', 'icon' => ''],
+            902 => ['type' => 'in',     'title' => $this->language->get('nav_mtc_error'),      'url' => $this->router->url('system/log'),            'active' => $page === 'log',     'icon' => ''],
         ];
+
+        $navigations = $this->event->trigger('setting.navigation', $navigations)->getData();
+        ksort($navigations);
+
+        return $navigations;
     }
 
     protected function validateForm($post)
