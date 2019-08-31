@@ -37,12 +37,10 @@ class Init extends Controller
 
         $this->document->addNode('class_html', [
             'lang-'  . $this->language->get('lang_code'),
-            'lang-'  . $this->language->get('lang_dir'),
+            'dir-'   . $this->language->get('lang_dir'),
             'debug-' . $this->config->get('setting.server.debug'),
             'env-'   . $this->config->get('setting.server.environment'),
-        ]);
-        $this->document->addNode('class_body', [
-            'path-'  . $this->tool_utility->sanitizeChar($this->request->getPathInfo()),
+            'route-' . $this->tool_utility->sanitizeChar($this->request->getPathInfo()),
             'theme-' . $this->config->get('setting.site.theme_admin'),
         ]);
         $this->document->addNode('breadcrumbs', [['Home', $this->router->url('home')]]);
@@ -98,7 +96,7 @@ class Init extends Controller
 
         $this->document->setTitle(' - ' . $this->config->get('setting.site.site_name'), 'suffix');
 
-        // Forwarding after login
+        // Used for forwarding after login
         if (!$this->request->is('ajax')) {
             $this->session->set('last_route', $this->router->url($this->request->query->get('route', 'home')));
         }

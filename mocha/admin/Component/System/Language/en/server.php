@@ -17,7 +17,7 @@ return [
 'environment'           => 'Environment',
 'development'           => 'Development',
 'production'            => 'Production',
-'maintenance'          => 'Maintenance ',
+'maintenance'           => 'Maintenance ',
 'output_compress'       => 'Output Comperession',
 
 'security'              => 'Security',

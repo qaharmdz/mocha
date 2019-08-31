@@ -181,16 +181,17 @@ class Primary extends Controller
      *
      * @return \Mocha\System\Engine\Response
      */
-    public function errorPermission(string $message)
+    public function errorPermission(string $message = '')
     {
         $this->document->setTitle('403 Forbidden!');
         $this->document->addNode('class_body', ['path-error status-403']);
 
         return $this->response
             ->setStatusCode(403)
-            ->setContent(
-                '<h1>403 Forbidden!</h1>' .
-                '<p>' . ($message ?: 'You not have permission to access!') . '</p>'
-            );
+            ->setContent($this->tool->render('error', [
+                'title'    => '403 Forbidden!',
+                'subtitle' => $message ?: 'You not have permission to access!',
+                'content'  => ''
+            ]));
     }
 }

@@ -207,7 +207,7 @@ return [
 // 'error_inconsistent'        => 'Inconsistet data detected!',
 // 'error_suspicious'          => 'Suspicious request detected!',
 // 'error_locked_modify'       => 'Cannot modify locked data!',
-'error_perm_edit'           => 'You not have permission to edit!',
+'error_permission_edit'     => 'You not have permission to edit!',
 
 // 'error_required'            => 'Input required!',
 'error_no_empty'            => 'Input cannot be empty!',

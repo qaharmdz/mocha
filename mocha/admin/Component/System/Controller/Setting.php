@@ -126,7 +126,7 @@ class Setting extends Controller
 
         // === Validate
         if (!$this->user->hasPermission('edit', 'system/setting')) {
-            return $this->tool->errorAjax($this->language->get('error_perm_edit'), 403);
+            return $this->tool->errorAjax($this->language->get('error_permission_edit'), 403);
         }
 
         if (!$this->request->is(['ajax', 'post'])) {
