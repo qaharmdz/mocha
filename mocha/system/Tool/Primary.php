@@ -101,8 +101,10 @@ class Primary extends Controller
      */
     public function abstractor(string $path, $param = [])
     {
-        if ($param instanceof Abstractor && !$this->bags->has('abstractor.' . $path)) {
-            $this->bags->set('abstractor.' . $path, $param);
+        if ($param instanceof Abstractor) {
+            if (!$this->bags->has('abstractor.' . $path)) {
+                $this->bags->set('abstractor.' . $path, $param);
+            }
         } else {
             $abstractor = explode('.', $path);
 
