@@ -233,7 +233,7 @@ class Framework
 
         $this->container['date']->param->add([
             // TODO: more date param from database setting
-            'localize_datetime' => $this->container['language']->get('i18n_localize_datetime')
+            'localize_datetime' => $this->container['language']->get('localize_datetime')
         ]);
 
         // Extra service

@@ -120,6 +120,7 @@ class Date
             (array)$options
         );
 
+        // Translate locale datetime to en
         $datetime = $this->translate(
             $datetime,
             $this->param->get('format.' . $param['from_format'], $param['from_format']),
