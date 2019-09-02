@@ -22,7 +22,7 @@ class User extends Controller
     {
         $this->user->logout();
 
-        $this->session->flash->set('alert_logout', true);
+        $this->session->flash->set('alert_user_logout', true);
 
         return $this->response->redirect($this->router->url());
     }

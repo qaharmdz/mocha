@@ -53,7 +53,7 @@ class Init extends Controller
                 'init.twig.global',
                 ['global' => [
                     // Variables
-                    'version'     => MOCHA,
+                    'version'     => $this->config->get('system.version'),
                     'secure'      => $this->request->isSecure(),
                     'theme'       => $this->tool->metafile('theme', $this->config->get('setting.site.theme')),
                     'user'        => $this->user->all(),
@@ -94,7 +94,7 @@ class Init extends Controller
 
         // ===
 
-        $this->document->setTitle(' - ' . $this->config->get('setting.site.site_name'), 'suffix');
+        $this->document->setTitle(' - ' . $this->config->get('setting.site.site_name') . ' Admin', 'suffix');
 
         // Used for forwarding after login
         if (!$this->request->is('ajax')) {

@@ -130,7 +130,7 @@ class Setting extends Controller
         }
 
         if (!$this->request->is(['ajax', 'post'])) {
-            return $this->tool->errorAjax($this->language->get('error_ajax_post_json'), 412);
+            return $this->tool->errorAjax($this->language->get('error_ajax_post'), 412);
         }
 
         $post = $this->request->post->all();

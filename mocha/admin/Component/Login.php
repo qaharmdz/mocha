@@ -37,7 +37,7 @@ class Login extends Controller
             'alert_admin_access' => 'danger',
             'alert_token'        => 'warning',
             'alert_inactivity'   => 'warning',
-            'alert_logout'       => 'success'
+            'alert_user_logout'  => 'success'
         ];
 
         foreach ($alertSession as $key => $value) {

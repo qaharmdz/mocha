@@ -8,6 +8,26 @@
  * Copyright and license see LICENSE file or https://www.gnu.org/licenses/gpl-3.0.en.html.
  */
 
+/*
+ * Table of Content:
+ *
+ * # Specific Page
+ *   - Login
+ *   - Error
+ *
+ * # Block Navbar
+ *   - Navbar Commander
+ *   - Navbar Search
+ *
+ * # Block
+ *   - Top
+ *   - Content
+ *   - Footer
+ *
+ * # Misc
+ *
+ * ======================================================================== */
+
 html {
     background: #f3f4f5;
     background: #e6ecf0;
@@ -150,7 +170,6 @@ body {
     padding: 8px; /* match .uk-dropdown padding */
 }
 
-
 /* Navbar Search
 ==================================== */
 .navbar-search {
@@ -201,25 +220,28 @@ body {
 }
 
 
-/* Block Top
+/* Block
 ======================================================================== */
 
+/* Top
+==================================== */
 .block-top {
-    font-size: 13px;
+    background: rgba(0, 0, 0, 0.05);
+    padding: 2px 0 3px;
 }
-.block-top .uk-breadcrumb {
-    margin: 5px 0 25px;
+.block-top  .uk-breadcrumb > * > * {
+    font-size: 12.5px;
 }
 
+/* Content
+==================================== */
 
-/* Block Content
-======================================================================== */
+.block-content {
+    margin-top: 25px;
+}
 
-.block-content {}
-
-
-/* Block Footer
-======================================================================== */
+/* Footer
+==================================== */
 
 .block-footer {
     padding:40px 0 50px;
@@ -229,7 +251,3 @@ body {
 
 /* Misc
 ======================================================================== */
-
-i[data-feather] {
-    min-width: 18px;
-}
