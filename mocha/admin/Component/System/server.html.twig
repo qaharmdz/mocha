@@ -7,8 +7,8 @@
     </div>
 </div>
 
-<form id="setting-form" action="{{ form_action }}" method="post" class="uk-form-horizontal uk-form-expand uk-margin" data-mc-form-monitor>
-    <div class="page-content uk-card-panel uk-card-body uk-margin uk-margin-hover">
+<form id="setting-form" action="{{ form_action }}" method="post" class="page-content uk-form-horizontal uk-form-expand uk-margin" data-mc-form-monitor>
+    <div class="uk-card-panel uk-card-body uk-margin-top uk-margin-hover">
 
         {{ mocha.tool_secure.csrfField() }}
         <input type="hidden" value="server" name="setting_type">
@@ -78,7 +78,7 @@
 
     </div>
 
-    <div class="page-content uk-card-panel uk-card-body uk-margin uk-margin-hover">
+    <div class="uk-card-panel uk-card-body uk-margin-top uk-margin-hover">
 
         <fieldset class="uk-fieldset">
             <legend class="uk-legend">{{ mocha.i18n.get('email') }}</legend>
