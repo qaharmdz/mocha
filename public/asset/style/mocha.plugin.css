@@ -8,6 +8,15 @@
  * Copyright and license see LICENSE file or https://www.gnu.org/licenses/gpl-3.0.en.html.
  */
 
+/*
+ * Table of Content:
+ *
+ * - Sketsa override
+ * - Select2
+ * - DataTables
+ *
+ * ======================================================================== */
+
 /* Sketsa override
 ======================================================================== */
 
@@ -79,6 +88,27 @@
 
 .uk-button-radio input[type=radio]:checked+.uk-button {
     text-shadow: 0 -1px 0 rgba(0,0,0,.1);
+}
+
+.uk-button-mini {
+    padding: 0px 2px;
+    line-height: 14px;
+    font-size: 12px;
+}
+.uk-margin-mini-left {
+    margin-left: 5px;
+}
+
+.uk-dropdown {
+    text-align: left;
+}
+.uk-dropdown-mini {
+    min-width: 130px;
+    padding: 4px;
+}
+.uk-dropdown-mini .uk-dropdown-nav>li>a {
+    font-size: 12.4px;
+    padding: 4px 6px;
 }
 
 .uk-form-controls  {
@@ -263,4 +293,104 @@
   margin: 3px;
   padding: 2px 8px;
   display: inline-block;
+}
+
+
+/* DataTables
+======================================================================== */
+.dataTables-top {
+  padding: 10px;
+  margin-bottom: 15px;
+  background: #f6f6f6;
+  border: none;
+}
+.dataTables-content thead tr:last-child .uk-checkbox {
+  margin-top: 3px;
+}
+.dataTables_filter,
+.dataTables-top .dataTables_info {
+  float: left;
+  margin-right: 10px;
+}
+.dataTables_length,
+.ColVis {
+  float: right;
+  margin-left: 10px;
+}
+.dataTables_filter input,
+.dataTables_length_select {
+  height: 28px !important;
+}
+.dataTables_filter input {
+  padding-left: 32px !important;
+}
+.dataTables_info {
+  color: #888;
+}
+.dataTables_info a {
+  margin-left: 8px;
+  font-size: 13px;
+  color: #aaa;
+  cursor: pointer;
+}
+.dataTables_info a:hover {
+  color: #666;
+}
+.dataTables-top .dataTables_info {
+  margin-top: 4px;
+  color: #999999;
+}
+.dataTables-bottom .uk-pagination {
+  margin-bottom: 0;
+}
+.uk-table.dataTable th {
+  text-align: center;
+  padding: 8px 12px 8px 4px;
+}
+.uk-table.dataTable th:first-child {
+  padding: 8px;
+}
+.uk-table.dataTable thead th:hover {
+  background-color: #e7efff;
+}
+.dataTables_processing {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  background-color: rgba(0, 0, 0, 0.4);
+  opacity: 1 !important;
+  z-index: 11000 !important;
+}
+.dataTables_processing_content {
+  position: fixed;
+  font-size: 24px;
+  top: 30%;
+  left: 41%;
+  width: 250px;
+  margin: 50px auto;
+  padding: 20px;
+  background: #fff;
+  color: #383838;
+  border: 1px solid #fbfbfb;
+  -webkit-box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+          box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+  z-index: 1200;
+  -webkit-transition: opacity 0.3s linear, -webkit-transform 0.3s ease-out;
+  transition: opacity 0.3s linear, -webkit-transform 0.3s ease-out;
+  transition: opacity 0.3s linear, transform 0.3s ease-out;
+  transition: opacity 0.3s linear, transform 0.3s ease-out, -webkit-transform 0.3s ease-out;
+}
+.dataTables_processing_content i {
+  margin-right: 10px;
+}
+.sorting {
+  background: url('../image/sort_both.png') no-repeat center right;
+}
+.sorting_asc {
+  background: url('../image/sort_asc.png') no-repeat center right;
+}
+.sorting_desc {
+  background: url('../image/sort_desc.png') no-repeat center right;
 }

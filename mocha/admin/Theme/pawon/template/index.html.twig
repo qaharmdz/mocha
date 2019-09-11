@@ -9,6 +9,7 @@
 {% endif %}
 
     <title>{{ mocha.document.getTitle }}</title>
+    <base href="{{ mocha.config.get('setting.url_base') }}">
 
 {% for meta in mocha.document.getMeta %}
     <meta {{ meta.attribute }}="{{ meta.value }}" content="{{ meta.content }}">
@@ -26,10 +27,10 @@
 
     <script src="{{ mocha.config.get('setting.url_site') }}asset/script/jquery-3.3.1.min.js"></script>
     <script src="{{ mocha.config.get('setting.url_site') }}asset/script/uikit.min.js?v=3.0.2"></script>
+
 {% block head %}
 <script>
-'use strict';
-const mocha = {
+var mocha = {
     'version'     : '{{ mocha.version }}',
     'theme'       : {{ mocha.theme|json_encode() }},
     'setting'     : {{ mocha.config.get('setting')|json_encode() }},
@@ -243,7 +244,7 @@ console.log(mocha);
     <div class="uk-container uk-container-large">
         <div class="footer-content">
             {{ mocha.i18n.get('copyright') }} <br>
-            Version {{ mocha.version }}
+            Version {{ constant('MOCHA') }}
         </div>
     </div>
 </div>
@@ -272,7 +273,6 @@ $(window).scroll(function() {
 <script src="{{ script }}"></script>
 {% endfor %}
 <script src="{{ mocha.config.get('setting.url_site') }}asset/theme/{{ mocha.theme.codename }}/theme.js?v={{ mocha.theme.version }}"></script>
-
 {% endblock bottom %}
 </body>
 </html>

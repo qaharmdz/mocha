@@ -232,15 +232,18 @@ class Init extends Controller
                 $this->config->get('setting.url_site') . 'asset/script/jquery-ui/sortable.min.js',
             ]
         ]);
+         */
         $this->document->addAsset('datatables', [
+            'version'   => 'v1.10.18',
             'script'    => [
                 $this->config->get('setting.url_site') . 'asset/script/datatables/dataTables.min.js',
-                $this->config->get('setting.url_site') . 'asset/script/datatables/dataTables.columnFilter.min.js',
-                $this->config->get('setting.url_site') . 'asset/script/datatables/dataTables.colVis.min.js',
-                $this->config->get('setting.url_site') . 'asset/script/dataTables.config.min.js',
-                $this->config->get('setting.url_site') . 'asset/script/typewatch/typewatch.min.js'
+                $this->config->get('setting.url_site') . 'asset/script/dataTables.config.js',
+                // $this->config->get('setting.url_site') . 'asset/script/datatables/dataTables.columnFilter.min.js',
+                // $this->config->get('setting.url_site') . 'asset/script/datatables/dataTables.colVis.min.js',
+                // $this->config->get('setting.url_site') . 'asset/script/typewatch/typewatch.min.js'
             ]
         ]);
+        /*
         $this->document->addAsset('ckeditor', [
             'script'    => [
                 $this->config->get('setting.url_site') . 'asset/script/ckeditor.config.min.js',

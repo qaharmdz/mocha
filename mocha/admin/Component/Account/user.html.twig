@@ -1,0 +1,117 @@
+<div class="page-top">
+    <div uk-grid>
+        <div class="uk-width-expand">
+            <h1 class="uk-margin-remove">Content <span class="uk-text-lead uk-text-muted uk-visible@s">Tags</span></h1>
+        </div>
+    </div>
+</div>
+
+<div class="page-content uk-card-panel uk-card-body uk-margin-top">
+
+    <div uk-grid>
+        <div class="uk-width-expand">
+            ...
+        </div>
+    </div>
+
+    <hr class="uk-divider-line">
+
+    <table id="user-record" class="uk-table uk-table-striped uk-table-hover" style="100%">
+        <thead>
+            <tr>
+                <th style="width:30px;"></th>
+                <th style="width:50px;">ID</th>
+                <th style="minwidth:200px;">Name</th>
+                <th style="width:200px;">Email</th>
+                <th style="width:150px;">Roles</th>
+                <th style="width:200px;">Registration</th>
+                <th style="width:200px;">Last Login</th>
+                <th style="width:110px;">Status</th>
+                <th style="width:90px;">Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td colspan="9" class="dataTables_empty"><i>{{ mocha.i18n.get('loading') }}</i></td>
+            </tr>
+        </tbody>
+    </table>
+
+</div>
+<script>
+$(document).ready(function() {
+var dtSetting = {
+        'table'   : '#user-record',
+        'ajaxurl' : mocha.setting.url_base + 'account/user/records',
+        column    : {
+            'sorting' : [[6, 'desc']], // last_login
+            'status'  : 7,
+        }
+    },
+    dtInstance = $(dtSetting.table).DataTable({
+        'ajax': $.fn.dataTable.pipeline({
+            'url'  : dtSetting.ajaxurl,
+            'data' : function(d) {
+                d['csrf-token'] = '{{ mocha.tool_secure.csrfToken() }}';
+            }
+        }),
+        'sorting': dtSetting.column.sorting,
+        'columnDefs': [
+            { 'orderable'   : false, 'targets' : [0, -1] },
+            { 'visible'     : false, 'targets' : [ 5 ] },
+            { 'createdCell' : function(nTd) {
+                $(nTd).addClass('uk-text-center'); },
+                'targets' : [ 0, 1, -2, -1 ]
+            },
+        ],
+        'columns'       : [
+            { 'data': 'user_id',
+                'render': function(data, type, full) {
+                    return  '<input type="checkbox" class="uk-checkbox bulk-checkbox" name="bulk_action[]" value="' + data + '" />';
+                }
+            },
+            { 'data': 'user_id' },
+            { 'data': 'fullname',
+                'render': function(data, type, full) {
+                    return '<a href="' + full.url_edit + '">' + (data ? data : '-') + '</a> ' + (full.displayname ? '<i class="uk-text-muted">(' + full.displayname + ')</i>' : '');
+                }
+            },
+            { 'data': 'email' },
+            { 'data': 'role_title' },
+            { 'data': 'created' },
+            { 'data': 'last_login' },
+            { 'data': 'status' },
+            { 'data': 'user_id',
+                'render': function(data, type, full) {
+                    output  = '<a href="' + full.url_edit + '" uk-tooltip title="{{ mocha.i18n.get('edit') }}"><i data-feather="edit-3" width="18px" height="18px"></i></span></a>';
+                    output += '<div class="uk-inline uk-margin-mini-left">';
+                    output += '    <a class="uk-button uk-button-default uk-button-mini" style="margin-top:-5px"><i data-feather="menu" width="16px" height="16px"></i></a>';
+                    output += '    <div class="uk-dropdown-mini" uk-dropdown="offset:5;pos:bottom-right;">';
+                    output += '        <ul class="uk-nav uk-dropdown-nav">';
+                    if (full.raw.status === 'trash') {
+                        output += '       <li><a class="js-action-bulk" data-dci-bulk=\'{"type":"disabled", "item":"' + full.user_id + '", "message":{{ mocha.i18n.get('success_restore') }}"}\'><i class="fa fa-undo fa-fw"></i> {{ mocha.i18n.get('restore') }}</a></li>';
+                        output += '       <li><a class="js-action-bulk" data-dci-bulk=\'{"type":"delete", "item":"' + full.user_id + '"}\'><span uk-icon="icon:trash"></span> {{ mocha.i18n.get('delete') }}</a></li>';
+                    } else {
+                        if (full.raw.status !== 'enabled') {
+                            output += '   <li><a class="js-action-bulk" data-dci-bulk=\'{"type":"enabled", "item":"' + full.user_id + '"}\'><i class="fa fa-check fa-fw"></i>{{ mocha.i18n.get('enabled') }}</a></li>';
+                        }
+                        if (full.raw.status !== 'disabled') {
+                            output += '   <li><a class="js-action-bulk" data-dci-bulk=\'{"type":"disabled", "item":"' + full.user_id + '"}\'>{{ mocha.i18n.get('disabled') }}</a></li>';
+                        }
+                        output += '       <li><a class="js-action-bulk" data-dci-bulk=\'{"type":"trash", "item":"' + full.user_id + '"}\'><i class="fa fa-trash-o fa-fw"></i> {{ mocha.i18n.get('trash') }}</a></li>';
+                    }
+                    output += '        </ul>';
+                    output += '    </div>';
+                    output += '</div>';
+
+                    return output;
+                }
+            },
+        ],
+        'drawCallback': function(settings) {
+            feather.replace();
+        }
+    });
+// console.log(dtInstance);
+});
+</script>
