@@ -24,8 +24,8 @@
                 <th style="minwidth:200px;">Name</th>
                 <th style="width:200px;">Email</th>
                 <th style="width:150px;">Roles</th>
-                <th style="width:200px;">Registration</th>
-                <th style="width:200px;">Last Login</th>
+                <th style="width:175px;">Registration</th>
+                <th style="width:175px;">Last Login</th>
                 <th style="width:110px;">Status</th>
                 <th style="width:90px;">Action</th>
             </tr>
@@ -48,7 +48,7 @@ var dtSetting = {
             'status'  : 7,
         }
     },
-    dtInstance = $(dtSetting.table).DataTable({
+    dtAPI = $(dtSetting.table).DataTable({
         'ajax': $.fn.dataTable.pipeline({
             'url'  : dtSetting.ajaxurl,
             'data' : function(d) {
@@ -112,6 +112,7 @@ var dtSetting = {
             feather.replace();
         }
     });
-// console.log(dtInstance);
+
+// console.log(dtAPI);
 });
 </script>

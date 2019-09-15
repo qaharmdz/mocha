@@ -22,6 +22,8 @@ class User extends Controller
 
         $this->language->load('Component/Account/user');
 
+        d($this->session->get('dtPost', []));
+        d($this->tool_datatables->parse($this->session->get('dtPost', [])));
 
         //=== Document
         $this->document->setTitle($this->language->get('page_title'));
@@ -42,6 +44,7 @@ class User extends Controller
             $data
         ));
     }
+
     public function records()
     {
         if (!$this->request->is(['ajax', 'post'])) {
@@ -51,6 +54,8 @@ class User extends Controller
         $this->tool->abstractor('user', new Component\Account\Abstractor\User());
 
         $post = $this->request->post->all();
+
+        $this->session->set('dtPost', $post);
 
         $records = $this->tool->abstractor('user.getRecords', [$post]);
 
@@ -73,8 +78,8 @@ class User extends Controller
         $output = [
             'draw'            => (int)$post['draw'],
             'data'            => $data,
-            'recordsFiltered' => 2,
-            'recordsTotal'    => 5,
+            'recordsFiltered' => count($data),
+            'recordsTotal'    => $this->tool->abstractor('user.getTotalRecords'),
         ];
 
         return $this->response->jsonOutput($output);

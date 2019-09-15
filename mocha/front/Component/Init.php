@@ -102,14 +102,62 @@ class Init extends Controller
 
     protected function test($data = [])
     {
+        $columns = [
+            'group'   => 1,
+            'type'    => 2,
+            'key'     => 3,
+            'value'   => 4,
+            'encoded' => 5,
+        ];
+
+        // d(implode(', ', array_keys($columns)));
+        // d(implode(', ', array_values($columns)));
+
         // d(MOCHA);
         // d($data);
+
+        // d($this->db->prepare('SELECT * FROM ' . DB_PREFIX . 'setting')->execute()); // execute return boolean
+        // d($this->db->run('SELECT * FROM ' . DB_PREFIX . 'setting')->fetch()); // get one row
+        // d($this->db->run('SELECT * FROM ' . DB_PREFIX . 'setting s WHERE s.group = ?', ['setting'])->fetchAll()); // get all rows
+        // d($this->db->run('SELECT count(*) FROM ' . DB_PREFIX . 'setting')->fetchColumn()); // getting the number of rows in the table
+        // d($this->db->run('SELECT * FROM ' . DB_PREFIX . 'user')->fetchAll(\PDO::FETCH_UNIQUE)); // first column as array key
+        // d($this->db->run('SELECT `type`, `key`, `value`, `encoded` FROM ' . DB_PREFIX . 'setting s WHERE s.group = ?', ['setting'])->fetchAll(\PDO::FETCH_GROUP)); // get all rows
+
+        /*
+        $users = $this->db->run(
+            'SELECT u.user_id, u.role_id, u.email, u.password, u.verify_code, u.verify_type,
+                    r.title AS role_name, u.created, u.updated, u.last_login
+            FROM ' . DB_PREFIX . 'user u
+            LEFT JOIN ' . DB_PREFIX . 'role r ON (r.role_id = u.role_id)
+            WHERE u.email = ? AND u.status = "enabled" AND r.status = "enabled"',
+            ['qahar.5010@gmail.com']
+        )->fetch();
+        $results = $this->db->run(
+            'SELECT um.attribute, um.value, um.encoded
+            FROM ' . DB_PREFIX . 'user_meta um
+            WHERE um.user_id = ?',
+            [$users['user_id']]
+        )->fetchAll();
+        $accesses = $this->db->run(
+            'SELECT rr.`group`, rr.type, ra.permission
+            FROM ' . DB_PREFIX . 'role_access ra
+            LEFT JOIN ' . DB_PREFIX . 'role_resource rr ON (ra.resource_id = rr.resource_id)
+            WHERE ra.role_id = ?',
+            [2]
+        )->fetchAll();
+        $resources = $this->db->run('SELECT rr.`group`, rr.type, rr.scheme, rr.route FROM ' . DB_PREFIX . 'role_resource rr')->fetchAll();
+
+        d($users);
+        d($results);
+        d($accesses);
+        d($resources);
+         */
 
         // d($this->event);
         // d($this->event->getEmitters());
         // d($this->container()->keys());
-        d($this->config->all());
-        d($this->presenter->param->get('global'));
+        // d($this->config->all());
+        // d($this->presenter->param->get('global'));
 
         // d($this->session->all());
         // $this->session->set('foo', 'bar');
@@ -163,5 +211,47 @@ class Init extends Controller
         //     ['info' => 'toSqlFormat()', 'carbon' => $this->date->toSqlFormat()],
         //     ['info' => 'tojQueryUIFormat()', 'carbon' => $this->date->tojQueryUIFormat()],
         // ]);
+
+        // Datatables search: Parse search string
+        $str = 'foo bar "great OR cool AND world" name:"john OR doe" price:100~200 age:~40 weight:20~ date:2018-05-12~2018-06-17';
+        // preprocess the cases where you have colon separated definitions with quotes
+        $str = preg_replace('/(\w+)\:"(\w+)/', '"${1}:${2}', $str);
+        $str = str_getcsv($str, ' ');
+        // d($str);
+
+        $column = [
+            'keyword'  => 'global',
+            'search'   => '',
+            'operator' => ''
+        ];
+        $parts = [];
+        for ($i=0; $i < count($str); $i++) {
+            $part = [];
+            $part['search'] = $str[$i];
+
+            if (strpos($str[$i], ':') !== false) {
+                $segments = explode(':', $str[$i]);
+                $part['keyword'] = $segments[0];
+                $part['search']  = $segments[1];
+            }
+
+            if (strpos($str[$i], '~') !== false) {
+                $part['search'] = array_map('trim', explode('~', $part['search']));
+                $part['operator'] = 'range';
+            }
+
+            if (!is_array($part['search']) &&strpos($str[$i], 'OR') !== false) {
+                $part['search'] = array_map('trim', explode('OR', $part['search']));
+                $part['operator'] = 'or';
+            }
+
+            if (!is_array($part['search']) && strpos($str[$i], 'AND') !== false) {
+                $part['search'] = array_map('trim', explode('AND', $part['search']));
+                $part['operator'] = 'and';
+            }
+
+            $parts[$i] = array_replace($column, $part);
+        }
+        // d($parts);
     }
 }

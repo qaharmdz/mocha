@@ -75,7 +75,7 @@
                 <div class="uk-form-controls">
                     <select id="default-role" name="default_role" class="uk-select uk-width-200">
                         {% for role in roles %}
-                            {% if not role.locked %}
+                            {% if not role.backend %}
                                 <option value="{{ role.role_id }}" {{ form.default_role == role.role_id ? 'selected' }}>{{ role.title }}</option>
                             {% endif %}
                         {% endfor %}

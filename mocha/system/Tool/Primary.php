@@ -20,6 +20,7 @@ class Primary extends Controller
      * @var Mocha\System\Engine\Config
      */
     protected $bags;
+    // protected $data = [];
 
     public function __construct()
     {
@@ -98,6 +99,11 @@ class Primary extends Controller
      * @param  Abstractor|array $param
      *
      * @return mixed
+     */
+    /**
+     * TODO:
+     * $this->tool->abstractor('system\setting', new Component\System\Abstractor\Setting());
+     * $this->tool->abstractor('system\setting')->method('getSettings', ['setting', $page])
      */
     public function abstractor(string $path, $param = [])
     {

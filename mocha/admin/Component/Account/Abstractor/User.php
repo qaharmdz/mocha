@@ -13,22 +13,10 @@ namespace Mocha\Admin\Component\Account\Abstractor;
 
 class User extends \Mocha\Abstractor
 {
-    // public function getUsers()
-    // {
-    //     $data    = [];
-    //     $results = $this->db->where('status', 'enabled')
-    //                         ->get('user', null, ['user_id']);
+    // Record
+    // ================================================
 
-    //     foreach ($results as $result) {
-    //         $user_metas = $this->tool_abstract_meta->get('user', $result['user_id']);
-
-    //         $data[$user_metas['firstname']] = array_merge($result, $user_metas);
-    //     }
-
-    //     ksort($data);
-    // }
-
-    public function getRecords($param)
+    public function getRecords(array $params)
     {
         $column_map = array(
             'user_id'       => 'u.user_id',
@@ -44,14 +32,45 @@ class User extends \Mocha\Abstractor
         );
 
         $filter_map = $column_map;
-        $filter_map['role_title'] = 'r.title';
-        $filter_map['fullname']   = 'CONCAT_WS(" ", umFn.value, umLn.value, umDn.value)';
+        $filter_map['role_title']  = 'r.title';
+        $filter_map['fullname']    = 'CONCAT(umFn.value, " ", umLn.value)';
+        $filter_map['displayname'] = 'umDn.value';
 
-        return $this->db->join('role r', 'u.role_id = r.role_id', 'LEFT')
-                        ->join('user_meta umFn', 'u.user_id = umFn.user_id AND umFn.attribute = "firstname"', 'LEFT')
-                        ->join('user_meta umLn', 'u.user_id = umLn.user_id AND umLn.attribute = "lastname"', 'LEFT')
-                        ->join('user_meta umDn', 'u.user_id = umDn.user_id AND umDn.attribute = "displayname"', 'LEFT')
-                        ->groupBy('u.user_id')
-                        ->get('user u', [0, 2], array_values($column_map));
+        $dataTables = $this->tool_datatables->parse($params)->getQuery($filter_map);
+
+        $args  = [];
+        $query = 'SELECT ' . implode(', ', array_values($column_map)) . '
+            FROM ' . DB_PREFIX . 'user u
+                LEFT JOIN ' . DB_PREFIX . 'role r ON (u.role_id = r.role_id)
+                LEFT JOIN ' . DB_PREFIX . 'user_meta umFn ON (u.user_id = umFn.user_id AND umFn.attribute = "firstname")
+                LEFT JOIN ' . DB_PREFIX . 'user_meta umLn ON (u.user_id = umLn.user_id AND umLn.attribute = "lastname")
+                LEFT JOIN ' . DB_PREFIX . 'user_meta umDn ON (u.user_id = umDn.user_id AND umDn.attribute = "displayname")';
+
+        if ($dataTables['search']['query']) {
+            $query .= $dataTables['search']['query'];
+            $args  += $dataTables['search']['vars'];
+        }
+
+        $query .= ' GROUP BY u.user_id';
+
+        if ($dataTables['order']['query']) {
+            $query .= $dataTables['order']['query'];
+        }
+
+        $query .= $dataTables['limit']['query'];
+        $args  += $dataTables['limit']['vars'];
+
+        $this->logger->info(json_encode($query));
+        $this->logger->info(json_encode($args));
+
+        return $this->db->run($query, $args)->fetchAll();
     }
+
+    public function getTotalRecords()
+    {
+        return $this->db->run('SELECT count(*) FROM ' . DB_PREFIX . 'user')->fetchColumn();
+    }
+
+    // Form
+    // ================================================
 }
