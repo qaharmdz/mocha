@@ -9,6 +9,7 @@
 {% endif %}
 
     <title>{{ mocha.document.getTitle }}</title>
+    <base href="{{ mocha.config.get('setting.url_base') }}">
 
 {% for meta in mocha.document.getMeta %}
     <meta {{ meta.attribute }}="{{ meta.value }}" content="{{ meta.content }}">
@@ -17,6 +18,7 @@
     <link rel="{{ link.rel }}" href="{{ link.href }}" {{ link.hreflang ? 'hreflang="' ~ link.hreflang ~ '"' }} {{ link.type ? 'type="' ~ link.type ~ '"' }} {{ link.media ? 'type="' ~ link.media ~ '"' }}>
 {% endfor %}
 
+    <link rel="icon" href="{{ mocha.config.get('setting.url_site') ~ mocha.config.get('setting.site.favicon') }}" type="image/png" />
     <link rel="stylesheet" href="{{ mocha.config.get('setting.url_site') }}asset/style/uikit.sketsa{{ mocha.i18n.get('lang_dir') == 'rtl' ? '-rtl' }}.min.css?v=1.0.0-rc.25" media="all">
     <link rel="stylesheet" href="{{ mocha.config.get('setting.url_site') }}asset/theme/{{ mocha.theme.codename }}/dummy.min.css?v={{ mocha.theme.version }}" media="all">
 {% for style in mocha.document.getStyle %}

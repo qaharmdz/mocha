@@ -18,6 +18,7 @@
     <link rel="{{ link.rel }}" href="{{ link.href }}" {{ link.hreflang ? 'hreflang="' ~ link.hreflang ~ '"' }} {{ link.type ? 'type="' ~ link.type ~ '"' }} {{ link.media ? 'type="' ~ link.media ~ '"' }}>
 {% endfor %}
 
+    <link rel="icon" href="{{ mocha.config.get('setting.url_site') ~ mocha.config.get('setting.site.favicon') }}" type="image/png" />
     <link rel="stylesheet" href="{{ mocha.config.get('setting.url_site') }}asset/style/uikit.sketsa{{ mocha.i18n.get('lang_dir') == 'rtl' ? '-rtl' }}.min.css?v=3.0.2" media="all">
 {% for style in mocha.document.getStyle() %}
     <link rel="stylesheet" href="{{ style.href }}" media="{{ style.media }}">
@@ -52,7 +53,7 @@ console.log(mocha);
             <div class="uk-navbar-left">
                 <div class="uk-display-inline uk-margin-small-left">
                     <a class="uk-navbar-toggle navbar-commander-icon" title="Navigation">
-                        <i data-feather="command" style="margin-top:-2px"></i>
+                        <i data-feather="command" width="22px" height="22px"></i>
                     </a>
                     <div class="uk-width-400 navbar-commander" uk-dropdown="mode:click; offset:0;">
                         <div class="uk-dropdown-grid uk-grid-collapse" uk-grid>
