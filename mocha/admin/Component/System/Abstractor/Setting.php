@@ -15,10 +15,11 @@ class Setting extends \Mocha\Abstractor
 {
     public function getSettings(string $group, string $type)
     {
-        $data   = [];
-        $results = $this->db->where('`group`', $group)
-                            ->where('type', $type)
-                            ->get('setting');
+        $data    = [];
+        $results = $this->db->run(
+            'SELECT * FROM ' . DB_PREFIX . 'setting WHERE `group` = ? AND `type` = ?',
+            [$group, $type]
+        )->fetchAll();
 
         foreach ($results as $result) {
             $data[$result['key']] = $result['encoded'] ? json_decode($result['value'], true) : $result['value'];
@@ -27,26 +28,9 @@ class Setting extends \Mocha\Abstractor
         return $data;
     }
 
-    public function getAliasType()
-    {
-        $results = $this->db->where('`group`', 'alias_type')
-                            ->orderBy('`key`', 'DESC')
-                            ->orderBy('`value`', 'ASC')
-                            ->get('setting', null, ['`key`', '`value`']);
-
-        $output = [];
-        foreach ($results as $result) {
-            $output[$result['key']][] = $result['value'];
-        }
-
-        return $output;
-    }
-
     public function update(string $group, string $type, array $data)
     {
-        $this->db->where('`group`', $group)
-                 ->where('type', $type)
-                 ->delete('setting');
+        $this->db->run('DELETE FROM ' . DB_PREFIX . 'setting WHERE `group` = ? AND `type` = ?', [$group, $type]);
 
         foreach ($data as $key => $value) {
             $columns = [
@@ -57,7 +41,7 @@ class Setting extends \Mocha\Abstractor
                 'encoded' => is_array($value) ? 1 : 0,
             ];
 
-            $this->db->insert('setting', $columns);
+            $this->db->run('INSERT INTO ' . DB_PREFIX . 'setting (`group`, `type`, `key`, `value`, `encoded`) VALUES (:group, :type, :key, :value, :encoded)', $columns);
         }
     }
 }

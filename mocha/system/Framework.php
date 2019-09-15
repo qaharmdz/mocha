@@ -83,8 +83,12 @@ class Framework
                 'system'        => [
                     'version'       => MOCHA,
                     'database'      => [
-                        'charset'       => 'utf8',
-                        'port'          => 3306
+                        'driver'        => 'mysql',
+                        'host'          => 'localhost',
+                        'charset'       => 'utf8mb4',
+                        'port'          => 3306,
+                        'options'       => [],
+                        'prefix'        => 'mc_'
                     ],
                     'namespace'     => [
                         'component'     => $config['app']['namespace'] . '\Component',
@@ -143,21 +147,17 @@ class Framework
         $this->container['database_param'] = $this->config->get('system.database');
         $this->config->remove('system.database');
 
-        // Standardize PHP and database timezone MUST be UTC
-        date_default_timezone_set('UTC');
-        $this->container['db']->rawQuery('SET time_zone="+00:00";');
-
-        // ====== Update config
+        // ====== Update $this->config
 
         // Load setting from database
-        foreach ($this->container['db']->where('`group`', 'setting')->get('setting') as $item) {
+        foreach ($this->container['db']->run('SELECT * FROM ' . DB_PREFIX . 'setting s WHERE s.group = "setting"')->fetchAll() as $item) {
             $this->config->set(
                 implode('.', [$item['group'], $item['type'], $item['key']]),
                 $item['encoded'] ? json_decode($item['value'], true) : $item['value']
             );
         }
 
-        // Config adjustment
+        // $this->config adjustment
         $this->config->set('setting.url_site', $this->container['request']->getScheme() . '://' . rtrim($this->config->get('setting.url_site'), '/.\\')  . '/');
         $this->config->set('setting.url_base', rtrim($this->config->get('setting.url_site') . $this->config->get('app.url_part'), '/.\\')  . '/');
 
@@ -183,8 +183,9 @@ class Framework
 
         // ====== TODO: Update serviceProvider, eventSubscriber, routeCollection list with plugins
         /*
-        Use `key` to store plugin_id and check if plugin is enabled
-        d($this->container['db']->where('`group`', 'system')->get('setting'));
+        type: eventSubscriber
+        key: plugin_x (x is plugin_id)
+        value: enabled, disabled, ..
          */
 
         return $this;

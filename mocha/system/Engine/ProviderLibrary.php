@@ -21,17 +21,15 @@ class ProviderLibrary implements ServiceProviderInterface
     {
         $container['database_param'] = [];
         $container['db'] = function ($c) {
+            $dsn = $c['database_param']['driver'] . ':host=' . $c['database_param']['host'] . ';dbname=' . $c['database_param']['db'] . ';charset=' . $c['database_param']['charset'];
             try {
-                $db = new \Mysqlidb($c['database_param']);
-                $db->rawQuery('SET session group_concat_max_len = 102400;');
-                $db->rawQuery('SET SESSION sql_mode="STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION";');
-                $db->mysqli();
-            } catch (Exception $e) {
-                throw new \RuntimeException();
+                $pdo = new Library\Database($dsn, $c['database_param']['username'], $c['database_param']['password'], $c['database_param']['options']);
+            } catch (\PDOException $e) {
+                throw new \PDOException($e->getMessage(), (int)$e->getCode());
                 exit('Can\'t get motivated without Caffeine');
             }
 
-            return \MysqliDb::getInstance();
+            return $pdo;
         };
 
         $container['secure'] = function ($c) {

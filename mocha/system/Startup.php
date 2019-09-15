@@ -12,6 +12,7 @@
 namespace Mocha\System;
 
 mb_internal_encoding('UTF-8');
+date_default_timezone_set('UTC');
 ini_set('display_errors', 1);
 
 defined('MOCHA') or define('MOCHA', '1.0.0-a.1');
@@ -46,6 +47,8 @@ $config = array_replace_recursive(
     require_once PATH_PUBLIC . 'config.php',    // public/config.php
     ['app' => $config_app]                      // public/index.php | public/admin/index.php
 );
+
+defined('DB_PREFIX') or define('DB_PREFIX', $config['system']['database']['prefix']);
 
 $config['setting']['url_site'] = $config['setting']['url_site'];
 $config['setting']['url_base'] = $config['setting']['url_site'] . $config['app']['url_part'];

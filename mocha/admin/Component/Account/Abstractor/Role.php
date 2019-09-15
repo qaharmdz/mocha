@@ -15,8 +15,6 @@ class Role extends \Mocha\Abstractor
 {
     public function getRoles()
     {
-        return $this->db->where('status', 'enabled')
-                        ->orderBy('role_id', 'ASC')
-                        ->get('role', null, ['role_id', 'title', 'locked']);
+        return $this->db->run('SELECT * FROM ' . DB_PREFIX . 'role WHERE status = "enabled" ORDER BY role_id ASC')->fetchAll();
     }
 }

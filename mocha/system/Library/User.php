@@ -19,7 +19,7 @@ class User
     protected $access = [];
 
     /**
-     * @var \Mysqlidb
+     * @var \PDO
      */
     protected $db;
 
@@ -33,7 +33,7 @@ class User
      */
     protected $session;
 
-    public function __construct(\Mysqlidb $db, Secure $secure, Engine\Session $session)
+    public function __construct(\PDO $db, Secure $secure, Engine\Session $session)
     {
         $this->db       = $db;
         $this->secure   = $secure;
@@ -168,40 +168,40 @@ class User
 
     protected function dbUpdatePassword($id, $password)
     {
-        return $this->db->where('user_id', $id)
-                        ->update('user', ['password' => $this->secure->password($post['password'])]);
+        return $this->db->run(
+            'UPDATE ' . DB_PREFIX . 'user SET `password` = ? WHERE user_id = ?',
+            [$this->secure->password($password), $id]
+        )->rowCount();
     }
 
     protected function dbUpdateLastLogin($id)
     {
         $utc = new \DateTime('now', new \DateTimeZone('UTC'));
 
-        $this->db->where('user_id', $id)->update('user', ['last_login' => $utc->format('Y-m-d H:i:s')]);
+        return $this->db->run(
+            'UPDATE ' . DB_PREFIX . 'user SET last_login = ? WHERE user_id = ?',
+            [$utc->format('Y-m-d H:i:s'), $id]
+        )->rowCount();
     }
 
     protected function dbGetUserByMail($email)
     {
-        $column = [
-            'u.user_id',
-            'u.role_id',
-            'u.email',
-            'u.password',
-            'u.verify_code',
-            'u.verify_type',
-            'r.title AS role_name',
-            'u.created',
-            'u.updated',
-            'u.last_login'
-        ];
+        $metas = [];
+        $users = $this->db->run(
+            'SELECT u.user_id, u.role_id, u.email, u.password, u.verify_code, u.verify_type,
+                r.title AS role_name, u.created, u.updated, u.last_login
+            FROM ' . DB_PREFIX . 'user u
+                LEFT JOIN ' . DB_PREFIX . 'role r ON (r.role_id = u.role_id)
+            WHERE u.email = ? AND u.status = "enabled" AND r.status = "enabled"',
+            [$email]
+        )->fetch();
+        $results = $this->db->run(
+            'SELECT attribute, value, encoded
+            FROM ' . DB_PREFIX . 'user_meta
+            WHERE user_id = ?',
+            [$users['user_id']]
+        )->fetchAll();
 
-        $users = $this->db->join('role r', 'u.role_id = r.role_id', 'LEFT')
-                          ->where('u.email', $email)
-                          ->where('u.status', 'enabled')
-                          ->where('r.status', 'enabled')
-                          ->getOne('user u', $column);
-
-        $metas   = [];
-        $results = $this->db->where('user_id', $users['user_id'])->get('user_meta');
         foreach ($results as $result) {
             $metas[$result['attribute']] = $result['encoded'] ? json_decode($result['value'], true) : $result['value'];
         }
@@ -214,15 +214,19 @@ class User
         $data   = [];
 
         // Main access
-        $result = $this->db->where('role_id', $id)->getOne('role');
+        $result = $this->db->run('SELECT * FROM ' . DB_PREFIX . 'role WHERE role_id = ?', [$id])->fetch();
 
         $data['backend']     = (bool)$result['backend'];
         $data['super_admin'] = (bool)$result['super_admin'];
 
         // Access
-        $accesses = $this->db->join('role_resource rr', 'ra.resource_id = rr.resource_id', 'LEFT')
-                             ->where('ra.role_id', $id)
-                             ->get('role_access ra', null, ['rr.`group`', 'rr.type', 'ra.permission']);
+        $accesses = $this->db->run(
+            'SELECT rr.`group`, rr.type, ra.permission
+            FROM ' . DB_PREFIX . 'role_access ra
+            LEFT JOIN ' . DB_PREFIX . 'role_resource rr ON (ra.resource_id = rr.resource_id)
+            WHERE ra.role_id = ?',
+            [$id]
+        )->fetchAll();
 
         $access_temp = [];
         foreach ($accesses as $access) {
@@ -239,7 +243,7 @@ class User
         );
 
         // Resources
-        $resources = $this->db->get('role_resource', null, ['`group`', 'type', 'scheme', 'route']);
+        $resources = $this->db->run('SELECT `group`, `type`, `scheme`, `route` FROM ' . DB_PREFIX . 'role_resource')->fetchAll();
 
         foreach ($resources as $resource) {
             $resource_scheme    = array_fill_keys(array_values(json_decode($resource['scheme'], true)), $data['super_admin']);

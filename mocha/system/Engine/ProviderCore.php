@@ -93,7 +93,7 @@ class ProviderCore implements ServiceProviderInterface
         $container['log_output'] = 'php://stderr';
         $container['logger'] = function ($c) {
             // Log level information see \Psr\Log\LoggerInterface.php
-            return new HttpKernel\Log\Logger(\Psr\Log\LogLevel::INFO, $c['log_output']);
+            return new HttpKernel\Log\Logger(\Psr\Log\LogLevel::DEBUG, $c['log_output']);
         };
 
         $container['presenter'] = function ($c) {
