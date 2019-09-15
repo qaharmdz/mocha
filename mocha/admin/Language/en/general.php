@@ -95,7 +95,7 @@ return [
 // 'module_edit'               => 'Edit Module',
 
 // // Action
-// 'all'                       => 'All',
+'all'                       => 'All',
 // 'new'                       => 'New',
 // 'insert'                    => 'Insert',
 // 'update'                    => 'Update',
@@ -226,11 +226,14 @@ return [
 // // Misc
 // 'show_all'                  => 'Show All',
 // 'restore_original'          => 'Restore Original',
+'search_'                   => 'Search..',
+'reload_data'               => 'Reload data',
 // 'search_all'                => 'Search All',
 // 'reset_filter'              => 'Reset Filter',
-// 'refresh_result'            => 'Refresh Result',
-// 'show_x_data'               => 'Showing _START_ to _END_ of _TOTAL_ data', // do not change _START_, _END_, _TOTAL_
-// 'filter_x_data'             => '(filtered from _MAX_ total data)', // do not change _MAX_
+'clear_search'              => 'Clear search',
+// 'refresh_result'            => 'Refresh result',
+'show_x_data'               => 'Showing _START_ to _END_ of _TOTAL_ data', // do not change _START_, _END_, _TOTAL_
+'filter_x_data'             => '(filtered from _MAX_ total data)', // do not change _MAX_
 
 
 // Localize datetime

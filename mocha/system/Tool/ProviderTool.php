@@ -20,9 +20,10 @@ class ProviderTool implements ServiceProviderInterface
     public function register(Container $container)
     {
         $tools = [
-            'tool'          => 'Mocha\System\Tool\Primary',
-            'tool_secure'   => 'Mocha\System\Tool\Secure',
-            'tool_utility'  => 'Mocha\System\Tool\Utility',
+            'tool'              => 'Mocha\System\Tool\Primary',
+            'tool_secure'       => 'Mocha\System\Tool\Secure',
+            'tool_utility'      => 'Mocha\System\Tool\Utility',
+            'tool_datatables'   => 'Mocha\System\Tool\Datatables',
         ];
 
         foreach ($tools as $key => $class) {

@@ -11,14 +11,53 @@
 // Default dataTables initialisation
 // ================================================
 $.extend($.fn.dataTable.defaults, {
-    'dom'           : "<'dataTables-top'<'uk-grid uk-grid-small'<'uk-width-2-3'fi>'<'uk-width-1-3 uk-text-right'Cl>>><'dataTables-content't><'dataTables-bottom'<'uk-grid'<'uk-width-1-2'i><'uk-width-1-2 uk-text-right'p>>>r",
-    'serverSide'    : true,
-    'processing'    : true,
-    'orderCellsTop' : true,
-    'autoWidth'     : false,
-    'language'      : {
-        'processing' : '<div class="dataTables_processing_content">' + mocha.i18n.processing + '</div>'
-    }
+    'dom'               : "<'dataTables-top'<'uk-grid uk-grid-small'<'uk-width-2-3'fi>'<'uk-width-1-3 uk-text-right'Cl>>><'dataTables-content't><'dataTables-bottom'<'uk-grid'<'uk-width-1-2'i><'uk-width-1-2 uk-text-right'p>>>r",
+    'serverSide'        : true,
+    'processing'        : true,
+    'stateSave'         : true,
+    'stateDuration'     : 60 * 60 * 24 * 14, // 14 day
+    'searchDelay'       : 1000,
+    'orderCellsTop'     : true,
+    'orderMulti'        : true, // use "shift+"
+    'autoWidth'         : false,
+    'orderClasses'      : true, // addition of the "sorting" classes to column cell vertically
+    'lengthMenu'        : [ [25, 50, 100, 150, -1], [25, 50, 100, 150, mocha.i18n.all] ],
+    'pageLength'        : 25,
+    'pagingType'        : 'full_numbers',
+    'renderer'          : { 'pageButton' : 'uikit' }, // custom pagination
+    'language'          : {
+        'emptyTable'        : mocha.i18n.no_data,
+        'info'              : mocha.i18n.show_x_data,
+        'infoEmpty'         : mocha.i18n.no_data,
+        'infoFiltered'      : mocha.i18n.filter_x_data,
+        'infoPostFix'       : '<a class="js-refresh-record" uk-tooltip title="' + mocha.i18n.reload_data + '"><i data-feather="refresh-cw" width="14px" height="14px"></i></a>',
+        'thousands'         : ',',
+        'lengthMenu'        : '_MENU_',
+        'loadingRecords'    : mocha.i18n.loading,
+        'search'            : '',
+        'searchPlaceholder' : mocha.i18n.search_,
+        'zeroRecords'       : mocha.i18n.no_result,
+        'processing'        : '<div class="dataTables_processing_content"><div uk-spinner="ratio:0.8"></div>' + mocha.i18n.processing + '</div>',
+        'paginate'          : {
+            "first"     : '<i data-feather="chevrons-left" width="17px" height="17px"></i>',
+            "last"      : '<i data-feather="chevrons-right" width="17px" height="17px"></i>',
+            "next"      : '<i data-feather="chevron-right" width="17px" height="17px"></i>',
+            "previous"  : '<i data-feather="chevron-left" width="17px" height="17px"></i>',
+        },
+    },
+    //====================
+
+
+});
+
+// Default class modification
+// ================================================
+$.extend($.fn.dataTableExt.oStdClasses, {
+    'sWrapper'      : 'dataTables_wrapper',
+    'sFilter'       : 'dataTables_filter uk-width-2-5',
+    'sInfo'         : 'dataTables_info',
+    'sFilterInput'  : 'uk-input uk-form-small',
+    'sLengthSelect' : 'dataTables_length_select uk-select uk-form-small'
 });
 
 // Pipelining function for DataTables. To be used to the `ajax` option of DataTables
@@ -135,3 +174,94 @@ $.fn.dataTable.Api.register('clearPipeline()', function () {
         settings.clearCache = true;
     });
 } );
+
+// UIkit Pagination
+// ================================================
+$.fn.dataTable.ext.renderer.pageButton.uikit = function (settings, host, idx, buttons, page, pages) {
+    var api     = new $.fn.dataTable.Api(settings);
+    var classes = settings.oClasses;
+    var lang    = settings.oLanguage.oPaginate;
+    var btnDisplay, btnClass;
+
+    var attach = function(container, buttons) {
+        var i, ien, node, button;
+        var clickHandler = function (e) {
+            e.preventDefault();
+            if (!$(e.currentTarget).hasClass('uk-disabled')) {
+                api.page(e.data.action).draw(false);
+            }
+        };
+
+        for (i=0, ien=buttons.length ; i<ien ; i++) {
+            button = buttons[i];
+
+            if ($.isArray(button)) {
+                attach(container, button);
+            }
+            else {
+                btnDisplay = '';
+                btnClass = '';
+
+                switch (button) {
+                    case 'ellipsis':
+                        btnDisplay  = '&hellip;';
+                        btnClass    = 'uk-disabled';
+                        break;
+
+                    case 'first':
+                        btnDisplay  = lang.sFirst;
+                        btnClass    = button + (page > 0 ? '' : ' uk-disabled');
+                        break;
+
+                    case 'previous':
+                        btnDisplay  = lang.sPrevious;
+                        btnClass    = button + (page > 0 ? '' : ' uk-disabled');
+                        break;
+
+                    case 'next':
+                        btnDisplay  = lang.sNext;
+                        btnClass    = button + (page < pages-1 ? '' : ' uk-disabled');
+                        break;
+
+                    case 'last':
+                        btnDisplay  = lang.sLast;
+                        btnClass    = button + (page < pages-1 ? '' : ' uk-disabled');
+                        break;
+
+                    default:
+                        btnDisplay  = button + 1;
+                        btnClass    = page === button ? 'uk-active' : '';
+                        break;
+                }
+
+                if (btnDisplay) {
+                    node = $('<li>', {
+                            'class': classes.sPageButton+' '+btnClass,
+                            'aria-controls': settings.sTableId,
+                            'tabindex': settings.iTabIndex,
+                            'id': idx === 0 && typeof button === 'string' ?
+                                settings.sTableId +'_'+ button :
+                                null
+                        });
+
+                    if (btnClass === 'uk-active' || btnClass.indexOf('uk-disabled') >= 0) {
+                        node = node.append($('<span>').html(btnDisplay));
+                    } else {
+                        node = node.append($('<a>', { 'href': '#' }).html(btnDisplay));
+                    }
+
+                    node = node.appendTo(container);
+
+                    settings.oApi._fnBindAction(
+                        node, {action: button}, clickHandler
+                   );
+                }
+            }
+        }
+    };
+
+    attach(
+        $(host).empty().html('<ul class="uk-pagination uk-flex-right"/>').children('ul'),
+        buttons
+   );
+};
