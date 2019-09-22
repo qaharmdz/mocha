@@ -48,6 +48,7 @@ class Init extends Controller
 
         $this->document->loadAsset('form');
 
+        // Twig global variables
         $this->presenter->param->add(
             $this->event->trigger(
                 'init.twig.global',
@@ -233,14 +234,21 @@ class Init extends Controller
             ]
         ]);
          */
+        $this->document->addAsset('datepicker', [
+            'version'   => 'v1.11.4',
+            'script'    => [
+                $this->config->get('setting.url_site') . 'asset/script/jquery-ui/ui.core.min.js',
+                $this->config->get('setting.url_site') . 'asset/script/jquery-ui/datepicker.min.js'
+            ]
+        ]);
         $this->document->addAsset('datatables', [
             'version'   => 'v1.10.18',
             'script'    => [
                 $this->config->get('setting.url_site') . 'asset/script/datatables/dataTables.min.js',
+                $this->config->get('setting.url_site') . 'asset/script/datatables/columnFilter.min.js',
+                // $this->config->get('setting.url_site') . 'asset/script/datatables/colVis.min.js',
                 $this->config->get('setting.url_site') . 'asset/script/dataTables.config.js',
-                // $this->config->get('setting.url_site') . 'asset/script/datatables/dataTables.columnFilter.min.js',
-                // $this->config->get('setting.url_site') . 'asset/script/datatables/dataTables.colVis.min.js',
-                // $this->config->get('setting.url_site') . 'asset/script/typewatch/typewatch.min.js'
+                $this->config->get('setting.url_site') . 'asset/script/typewatch/typewatch.min.js'
             ]
         ]);
         /*

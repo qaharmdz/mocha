@@ -154,20 +154,26 @@ class Setting extends Controller
         }
 
         if ($data['type'] == 'locale') {
-            $post['date_custom_in']     = 0;
-            $post['time_custom_in']     = 0;
+            $post['date_custom_is']     = 0;
+            $post['time_custom_is']     = 0;
 
             if ($post['date_format'] == '#custom') {
                 $post['date_format']    = $post['date_custom'];
-                $post['date_custom_in'] = 1;
+                $post['date_custom_is'] = 1;
             }
 
             if ($post['time_format'] == '#custom') {
                 $post['time_format']    = $post['time_custom'];
-                $post['time_custom_in'] = 1;
+                $post['time_custom_is'] = 1;
             }
 
-            $post['datetime_format'] = $post['date_format'] . ' ' . $post['time_format'];
+            $post['datetime_format']     = $post['date_format'] . ' ' . $post['time_format'];
+            $post['date_format_sql']     = $this->date->toSqlFormat($post['date_format']);
+            $post['time_format_sql']     = $this->date->toSqlFormat($post['time_format']);
+            $post['datetime_format_sql'] = $this->date->toSqlFormat($post['datetime_format']);
+            $post['date_format_js']      = $this->date->tojQueryUIFormat($post['date_format']);
+            $post['time_format_js']      = $this->date->tojQueryUIFormat($post['time_format']);
+            $post['datetime_format_js']  = $this->date->tojQueryUIFormat($post['datetime_format']);
         }
 
         $this->tool->abstractor('setting.update', ['setting', $data['type'], $post]);

@@ -11,6 +11,8 @@
 /*
  * Table of Content:
  *
+ * - UIkit Sketsa override
+ *
  * # Specific Page
  *   - Login
  *   - Error
@@ -35,6 +37,111 @@ html {
 }
 body {
     min-height: 100vh;
+}
+
+
+/* UIkit Sketsa override
+======================================================================== */
+
+/*.uk-container {
+    padding-left: 30px;
+    padding-right: 30px;
+}*/
+.uk-container-large {
+    max-width: 1400px;
+}
+
+@media (min-width: 960px) {
+    .uk-breadcrumb {
+        margin-bottom: 20px;
+    }
+}
+
+.uk-nav-header {
+    font-size: 1.3em;
+}
+.uk-alert {
+    overflow: hidden;
+}
+
+.uk-button-link {
+    color: #0f6ecd;
+}
+
+.uk-modal-confirm .uk-modal-body {
+    text-align: center;
+}
+.uk-modal-footer {
+    padding: 15px 25px;
+    background: rgba(0, 0, 0, 0.06);
+    border-top: 1px solid #ccc;
+    box-shadow: inset 0 1px 2px rgba(0,0,0,.1);
+}
+
+/* Playground
+==================================== */
+.uk-margin-hover .uk-margin {
+    padding: 10px 24px;
+    margin: 0 -24px !important;
+}
+.uk-margin-hover .uk-margin:hover {
+    background: #fafafa;
+}
+
+/* TODO: Update sketsa source
+==================================== */
+.uk-card-panel {
+    box-shadow: 0 3px 1px -2px rgba(0,0,0,.1), 0 2px 2px 0 rgba(0,0,0,.1), 0 1px 5px 0 rgba(0,0,0,.1);
+}
+
+.uk-divider-line {
+    border-top: 1px solid #d4d4d4;
+    border-bottom: 5px solid #f3f3f3;
+}
+
+.uk-button-group.uk-button-radio > .uk-button:nth-child(n+2),
+.uk-button-group.uk-button-radio > div:nth-child(n+2) .uk-button {
+    margin-left: 0;
+}
+.uk-button-group.uk-button-radio > .uk-button:nth-child(n+3),
+.uk-button-group.uk-button-radio > div:nth-child(n+3) .uk-button {
+    margin-left: -1px;
+    border-left-width: 0;
+}
+
+.uk-button-radio input[type=radio]:checked+.uk-button {
+    text-shadow: 0 -1px 0 rgba(0,0,0,.1);
+}
+
+.uk-button-mini {
+    padding: 0px 3px 0;
+    line-height: 16px;
+    font-size: 12.4px;
+}
+.uk-margin-mini-left {
+    margin-left: 5px;
+}
+
+.uk-dropdown {
+    text-align: left;
+}
+.uk-dropdown-mini {
+    min-width: 120px;
+    padding: 4px;
+}
+.uk-dropdown-mini .uk-dropdown-nav>li>a {
+    font-size: 12.4px;
+    padding: 4px 6px 5px;
+    line-height: 14px;
+}
+
+.uk-form-controls  {
+    overflow: hidden;
+}
+@media (min-width: 960px) {
+    .uk-form-controls .uk-text-meta {
+        margin-top: 0;
+    }
 }
 
 

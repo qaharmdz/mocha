@@ -23,6 +23,7 @@ class User extends Controller
         $this->language->load('Component/Account/user');
 
         d($this->session->get('dtPost', []));
+        d($this->session->get('output', []));
         d($this->tool_datatables->parse($this->session->get('dtPost', [])));
 
         //=== Document
@@ -33,10 +34,15 @@ class User extends Controller
             [$this->language->get('list'), $this->router->url('account/user')]
         ]);
 
+        $this->document->loadAsset('datepicker');
         $this->document->loadAsset('datatables');
 
         //=== Content
         $data['content'] = $this->language->get('message');
+
+        $this->tool->abstractor('role', new Component\Account\Abstractor\Role());
+        $data['roles'] = $this->tool->abstractor('role.getRoles');
+
 
         // === Presenter
         return $this->response->setContent($this->tool->render(
@@ -54,7 +60,6 @@ class User extends Controller
         $this->tool->abstractor('user', new Component\Account\Abstractor\User());
 
         $post = $this->request->post->all();
-
         $this->session->set('dtPost', $post);
 
         $records = $this->tool->abstractor('user.getRecords', [$post]);
@@ -81,6 +86,7 @@ class User extends Controller
             'recordsFiltered' => count($data),
             'recordsTotal'    => $this->tool->abstractor('user.getTotalRecords'),
         ];
+        $this->session->set('output', $output);
 
         return $this->response->jsonOutput($output);
     }

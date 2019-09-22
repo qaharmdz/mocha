@@ -96,8 +96,8 @@ class Datatables extends Controller
             return $output;
         }
 
+        $output['search'] = ['query' => '', 'vars'  => []];
         if ($data['search']) {
-            $output['search'] = ['query' => '', 'vars'  => []];
             $search = ['query' => [],'vars'  => []];
 
             if ($data['search']['all']) {
@@ -124,8 +124,8 @@ class Datatables extends Controller
             }
         }
 
-        if ($data['order']) {
-            $output['order'] = ['query' => '', 'vars'  => []];
+        $output['order'] = ['query' => '', 'vars'  => []];
+        if ($data['search']) {
             $orders = [];
 
             foreach ($data['order'] as $key => $value) {

@@ -11,53 +11,82 @@
 // Default dataTables initialisation
 // ================================================
 $.extend($.fn.dataTable.defaults, {
-    'dom'               : "<'dataTables-top'<'uk-grid uk-grid-small'<'uk-width-2-3'fi>'<'uk-width-1-3 uk-text-right'Cl>>><'dataTables-content't><'dataTables-bottom'<'uk-grid'<'uk-width-1-2'i><'uk-width-1-2 uk-text-right'p>>>r",
-    'serverSide'        : true,
-    'processing'        : true,
-    'stateSave'         : true,
-    'stateDuration'     : 60 * 60 * 24 * 14, // 14 day
-    'searchDelay'       : 1000,
-    'orderCellsTop'     : true,
-    'orderMulti'        : true, // use "shift+"
-    'autoWidth'         : false,
-    'orderClasses'      : true, // addition of the "sorting" classes to column cell vertically
-    'lengthMenu'        : [ [25, 50, 100, 150, -1], [25, 50, 100, 150, mocha.i18n.all] ],
-    'pageLength'        : 25,
-    'pagingType'        : 'full_numbers',
-    'renderer'          : { 'pageButton' : 'uikit' }, // custom pagination
-    'language'          : {
-        'emptyTable'        : mocha.i18n.no_data,
-        'info'              : mocha.i18n.show_x_data,
-        'infoEmpty'         : mocha.i18n.no_data,
-        'infoFiltered'      : mocha.i18n.filter_x_data,
-        'infoPostFix'       : '<a class="js-refresh-record" uk-tooltip title="' + mocha.i18n.reload_data + '"><i data-feather="refresh-cw" width="14px" height="14px"></i></a>',
-        'thousands'         : ',',
-        'lengthMenu'        : '_MENU_',
-        'loadingRecords'    : mocha.i18n.loading,
-        'search'            : '',
-        'searchPlaceholder' : mocha.i18n.search_,
-        'zeroRecords'       : mocha.i18n.no_result,
-        'processing'        : '<div class="dataTables_processing_content"><div uk-spinner="ratio:0.8"></div>' + mocha.i18n.processing + '</div>',
-        'paginate'          : {
-            "first"     : '<i data-feather="chevrons-left" width="17px" height="17px"></i>',
-            "last"      : '<i data-feather="chevrons-right" width="17px" height="17px"></i>',
-            "next"      : '<i data-feather="chevron-right" width="17px" height="17px"></i>',
-            "previous"  : '<i data-feather="chevron-left" width="17px" height="17px"></i>',
+    dom             : "<'dataTables-top'<'uk-grid uk-grid-small'<'uk-width-2-3'fi>'<'uk-width-1-3 dt-top-right'Bl>>><'dataTables-content't><'dataTables-bottom'<'uk-grid'<'uk-width-1-2'i><'uk-width-1-2 uk-text-right'p>>>r",
+    serverSide      : true,
+    processing      : true,
+    stateSave       : true,
+    stateDuration   : 60 * 60 * 24 * 14, // 14 day
+    searchDelay     : 1000,
+    orderCellsTop   : true,
+    orderMulti      : true, // use "shift+"
+    autoWidth       : false,
+    orderClasses    : true, // addition of the "sorting" classes to column cell vertically
+    lengthMenu      : [ [25, 50, 100, 150, -1], [25, 50, 100, 150, mocha.i18n.all] ],
+    pageLength      : 25,
+    pagingType      : 'full_numbers',
+    renderer        : { 'pageButton' : 'uikit' }, // custom pagination
+    buttons         : {
+        buttons : [
+            // {
+            //     extend : 'csv',
+            //     title : 'Data export',
+            //     text : '</span><span uk-tooltip title="Download CSV">CSV'
+            // },
+            {
+                extend : 'print',
+                text : '</span><span uk-tooltip title="Print record">Print',
+                autoPrint: false,
+                exportOptions : {
+                    columns : ':visible'
+                }
+            },
+            {
+                extend : 'colvis',
+                text : '</span><span uk-tooltip title="Columns visual">Columns',
+                columns : ':not(.noVis)',
+                postfixButtons : [ 'colvisRestore' ]
+            }
+        ],
+        dom : {
+            button : {
+                tag : 'button',
+                className : 'uk-button uk-button-default uk-button-small'
+            },
+            buttonLiner : {
+                tag: null
+            }
+        }
+    },
+    language : {
+        emptyTable          : mocha.i18n.no_data,
+        info                : mocha.i18n.show_x_data,
+        infoEmpty           : mocha.i18n.no_data,
+        infoFiltered        : mocha.i18n.filter_x_data,
+        infoPostFix         : '<a data-refresh-record uk-tooltip title="' + mocha.i18n.reload_data + '"><i data-feather="refresh-cw" width="12px" height="12px"></i></a>',
+        thousands           : ',',
+        lengthMenu          : '_MENU_',
+        loadingRecords      : mocha.i18n.loading,
+        search              : '',
+        searchPlaceholder   : mocha.i18n.search_,
+        zeroRecords         : mocha.i18n.no_result,
+        processing          : '<div class="dataTables_processing_content"><div uk-spinner="ratio:0.8"></div>' + mocha.i18n.processing + '</div>',
+        paginate            : {
+            first       : '<i data-feather="chevrons-left" width="17px" height="17px"></i>',
+            last        : '<i data-feather="chevrons-right" width="17px" height="17px"></i>',
+            next        : '<i data-feather="chevron-right" width="17px" height="17px"></i>',
+            previous    : '<i data-feather="chevron-left" width="17px" height="17px"></i>',
         },
     },
-    //====================
-
-
 });
 
 // Default class modification
 // ================================================
 $.extend($.fn.dataTableExt.oStdClasses, {
-    'sWrapper'      : 'dataTables_wrapper',
-    'sFilter'       : 'dataTables_filter uk-width-2-5',
-    'sInfo'         : 'dataTables_info',
-    'sFilterInput'  : 'uk-input uk-form-small',
-    'sLengthSelect' : 'dataTables_length_select uk-select uk-form-small'
+    sWrapper        : 'dataTables_wrapper',
+    sFilter         : 'dataTables_filter uk-width-2-5',
+    sInfo           : 'dataTables_info',
+    sFilterInput    : 'uk-input uk-form-small',
+    sLengthSelect   : 'dataTables_length_select uk-select uk-form-small'
 });
 
 // Pipelining function for DataTables. To be used to the `ajax` option of DataTables
@@ -105,7 +134,7 @@ $.fn.dataTable.pipeline = function (opts) {
         // Store the request for checking next time around
         cacheLastRequest = $.extend( true, {}, request );
 
-        if ( ajax ) {
+        if (ajax) {
             // Need data from the server
             if (requestStart < cacheLower) {
                 requestStart = requestStart - (requestLength * (conf.pages - 1));
@@ -163,7 +192,7 @@ $.fn.dataTable.pipeline = function (opts) {
 
             drawCallback(json);
         }
-    }
+    };
 };
 
 // Register an API method that will empty the pipelined data, forcing an Ajax
@@ -174,6 +203,32 @@ $.fn.dataTable.Api.register('clearPipeline()', function () {
         settings.clearCache = true;
     });
 } );
+
+// Clear search, compatible with columnFilter
+// ================================================
+$.fn.dataTable.Api.register('clearSearch()', function () {
+    return this.iterator('table', function (settings) {
+
+        // clear pre-search
+        settings.oPreviousSearch.sSearch = '';
+        for (iCol = 0; iCol < settings.aoPreSearchCols.length; iCol++) {
+            if (typeof settings.aoPreSearchCols[ iCol ].search !== 'undefined') { // set back to initial search
+                settings.aoPreSearchCols[ iCol ].sSearch = settings.aoPreSearchCols[ iCol ].search;
+            } else {
+                settings.aoPreSearchCols[ iCol ].sSearch = '';
+            }
+        }
+
+        // clear pipeline cache
+        settings.clearCache = true;
+
+        // clear input
+        var headTd = $('thead td', '#' + settings.nTable.id);
+        $('input', '#'+settings.nTable.id+'_filter').val(''); // global search
+        $('input', headTd).val('');
+        $('select', headTd).prop('selectedIndex', 0);
+    });
+});
 
 // UIkit Pagination
 // ================================================

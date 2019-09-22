@@ -48,14 +48,14 @@ console.log(mocha);
 {% block navbar %}
 <div id="block-navbar" class="block-navbar">
     <div uk-sticky="sel-target: .uk-navbar-container; cls-active: uk-navbar-sticky">
-        <nav class="uk-navbar-container" uk-navbar="mode: click">
+        <nav class="uk-navbar-container" uk-navbar>
 
             <div class="uk-navbar-left">
                 <div class="uk-display-inline uk-margin-small-left">
                     <a class="uk-navbar-toggle navbar-commander-icon" title="Navigation">
                         <i data-feather="command" width="22px" height="22px"></i>
                     </a>
-                    <div class="uk-width-400 navbar-commander" uk-dropdown="mode:click; offset:0;">
+                    <div class="uk-width-400 navbar-commander" uk-dropdown="offset:0;">
                         <div class="uk-dropdown-grid uk-grid-collapse" uk-grid>
                             <div class="uk-width-175">
                                 <div class="navbar-commander-group">
@@ -127,7 +127,7 @@ console.log(mocha);
                             <i data-feather="x" width="12px" height="12px"></i>
                         </a>
                     </div>
-                    <div class="uk-width-300 navbar-search-result" uk-dropdown="mode:click; offset:4;">
+                    <div class="uk-width-300 navbar-search-result" uk-dropdown="offset:4;">
                         <ul class="uk-nav uk-dropdown-nav">
                             <li><a href="#">Item</a></li>
                             <li><a href="#">Item</a></li>
@@ -150,7 +150,7 @@ console.log(mocha);
                     <a class="uk-search-icon navbar-search-option" title="Search options">
                         <i data-feather="sliders" width="16px" height="16px"></i>
                     </a>
-                    <div class="uk-width-300 navbar-search-setting" uk-dropdown="mode:click; pos:bottom-right; offset:4;">
+                    <div class="uk-width-300 navbar-search-setting" uk-dropdown="pos:bottom-right; offset:4;">
                         <ul class="uk-nav uk-dropdown-nav">
                             <li class="uk-nav-header">Search in</li>
                             <li><a href="#">Item</a></li>
@@ -175,7 +175,7 @@ console.log(mocha);
                         <i data-feather="link-2" width="20px" height="20px"></i>
                         <span class="dropdown-caret"></span>
                     </a>
-                    <div uk-dropdown="mode:click; offset:0; pos:bottom-right;">
+                    <div uk-dropdown="offset:0; pos:bottom-right;">
                         <ul class="uk-nav uk-dropdown-nav">
                             <li><a href="#">TODO: Change to shortcut</a></li>
                             <li><a href="#">New Content Post</a></li>

@@ -1,33 +1,52 @@
 <div class="page-top">
     <div uk-grid>
         <div class="uk-width-expand">
-            <h1 class="uk-margin-remove">Content <span class="uk-text-lead uk-text-muted uk-visible@s">Tags</span></h1>
+            <h1 class="uk-margin-remove">Users</h1>
         </div>
     </div>
 </div>
 
 <div class="page-content uk-card-panel uk-card-body uk-margin-top">
 
-    <div uk-grid>
-        <div class="uk-width-expand">
-            ...
-        </div>
-    </div>
-
-    <hr class="uk-divider-line">
-
-    <table id="user-record" class="uk-table uk-table-striped uk-table-hover" style="100%">
+    <table id="user-record" class="uk-table uk-table-striped uk-table-hover">
         <thead>
             <tr>
-                <th style="width:30px;"></th>
+                <th style="width:30px;">
+                    <div class="uk-inline">
+                        <button class="uk-button uk-button-default uk-button-mini" type="button">W</i></button>
+                        <div class="uk-dropdown-mini" uk-dropdown="pos:bottom-left">
+                            <ul class="uk-nav uk-dropdown-nav">
+                                <li><a class="js-action-bulk" data-dci-bulk='{"type":"enabled"}'><i class="fa fa-check fa-fw"></i> enabled</a></li>
+                                <li><a class="js-action-bulk" data-dci-bulk='{"type":"disabled"}'><i class="fa fa-times fa-fw"></i> disabled</a></li>
+                                <li><a class="js-action-bulk" data-dci-bulk='{"type":"trash"}'><i class="fa fa-trash-o fa-fw"></i> trash</a></li>
+                                <li><a class="js-action-bulk" data-dci-bulk='{"type":"delete"}'><i class="fa fa-trash fa-fw"></i> delete</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </th>
                 <th style="width:50px;">ID</th>
-                <th style="minwidth:200px;">Name</th>
+                <th style="min-width:200px">Name</th>
                 <th style="width:200px;">Email</th>
                 <th style="width:150px;">Roles</th>
-                <th style="width:175px;">Registration</th>
-                <th style="width:175px;">Last Login</th>
+                <th style="width:200px;">Registration</th>
+                <th style="width:200px;">Last Login</th>
                 <th style="width:110px;">Status</th>
                 <th style="width:90px;">Action</th>
+            </tr>
+            <tr>
+                <td class="uk-text-center">
+                    <input type="checkbox" class="uk-checkbox" data-dc-checkbox='{"target":"bulk-checkbox"}'>
+                </td>
+                <td style="width:50px;"></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td class="uk-text-center">
+                    <a id="js-clear-filter" class="uk-button uk-button-warning uk-button-mini">{{ mocha.i18n.get('reset_filter') }}</a>
+                </td>
             </tr>
         </thead>
         <tbody>
@@ -40,53 +59,75 @@
 </div>
 <script>
 $(document).ready(function() {
-var dtSetting = {
-        'table'   : '#user-record',
-        'ajaxurl' : mocha.setting.url_base + 'account/user/records',
-        column    : {
-            'sorting' : [[6, 'desc']], // last_login
-            'status'  : 7,
-        }
-    },
-    dtAPI = $(dtSetting.table).DataTable({
-        'ajax': $.fn.dataTable.pipeline({
-            'url'  : dtSetting.ajaxurl,
-            'data' : function(d) {
+var tableId     = '#user-record',
+    sortingCol  = [[6, 'desc'], [2, 'asc']], // default last_login, name
+    dtTable     = $(tableId).DataTable({
+        ajax : $.fn.dataTable.pipeline({
+            url : mocha.setting.url_base + 'account/user/records',
+            data : function(d) {
                 d['csrf-token'] = '{{ mocha.tool_secure.csrfToken() }}';
             }
         }),
-        'sorting': dtSetting.column.sorting,
-        'columnDefs': [
-            { 'orderable'   : false, 'targets' : [0, -1] },
-            { 'visible'     : false, 'targets' : [ 5 ] },
-            { 'createdCell' : function(nTd) {
+        sorting : sortingCol,
+        columnDefs : [
+            { orderable : false, targets : [0, -1] },
+            { visible   : false, targets : [ 5 ] }, // Hide column
+            { className : 'noVis dt-no-print', targets : [0, -1] },
+            { createdCell : function(nTd) {
                 $(nTd).addClass('uk-text-center'); },
-                'targets' : [ 0, 1, -2, -1 ]
+                targets : [ 0, 1, -2, -1 ]
             },
         ],
-        'columns'       : [
-            { 'data': 'user_id',
-                'render': function(data, type, full) {
+        searchCols : [
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            { 'search': '!=trash' },
+            null
+        ],
+        columns : [
+            { data : 'user_id',
+                render : function(data, type, full) {
                     return  '<input type="checkbox" class="uk-checkbox bulk-checkbox" name="bulk_action[]" value="' + data + '" />';
                 }
             },
-            { 'data': 'user_id' },
-            { 'data': 'fullname',
-                'render': function(data, type, full) {
+            { data : 'user_id' },
+            { data : 'fullname',
+                render : function(data, type, full) {
                     return '<a href="' + full.url_edit + '">' + (data ? data : '-') + '</a> ' + (full.displayname ? '<i class="uk-text-muted">(' + full.displayname + ')</i>' : '');
                 }
             },
-            { 'data': 'email' },
-            { 'data': 'role_title' },
-            { 'data': 'created' },
-            { 'data': 'last_login' },
-            { 'data': 'status' },
-            { 'data': 'user_id',
-                'render': function(data, type, full) {
+            { data : 'email' },
+            { data : 'role_title' },
+            { data : 'created' },
+            { data : 'last_login',
+                render : function(data, type, full) {
+                    return data ? data : '-';
+                }
+            },
+            { data : 'status',
+                render : function(data, type, full) {
+                    output  = data;
+                    if (full.raw.status === 'disabled') {
+                        output  = '<div class="uk-badge uk-badge-warning">' + data + '</div>';
+                    }
+                    if (full.raw.status === 'trash') {
+                        output  = '<div class="uk-badge uk-badge-danger">' + data + '</div>';
+                    }
+
+                    return output;
+                }
+            },
+            { data : 'user_id',
+                render : function(data, type, full) {
                     output  = '<a href="' + full.url_edit + '" uk-tooltip title="{{ mocha.i18n.get('edit') }}"><i data-feather="edit-3" width="18px" height="18px"></i></span></a>';
                     output += '<div class="uk-inline uk-margin-mini-left">';
                     output += '    <a class="uk-button uk-button-default uk-button-mini" style="margin-top:-5px"><i data-feather="menu" width="16px" height="16px"></i></a>';
-                    output += '    <div class="uk-dropdown-mini" uk-dropdown="offset:5;pos:bottom-right;">';
+                    output += '    <div class="uk-dropdown-mini" uk-dropdown="mode:click;offset:5;pos:bottom-right;">';
                     output += '        <ul class="uk-nav uk-dropdown-nav">';
                     if (full.raw.status === 'trash') {
                         output += '       <li><a class="js-action-bulk" data-dci-bulk=\'{"type":"disabled", "item":"' + full.user_id + '", "message":{{ mocha.i18n.get('success_restore') }}"}\'><i class="fa fa-undo fa-fw"></i> {{ mocha.i18n.get('restore') }}</a></li>';
@@ -108,11 +149,56 @@ var dtSetting = {
                 }
             },
         ],
-        'drawCallback': function(settings) {
+        drawCallback: function(settings) {
             feather.replace();
         }
     });
 
-// console.log(dtAPI);
+var dtObject = $(tableId).dataTable().columnFilter({
+        sPlaceHolder : 'head:after',
+        sRangeFormat : '{from}-{to}',
+        aoColumns    : [
+            null,
+            { type : 'number' },
+            { type : 'text' },
+            { type : 'text' },
+            { type : 'select', values: [
+                { value : '', label: 'All' },
+                {% for role in roles %}
+                    { value: '{{ role.title }}', label: '{{ role.title }}' },
+                {% endfor %}
+            ], selected : '' },
+            { type : 'date-range' },
+            { type : 'date-range' },
+            { type : 'select', values: [
+                { value : '!=trash',   label : 'all' },
+                { value : 'enabled',   label : 'enabled' },
+                { value : 'disabled',  label : 'disabled' },
+                { value : 'trash',     label : 'trash' }
+            ], selected : '!=trash' },
+            null
+        ]
+    });
+
+    // console.log(dtTable);
+
+    // Use typewatch for "search all" input
+    $('.dataTables_filter input').off('keypress keyup search input paste cut').typeWatch({
+        captureLength: 0,
+        callback: function(value) {
+            dtTable.search(value).draw();
+        },
+    });
+
+    // Refresh record results
+    $('.page-content').on('click', '[data-refresh-record]', function() {
+        dtTable.clearPipeline().draw();
+    });
+
+    // Clear all filter + order
+    $('#js-clear-filter').on('click', function() {
+        dtTable.order(sortingCol).clearSearch().draw();
+    });
 });
+
 </script>

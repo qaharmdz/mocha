@@ -57,13 +57,13 @@
                     <div class="uk-width-300">
                         {% for format in date_formats %}
                             <label class="uk-display-block uk-margin-small">
-                                <input type="radio" name="date_format" value="{{ format }}" class="uk-radio" {{ form.date_format == format and not form.date_custom_in ? 'checked' }}>
+                                <input type="radio" name="date_format" value="{{ format }}" class="uk-radio" {{ form.date_format == format and not form.date_custom_is ? 'checked' }}>
                                 <span class="uk-width-100 uk-display-inline-block">{{ format }}</span>
                                 <span class="uk-text-meta">{{ 'now'|date(format) }}</span>
                             </label>
                         {% endfor %}
                         <label class="uk-display-block">
-                            <input type="radio" name="date_format" value="#custom" class="uk-radio" {{ form.date_custom_in ? 'checked' }}>
+                            <input type="radio" name="date_format" value="#custom" class="uk-radio" {{ form.date_custom_is ? 'checked' }}>
                             <span class="uk-width-100 uk-display-inline-block">{{ mocha.i18n.get('custom') }}</span>
                             <input type="text" name="date_custom" class="uk-input uk-form-small uk-width-100" placeholder="{{ date_formats.0 }}" value="{{ form.date_custom }}">
                         </label>
@@ -76,13 +76,13 @@
                     <div class="uk-width-1-3">
                         {% for format in time_formats %}
                             <label class="uk-display-block uk-margin-small">
-                                <input type="radio" name="time_format" value="{{ format }}" class="uk-radio" {{ form.time_format == format and not form.time_custom_in ? 'checked' }}>
+                                <input type="radio" name="time_format" value="{{ format }}" class="uk-radio" {{ form.time_format == format and not form.time_custom_is ? 'checked' }}>
                                 <span class="uk-width-100 uk-display-inline-block">{{ format }}</span>
                                 <span class="uk-text-meta">{{ 'now'|date(format) }}</span>
                             </label>
                         {% endfor %}
                         <label class="uk-display-block">
-                            <input type="radio" name="time_format" value="#custom" class="uk-radio" {{ form.time_custom_in ? 'checked' }}>
+                            <input type="radio" name="time_format" value="#custom" class="uk-radio" {{ form.time_custom_is ? 'checked' }}>
                             <span class="uk-width-100 uk-display-inline-block">{{ mocha.i18n.get('custom') }}</span>
                             <input type="text" name="time_custom" class="uk-input uk-form-small uk-width-100" placeholder="{{ time_formats.0 }}" value="{{ form.time_custom }}">
                         </label>

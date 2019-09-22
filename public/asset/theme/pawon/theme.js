@@ -75,6 +75,7 @@ $(document).ajaxError(function(event, jqxhr, settings, exception) {
 
 //=== UIkit components
 UIkit.dropdown('.uk-dropdown', {
+    mode: 'click',
     animation: ['uk-animation-slide-bottom-small']
 });
 
@@ -87,6 +88,26 @@ if (jQuery().select2) {
         loadingMore  : function() { return mocha.i18n.load_more; },
         searching    : function() { return mocha.i18n.processing; }
     });
+}
+
+if (jQuery().datepicker) {
+    $.datepicker.regional.mocha = {
+        prevText        : '<span uk-icon="icon:chevron-left">',
+        nextText        : '<span uk-icon="icon:chevron-right">',
+        monthNamesShort : mocha.i18n.localize_datetime.month_short,
+        dayNames        : mocha.i18n.localize_datetime.day_long,
+        dayNamesShort   : mocha.i18n.localize_datetime.day_short,
+        dayNamesMin     : mocha.i18n.localize_datetime.day_short,
+        dateFormat      : mocha.setting.locale.date_format_js,
+        changeMonth     : true,
+        changeYear      : true,
+        yearRange       : '-4:+4',
+        isRTL           : false,
+        beforeShow      : function () {
+            feather.replace();
+        }
+    };
+    $.datepicker.setDefaults($.datepicker.regional.mocha);
 }
 
 

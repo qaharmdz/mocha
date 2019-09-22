@@ -229,7 +229,7 @@ return [
 'search_'                   => 'Search..',
 'reload_data'               => 'Reload data',
 // 'search_all'                => 'Search All',
-// 'reset_filter'              => 'Reset Filter',
+'reset_filter'              => 'Reset Filter',
 'clear_search'              => 'Clear search',
 // 'refresh_result'            => 'Refresh result',
 'show_x_data'               => 'Showing _START_ to _END_ of _TOTAL_ data', // do not change _START_, _END_, _TOTAL_
