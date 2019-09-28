@@ -178,7 +178,7 @@ class Date
      */
     public function translate($dtObject = '', string $format = 'dtf', bool $reverse = false)
     {
-        $datetime = is_string($dtObject) ? $dtObject : $dtObject->format($format);
+        $datetime = is_object($dtObject) ? $dtObject->format($format) : $dtObject;
         $format   = $this->param->get('format.' . $format, $format);
         $lang     = $this->param->get('localize_datetime');
 

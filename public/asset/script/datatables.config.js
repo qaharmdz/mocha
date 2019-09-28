@@ -62,7 +62,7 @@ $.extend($.fn.dataTable.defaults, {
         info                : mocha.i18n.show_x_data,
         infoEmpty           : mocha.i18n.no_data,
         infoFiltered        : mocha.i18n.filter_x_data,
-        infoPostFix         : '<a data-refresh-record uk-tooltip title="' + mocha.i18n.reload_data + '"><i data-feather="refresh-cw" width="12px" height="12px"></i></a>',
+        infoPostFix         : '<a data-dtRefreshRecord uk-tooltip title="' + mocha.i18n.reload_data + '"><i data-feather="refresh-cw" width="12px" height="12px"></i></a>',
         thousands           : ',',
         lengthMenu          : '_MENU_',
         loadingRecords      : mocha.i18n.loading,
@@ -202,7 +202,18 @@ $.fn.dataTable.Api.register('clearPipeline()', function () {
     return this.iterator('table', function( settings ) {
         settings.clearCache = true;
     });
-} );
+});
+
+// Column filter options
+// ================================================
+function dtFilterOptions(filterParam) {
+    return {
+        bUseColVis   : true,
+        sPlaceHolder : 'head:after',
+        sRangeFormat : '{from}-{to}',
+        aoColumns    : filterParam
+    }
+}
 
 // Clear search, compatible with columnFilter
 // ================================================

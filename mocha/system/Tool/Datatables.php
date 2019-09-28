@@ -16,6 +16,7 @@ use Mocha\Controller;
 class Datatables extends Controller
 {
     protected $data = [];
+    protected $separator = '~';
 
     /**
      * Parse datatables ajax request
@@ -25,18 +26,20 @@ class Datatables extends Controller
      *
      * @return array
      */
-    public function parse(array $params, array $excludes = [0, -1])
+    public function parse(array $params, array $excludes = [0, -1], array $date_map = [])
     {
-        $this->data['_request'] = $params;
+        $date_map = array_unique(array_merge(['created', 'updated', 'publish', 'unpublish', 'last_login'], $date_map));
 
         if (empty($params['draw'])) {
             return [];
         }
 
-        $this->data['columns'] = $params['columns'];
-        $this->data['search']  = [
+        $this->data['_request'] = $params;
+        $this->data['columns']  = $params['columns'];
+        $this->data['search']   = [
             'all'     => '',
-            'columns' => []
+            'columns' => [],
+            'dates'   => [],
         ];
 
         // Remove unused column; preserve key (column sequence)
@@ -51,11 +54,20 @@ class Datatables extends Controller
             $this->data['search']['all'] = $params['search']['value'];
         }
 
-        foreach ($this->data['columns'] as $key => $value) {
-            $this->data['columns'][$key] = $value['data'];
+        foreach ($this->data['columns'] as $key => $column) {
+            $this->data['columns'][$key] = $column['data'];
 
-            if ($value['search']['value']) {
-                $this->data['search']['columns'][$value['data']] = $value['search']['value'];
+            if ($column['search']['value']) {
+                $range = explode($this->separator, $column['search']['value']);
+
+                if (isset($range[1])) {
+                    $this->data['search']['columns'][$column['data']] = [
+                        $range[0] ? $this->date->shiftToUTC($range[0], ['from_format' => 'df']) : '',
+                        $range[1] ? $this->date->shiftToUTC($range[1], ['from_format' => 'df']) : ''
+                    ];
+                } else {
+                    $this->data['search']['columns'][$column['data']] = $column['search']['value'];
+                }
             }
         }
 
@@ -115,7 +127,21 @@ class Datatables extends Controller
             }
 
             if ($data['search']['columns']) {
-                # code...
+                foreach ($data['search']['columns'] as $column => $filter_value) {
+                    if (in_array($column, array_keys($filter_map)) && $filter_value) {
+                        if (!in_array($column, $date_map)) {
+                            if (substr($filter_value, 0, 2) === '!=') {
+                                $search['query'][] = $filter_map[$column] . ' NOT LIKE :search_' . $column;
+                                $search['vars']['search_' . $column] = '%' . str_replace('!=', '', $filter_value) . '%';
+                            } else {
+                                $search['query'][] = $filter_map[$column] . ' LIKE :search_' . $column;
+                                $search['vars']['search_' . $column] = '%' . $filter_value . '%';
+                            }
+                        } elseif (is_array($filter_value)) {
+                            // $this->logger->info(json_encode($filter_value));
+                        }
+                    }
+                }
             }
 
             if ($search['query']) {
@@ -125,7 +151,7 @@ class Datatables extends Controller
         }
 
         $output['order'] = ['query' => '', 'vars'  => []];
-        if ($data['search']) {
+        if ($data['order']) {
             $orders = [];
 
             foreach ($data['order'] as $key => $value) {

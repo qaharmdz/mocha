@@ -45,7 +45,7 @@
                 <td></td>
                 <td></td>
                 <td class="uk-text-center">
-                    <a id="js-clear-filter" class="uk-button uk-button-warning uk-button-mini">{{ mocha.i18n.get('reset_filter') }}</a>
+                    <a class="uk-button uk-button-warning uk-button-mini" data-dtClearFilter>{{ mocha.i18n.get('reset_filter') }}</a>
                 </td>
             </tr>
         </thead>
@@ -61,10 +61,35 @@
 $(document).ready(function() {
 var tableId     = '#user-record',
     sortingCol  = [[6, 'desc'], [2, 'asc']], // default last_login, name
-    dtTable     = $(tableId).DataTable({
+    filterParam = [
+        null,
+        { type : 'number' },
+        { type : 'text' },
+        { type : 'text' },
+        { type : 'select', values: [
+            { value : '', label: 'All' },
+            {% for role in roles %}
+                { value: '{{ role.title }}', label: '{{ role.title }}' },
+            {% endfor %}
+        ], selected : '' },
+        { type : 'date-range' },
+        { type : 'date-range' },
+        { type : 'select', values: [
+            { value : '!=trash',   label : '{{ mocha.i18n.get('all') }}' },
+            { value : 'enabled',   label : '{{ mocha.i18n.get('enabled') }}' },
+            { value : 'disabled',  label : '{{ mocha.i18n.get('disabled') }}' },
+            { value : 'trash',     label : '{{ mocha.i18n.get('trash') }}' }
+        ], selected : '!=trash' },
+        null
+    ];
+
+var dtTable = $(tableId).DataTable({
         ajax : $.fn.dataTable.pipeline({
             url : mocha.setting.url_base + 'account/user/records',
             data : function(d) {
+                d['params']     = {
+                    'search' : filterParam
+                };
                 d['csrf-token'] = '{{ mocha.tool_secure.csrfToken() }}';
             }
         }),
@@ -154,31 +179,7 @@ var tableId     = '#user-record',
         }
     });
 
-var dtObject = $(tableId).dataTable().columnFilter({
-        sPlaceHolder : 'head:after',
-        sRangeFormat : '{from}-{to}',
-        aoColumns    : [
-            null,
-            { type : 'number' },
-            { type : 'text' },
-            { type : 'text' },
-            { type : 'select', values: [
-                { value : '', label: 'All' },
-                {% for role in roles %}
-                    { value: '{{ role.title }}', label: '{{ role.title }}' },
-                {% endfor %}
-            ], selected : '' },
-            { type : 'date-range' },
-            { type : 'date-range' },
-            { type : 'select', values: [
-                { value : '!=trash',   label : 'all' },
-                { value : 'enabled',   label : 'enabled' },
-                { value : 'disabled',  label : 'disabled' },
-                { value : 'trash',     label : 'trash' }
-            ], selected : '!=trash' },
-            null
-        ]
-    });
+var dtObject = $(tableId).dataTable().columnFilter(dtFilterOptions(filterParam));
 
     // console.log(dtTable);
 
@@ -191,14 +192,13 @@ var dtObject = $(tableId).dataTable().columnFilter({
     });
 
     // Refresh record results
-    $('.page-content').on('click', '[data-refresh-record]', function() {
+    $('.page-content').on('click', '[data-dtRefreshRecord]', function() {
         dtTable.clearPipeline().draw();
     });
 
     // Clear all filter + order
-    $('#js-clear-filter').on('click', function() {
+    $('[data-dtClearFilter]').on('click', function() {
         dtTable.order(sortingCol).clearSearch().draw();
     });
 });
-
 </script>

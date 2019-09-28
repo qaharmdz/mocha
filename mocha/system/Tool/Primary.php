@@ -120,7 +120,7 @@ class Primary extends Controller
                 // TODO: wrap in event .after
             }
 
-            $this->logger->error(sprintf('Cannot locate expected tool abstractor path "%s"!', $path));
+            $this->logger->error(sprintf('Cannot locate abstractor path "%s"!', $path));
             return false;
         }
     }

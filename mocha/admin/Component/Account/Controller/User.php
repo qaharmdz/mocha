@@ -22,9 +22,11 @@ class User extends Controller
 
         $this->language->load('Component/Account/user');
 
-        d($this->session->get('dtPost', []));
-        d($this->session->get('output', []));
+        // d($this->session->get('dtPost', []));
+        // d($this->session->get('output', []));
         d($this->tool_datatables->parse($this->session->get('dtPost', [])));
+
+        // d($this->date->translate('Sep 11, 2019', 'dtf', true));
 
         //=== Document
         $this->document->setTitle($this->language->get('page_title'));
@@ -60,8 +62,6 @@ class User extends Controller
         $this->tool->abstractor('user', new Component\Account\Abstractor\User());
 
         $post = $this->request->post->all();
-        $this->session->set('dtPost', $post);
-
         $records = $this->tool->abstractor('user.getRecords', [$post]);
 
         $data  = [];
@@ -86,6 +86,8 @@ class User extends Controller
             'recordsFiltered' => count($data),
             'recordsTotal'    => $this->tool->abstractor('user.getTotalRecords'),
         ];
+
+        $this->session->set('dtPost', $post);
         $this->session->set('output', $output);
 
         return $this->response->jsonOutput($output);
