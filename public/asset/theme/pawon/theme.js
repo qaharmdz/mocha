@@ -51,14 +51,16 @@ window.onbeforeunload = function() {
 //=== AJAX error handler
 $(document).ajaxError(function(event, jqxhr, settings, exception) {
     if (mocha.setting.server.debug) {
-        console.warn('# Mocha debug: ' + jqxhr.status + ' ' + exception, jqxhr, settings);
+        console.warn('#=== Mocha debug: ' + jqxhr.status + ' ' + exception);
+        console.log(jqxhr, settings);
     }
-    if (jqxhr.status === 401) { // Unauthorized, login require
-        window.location.replace(jqxhr.responseText);
-    } else {
-        var data = jqxhr.responseJSON ? jqxhr.responseJSON : JSON.parse(jqxhr.responseText);
 
-        if (jqxhr.status.toString().length === 3 && data.message) {
+    var data = jqxhr.responseJSON ? jqxhr.responseJSON : JSON.parse(jqxhr.responseText);
+
+    if ('redirect' in data) {
+        window.location.replace(data.redirect);
+    } else {
+        if (jqxhr.status.toString().length === 3 && 'message' in data) {
             if (jqxhr.status === 404) {
                 data.message += '<div class="uk-text-help uk-text-break uk-margin-small-top">' + settings.url.split(/[?#]/)[0] + '</div>';
             }
