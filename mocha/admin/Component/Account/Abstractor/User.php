@@ -60,9 +60,6 @@ class User extends \Mocha\Abstractor
         $query .= $dataTables['limit']['query'];
         $args  += $dataTables['limit']['vars'];
 
-        // $this->logger->info(json_encode($query));
-        // $this->logger->info(json_encode($args));
-
         return $this->db->run($query, $args)->fetchAll();
     }
 

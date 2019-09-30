@@ -22,12 +22,6 @@ class User extends Controller
 
         $this->language->load('Component/Account/user');
 
-        // d($this->session->get('dtPost', []));
-        // d($this->session->get('output', []));
-        d($this->tool_datatables->parse($this->session->get('dtPost', [])));
-
-        // d($this->date->translate('Sep 11, 2019', 'dtf', true));
-
         //=== Document
         $this->document->setTitle($this->language->get('page_title'));
         $this->document->addNode('breadcrumbs', [
@@ -75,8 +69,8 @@ class User extends Controller
             ];
 
             $data[$i]['status']     = $this->language->get($data[$i]['status']);
-            $data[$i]['created']    = $this->date->shift($data[$i]['created']);
-            $data[$i]['last_login'] = $this->date->shift($data[$i]['last_login']);
+            $data[$i]['created']    = $this->date->shift($data[$i]['created'], ['diff_human' => true]);
+            $data[$i]['last_login'] = $this->date->shift($data[$i]['last_login'], ['diff_human' => true]);
             $data[$i]['url_edit']   = $this->router->url('account/userForm/edit', ['user_id' => $data[$i]['user_id']]);
         }
 
@@ -84,11 +78,8 @@ class User extends Controller
             'draw'            => (int)$post['draw'],
             'data'            => $data,
             'recordsFiltered' => count($data),
-            'recordsTotal'    => $this->tool->abstractor('user.getTotalRecords'),
+            'recordsTotal'    => $this->tool->abstractor('user.getTotalRecords')
         ];
-
-        $this->session->set('dtPost', $post);
-        $this->session->set('output', $output);
 
         return $this->response->jsonOutput($output);
     }

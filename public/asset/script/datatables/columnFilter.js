@@ -1,4 +1,4 @@
-﻿/*
+/*
 * File:        jquery.dataTables.columnFilter.js
 * Version:     1.5.6-modified
 * Author:      Jovan Popovic
@@ -327,7 +327,7 @@
 
             // $(document.body).delegate('#date_range_clear_' + i, 'click', function() {
             //$(document.body).on('click', '#date_range_clear_' + i, function() {
-            $('#content').on('click', '#date_range_clear_' + i, function() {
+            $(body).on('click', '#date_range_clear_' + i, function() {
                 $('#' + sFromId + ', #' + sToId, 'thead td').val('');
                 oTable.fnDraw();
             });

@@ -87,9 +87,7 @@ var dtTable = $(tableId).DataTable({
         ajax : $.fn.dataTable.pipeline({
             url : mocha.setting.url_base + 'account/user/records',
             data : function(d) {
-                d['params']     = {
-                    'search' : filterParam
-                };
+                d['params']     = { 'search' : filterParam };
                 d['csrf-token'] = '{{ mocha.tool_secure.csrfToken() }}';
             }
         }),

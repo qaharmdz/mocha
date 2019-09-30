@@ -112,10 +112,11 @@ class Date
         $param = array_merge(
             [
                 'from_tz'     => 'UTC',
-                'from_format' => 'dts',
+                'from_format' => 'dts', // datetime_sql
                 'to_tz'       => 'user',
-                'to_format'   => 'dtf',
-                'diffHuman'   => false
+                'to_format'   => 'dtf', // datetime_format
+                'diff_human'  => false,
+                'reset'       => false  // Set time to 00:00:00
             ],
             (array)$options
         );
@@ -127,15 +128,19 @@ class Date
             true
         );
 
-        $dtObject = $this->carbon
-            ->createFromFormat(
-                $this->param->get('format.' . $param['from_format'], $param['from_format']),
-                $datetime,
-                $this->param->get('tz_' . $param['from_tz'], $param['from_tz'])
-            )
-            ->setTimezone($this->param->get('tz_' . $param['to_tz'], $param['to_tz']));
+        $dtObject = $this->carbon->createFromFormat(
+            $this->param->get('format.' . $param['from_format'], $param['from_format']),
+            $datetime,
+            $this->param->get('tz_' . $param['from_tz'], $param['from_tz'])
+        );
 
-        if ($param['diffHuman']) {
+        if ($param['reset']) {
+            $dtObject->startOfDay();
+        }
+
+        $dtObject->setTimezone($this->param->get('tz_' . $param['to_tz'], $param['to_tz']));
+
+        if ($param['diff_human']) {
             return $this->diffHuman(
                 $dtObject,
                 $this->param->get('format.' . $param['to_format'], $param['to_format'])
@@ -162,10 +167,9 @@ class Date
         $param = array_merge(
             [
                 'from_tz'     => 'user',
-                'from_format' => 'dtf',
+                'from_format' => 'dtf', // datetime_format
                 'to_tz'       => 'UTC',
-                'to_format'   => 'dts',
-                'diffHuman'   => false
+                'to_format'   => 'dts'  // datetime_sql
             ],
             (array)$options
         );

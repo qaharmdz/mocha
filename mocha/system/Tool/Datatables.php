@@ -26,10 +26,8 @@ class Datatables extends Controller
      *
      * @return array
      */
-    public function parse(array $params, array $excludes = [0, -1], array $date_map = [])
+    public function parse(array $params, array $excludes = [0, -1])
     {
-        $date_map = array_unique(array_merge(['created', 'updated', 'publish', 'unpublish', 'last_login'], $date_map));
-
         if (empty($params['draw'])) {
             return [];
         }
@@ -38,8 +36,7 @@ class Datatables extends Controller
         $this->data['columns']  = $params['columns'];
         $this->data['search']   = [
             'all'     => '',
-            'columns' => [],
-            'dates'   => [],
+            'columns' => []
         ];
 
         // Remove unused column; preserve key (column sequence)
@@ -51,24 +48,55 @@ class Datatables extends Controller
 
         // Parse build
         if ($params['search']['value']) {
-            $this->data['search']['all'] = $params['search']['value'];
+            $this->data['search']['all'] = trim($params['search']['value']);
         }
 
         foreach ($this->data['columns'] as $key => $column) {
             $this->data['columns'][$key] = $column['data'];
 
-            if ($column['search']['value']) {
-                $range = explode($this->separator, $column['search']['value']);
+            $column_search = [
+                'value'    => trim($column['search']['value']),
+                'type'     => $params['params']['search'][$key]['type'] ?? 'text',
+                'operator' => $params['params']['search'][$key]['operator'] ?? '%like%', // equal, range, %like%
+                'negate'   => false
+            ];
 
-                if (isset($range[1])) {
-                    $this->data['search']['columns'][$column['data']] = [
-                        $range[0] ? $this->date->shiftToUTC($range[0], ['from_format' => 'df']) : '',
-                        $range[1] ? $this->date->shiftToUTC($range[1], ['from_format' => 'df']) : ''
+            if (in_array($column_search['value'], ['', '!=', $this->separator])) {
+                continue;
+            }
+
+            if (in_array($column_search['type'], ['number', 'select'])) {
+                $column_search['operator'] = 'equal';
+            }
+
+            if (substr($column_search['value'], 0, 2) === '!=') {
+                $column_search['value']  = substr($column_search['value'], 2);
+                $column_search['negate'] = true;
+            }
+
+            if ($column_search['type'] == 'number') {
+                $column_search['value'] = (int)$column_search['value'];
+            }
+
+            if (strpos($column_search['type'], 'range') !== false) {
+                $range = explode($this->separator, $column_search['value']);
+                $column_search['value'] = $range;
+                $column_search['operator'] = 'range';
+
+                if ($column_search['type'] == 'number-range') {
+                    $column_search['value'] = [
+                        isset($range[0]) ? (int)$range[0] : null,
+                        isset($range[1]) ? (int)$range[0] : null
                     ];
-                } else {
-                    $this->data['search']['columns'][$column['data']] = $column['search']['value'];
+                } elseif ($column_search['type'] == 'date-range') {
+                    $column_search['value'] = [
+                        !empty($range[0]) ? $this->date->shiftToUTC($range[0], ['from_format' => 'df', 'reset' => true]) : null,
+                        !empty($range[1]) ? $this->date->shiftToUTC($range[1], ['from_format' => 'df', 'reset' => true]) : null
+                    ];
                 }
             }
+
+            $this->data['search']['columns'][$column['data']] = $column_search;
         }
 
         foreach ($params['order'] as $order) {
@@ -114,9 +142,9 @@ class Datatables extends Controller
 
             if ($data['search']['all']) {
                 $search_all = [];
-                foreach ($filter_map as $filter_key => $column) {
+                foreach ($filter_map as $filter_key => $db_column) {
                     if (!in_array($filter_key, $date_map)) {
-                        $search_all[] = $column . ' LIKE :search_all_' . $filter_key;
+                        $search_all[] = $db_column . ' LIKE :search_all_' . $filter_key;
                         $search['vars']['search_all_' . $filter_key] = '%' . $data['search']['all'] . '%';
                     }
                 }
@@ -127,19 +155,53 @@ class Datatables extends Controller
             }
 
             if ($data['search']['columns']) {
-                foreach ($data['search']['columns'] as $column => $filter_value) {
-                    if (in_array($column, array_keys($filter_map)) && $filter_value) {
-                        if (!in_array($column, $date_map)) {
-                            if (substr($filter_value, 0, 2) === '!=') {
-                                $search['query'][] = $filter_map[$column] . ' NOT LIKE :search_' . $column;
-                                $search['vars']['search_' . $column] = '%' . str_replace('!=', '', $filter_value) . '%';
-                            } else {
-                                $search['query'][] = $filter_map[$column] . ' LIKE :search_' . $column;
-                                $search['vars']['search_' . $column] = '%' . $filter_value . '%';
+                foreach ($data['search']['columns'] as $filter_key => $filter) {
+                    $output['debug'][$filter_key] = $filter;
+
+                    switch ($filter['operator']) {
+                        case 'equal':
+                            $search['query'][] = $filter_map[$filter_key] . ' ' . ($filter['negate'] ? '!=' : '=') . ' :search_' . $filter_key;
+                            $search['vars']['search_' . $filter_key] = $filter['value'];
+                            break;
+
+                        case 'range':
+                            if ($filter['type'] == 'number-range') {
+                                if (!empty($filter['value'][0]) && empty($filter['value'][1])) {
+                                    $search['query'][] = $filter_map[$filter_key] . ' >= :search_' . $filter_key . '_0';
+                                    $search['vars']['search_' . $filter_key . '_0'] = $filter['value'][0];
+                                }
+                                if (empty($filter['value'][0]) && !empty($filter['value'][1])) {
+                                    $search['query'][] = $filter_map[$filter_key] . ' <= :search_' . $filter_key . '_1';
+                                    $search['vars']['search_' . $filter_key . '_1'] = $filter['value'][1];
+                                }
+                                if (!empty($filter['value'][0]) && !empty($filter['value'][1])) {
+                                    $search['query'][] = '(' . $filter_map[$filter_key] . ' BETWEEN :search_' . $filter_key . '_1 AND :search_' . $filter_key . '_0)';
+                                    $search['vars']['search_' . $filter_key . '_0'] = $filter['value'][0];
+                                    $search['vars']['search_' . $filter_key . '_1'] = $filter['value'][1];
+                                }
                             }
-                        } elseif (is_array($filter_value)) {
-                            // $this->logger->info(json_encode($filter_value));
-                        }
+
+                            if ($filter['type'] == 'date-range' && in_array($filter_key, $date_map)) {
+                                if (!empty($filter['value'][0]) && empty($filter['value'][1])) {
+                                    $search['query'][] = $filter_map[$filter_key] . ' >= :search_' . $filter_key . '_0';
+                                    $search['vars']['search_' . $filter_key . '_0'] = $filter['value'][0];
+                                }
+                                if (empty($filter['value'][0]) && !empty($filter['value'][1])) {
+                                    $search['query'][] = $filter_map[$filter_key] . ' <= DATE_ADD(:search_' . $filter_key . '_1, INTERVAL 1 DAY)';
+                                    $search['vars']['search_' . $filter_key . '_1'] = $filter['value'][1];
+                                }
+                                if (!empty($filter['value'][0]) && !empty($filter['value'][1])) {
+                                    $search['query'][] = '(' . $filter_map[$filter_key] . ' BETWEEN :search_' . $filter_key . '_0 AND DATE_ADD(:search_' . $filter_key . '_1, INTERVAL 1 DAY))';
+                                    $search['vars']['search_' . $filter_key . '_0'] = $filter['value'][0];
+                                    $search['vars']['search_' . $filter_key . '_1'] = $filter['value'][1];
+                                }
+                            }
+                            break;
+
+                        default: // %like%
+                            $search['query'][] = $filter_map[$filter_key] . ' ' . ($filter['negate'] ? 'NOT LIKE' : 'LIKE') . ' :search_' . $filter_key;
+                            $search['vars']['search_' . $filter_key] = '%' . $filter['value'] . '%';
+                            break;
                     }
                 }
             }

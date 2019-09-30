@@ -19,7 +19,7 @@ class Response extends HttpFoundation\Response
     /**
      * @var HttpFoundation\Response
      */
-    private $output;
+    protected $output;
 
     /**
      * A layer for content indicate that $response must be send immediately.
