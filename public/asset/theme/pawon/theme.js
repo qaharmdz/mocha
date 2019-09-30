@@ -18,7 +18,7 @@
  *
  * # Global Defaults
  *   - Form change confirmation
- *   - AJAX error handler
+ *   - AJAX setup
  *   - UIkit components
  *   - 3rd Plugins default setting
  *
@@ -37,6 +37,10 @@
  *
  * ======================================================================== */
 
+if (mocha.setting.server.debug) {
+    console.log(mocha);
+}
+
 /*
  * Global Defaults
  * ======================================================================== */
@@ -48,11 +52,17 @@ window.onbeforeunload = function() {
     }
 };
 
-//=== AJAX error handler
+//=== AJAX Setup
+$(document).ajaxComplete(function(event, jqxhr, options) {
+    var data = jqxhr.responseJSON ? jqxhr.responseJSON : JSON.parse(jqxhr.responseText);
+
+    if (mocha.setting.server.debug && 'debug' in data) {
+        console.log('# Mocha: ' + options.url, data.debug);
+    }
+});
 $(document).ajaxError(function(event, jqxhr, settings, exception) {
     if (mocha.setting.server.debug) {
-        console.warn('#=== Mocha debug: ' + jqxhr.status + ' ' + exception);
-        console.log(jqxhr, settings);
+        console.warn('# Mocha: ' + jqxhr.status + ' ' + exception, jqxhr);
     }
 
     var data = jqxhr.responseJSON ? jqxhr.responseJSON : JSON.parse(jqxhr.responseText);
@@ -105,9 +115,7 @@ if (jQuery().datepicker) {
         changeYear      : true,
         yearRange       : '-4:+4',
         isRTL           : false,
-        beforeShow      : function () {
-            feather.replace();
-        }
+        beforeShow      : function () {}
     };
     $.datepicker.setDefaults($.datepicker.regional.mocha);
 }

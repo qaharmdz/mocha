@@ -48,7 +48,7 @@ class Login extends Controller
 
         $data['alerts'] = ['primary', 'success', 'danger', 'warning'];
         foreach ($data['alerts'] as $alert) {
-            $data['alert_' . $alert] = $this->error['alert_'.$alert] ?? ${'alert_'.$alert} ?? '';
+            $data['alert_' . $alert] = $this->error['alert_' . $alert] ?? ${'alert_' . $alert} ?? '';
         }
 
         // === Content
