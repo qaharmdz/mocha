@@ -172,7 +172,7 @@ class Init extends Controller
             // All $_POST must have csrf
             case $this->request->is('post') && !$this->tool_secure->csrfValidate():
                 if ($this->request->is('ajax')) {
-                    return $this->response->jsonOutput(['message' => $this->language->get('error_csrf')], 403);
+                    return $this->tool->errorAjax($this->language->get('error_csrf'), 403);
                 }
 
                 $this->document->addNode('alerts', [

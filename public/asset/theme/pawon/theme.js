@@ -57,31 +57,36 @@ $(document).ajaxComplete(function(event, jqxhr, options) {
     var data = jqxhr.responseJSON ? jqxhr.responseJSON : JSON.parse(jqxhr.responseText);
 
     if (mocha.setting.server.debug && 'debug' in data) {
-        console.log('# Mocha: ' + options.url, data.debug);
+        console.log('# Mocha: ' + options.url + '\n', data.debug);
     }
 });
 $(document).ajaxError(function(event, jqxhr, settings, exception) {
-    if (mocha.setting.server.debug) {
-        console.warn('# Mocha: ' + jqxhr.status + ' ' + exception, jqxhr);
-    }
-
     var data = jqxhr.responseJSON ? jqxhr.responseJSON : JSON.parse(jqxhr.responseText);
+
+    if (mocha.setting.server.debug) {
+        console.warn('# Mocha: ' + jqxhr.status + ' ' + exception + '\n', jqxhr);
+    }
 
     if ('redirect' in data) {
         window.location.replace(data.redirect);
-    } else {
-        if (jqxhr.status.toString().length === 3 && 'message' in data) {
-            if (jqxhr.status === 404) {
-                data.message += '<div class="uk-text-help uk-text-break uk-margin-small-top">' + settings.url.split(/[?#]/)[0] + '</div>';
-            }
-
-            $.fn.mocha.notify({
-                message : data.message,
-                icon    : '<span uk-icon=\'icon:warning;ratio:1.5\'></span>',
-                status  : 'warning',
-                timeout : 120000 // 2 minute
-            });
+    } else if ('message' in data) {
+        if (jqxhr.status === 404) {
+            data.message += '<div class="uk-text-help uk-text-break uk-margin-small-top">' + settings.url.split(/[?#]/)[0] + '</div>';
         }
+
+        $.fn.mocha.notify({
+            message : data.message,
+            icon    : '<span uk-icon=\'icon:warning;ratio:1.5\'></span>',
+            status  : 'warning',
+            timeout : 120000 // 2 minute
+        });
+    } else {
+        $.fn.mocha.notify({
+            message : '<span style="font-size:20px;line-height:1em;margin: 0 5px;display:block;">' + jqxhr.status + ' ' + exception + '</span>',
+            icon    : '<span uk-icon=\'icon:warning;ratio:1.5\'></span>',
+            status  : 'danger',
+            timeout : 120000 // 2 minute
+        });
     }
 });
 
