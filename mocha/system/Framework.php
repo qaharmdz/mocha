@@ -165,7 +165,7 @@ class Framework
         $this->config->set('setting.locale.language', $this->config->get('setting.locale.language_' . $this->config->get('app.folder')));
         $this->config->set('setting.locale.language_id', $this->config->get('setting.locale.languages')[$this->config->get('setting.locale.language')]['language_id']);
 
-        if ($this->config->get('setting.server.environment') != 'live') {
+        if ($this->config->get('setting.server.environment') == 'dev') {
             $this->config->set('setting.server.debug', true);
         }
 

@@ -107,10 +107,6 @@ class Init extends Controller
         /*
         d($this->config->all());
         d($this->event);
-        TODO: at parent controller
-            - $this->controller() load controller
-            - $this->model(name, object) register model
-            - $this->model(name, method) call model method wrapped in event
 
         d($this->controllerResolver->resolve('home', []));
         d($this->controllerResolver->resolve('cool/app', [], 'module'));
@@ -158,7 +154,7 @@ class Init extends Controller
             return null;
         }
 
-        // Config setting.server.debug is "true" in environment: dev and test
+        // Config setting.server.debug is "true" in development environment
         if ($this->config->get('setting.server.debug')) {
             $this->config->set('setting.server.login_session', ($this->config->get('setting.server.login_session') * 6));
         }

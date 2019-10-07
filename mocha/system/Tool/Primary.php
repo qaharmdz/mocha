@@ -95,15 +95,13 @@ class Primary extends Controller
     /**
      * Wrap abstractor with before/after event
      *
+     * $this->tool->abstractor('system/setting', new Component\System\Abstractor\Setting());
+     * $this->tool->abstractor('system/setting.getSettings', ['group', 'type']);
+     *
      * @param  string           $path
      * @param  Abstractor|array $param
      *
      * @return mixed
-     */
-    /**
-     * TODO:
-     * $this->tool->abstractor('system\setting', new Component\System\Abstractor\Setting());
-     * $this->tool->abstractor('system\setting')->method('getSettings', ['setting', $page])
      */
     public function abstractor(string $path, $param = [])
     {
