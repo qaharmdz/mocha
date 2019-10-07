@@ -27,7 +27,7 @@ class Secure extends Controller
      */
     public function csrfField()
     {
-        return '<input type="hidden" name="csrf-token" value="' . $this->csrfToken() . '" class="csrf-token" />';
+        return '<input type="hidden" name="csrf_token" value="' . $this->csrfToken() . '" class="csrf_token" />';
     }
 
     /**
@@ -37,8 +37,8 @@ class Secure extends Controller
      */
     public function csrfValidate()
     {
-        if ($valid = $this->request->post->get('csrf-token') === $this->csrfToken()) {
-            $this->request->post->remove('csrf-token');
+        if ($valid = $this->request->post->get('csrf_token') === $this->csrfToken()) {
+            $this->request->post->remove('csrf_token');
         }
 
         return $valid;
