@@ -144,7 +144,7 @@ class User
             // User identity
             $this->get('user_id'),
             $this->get('email'),
-            $this->get('created'),
+            $this->get('last_login'),
 
             // User session
             $this->session->get('user_token'),
