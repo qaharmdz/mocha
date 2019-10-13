@@ -68,6 +68,25 @@ class User extends \Mocha\Abstractor
         return $this->db->run('SELECT count(*) FROM ' . DB_PREFIX . 'user')->fetchColumn();
     }
 
+    public function actionRecord($type, $items)
+    {
+        if (in_array($type, array('enabled', 'disabled', 'trash'))) {
+            foreach ($items as $item) {
+                $this->db->run('UPDATE ' . DB_PREFIX . 'user SET `status` = ? WHERE user_id = ?', [$type, $item]);
+            }
+        }
+
+        if ($type == 'delete') {
+            foreach ($items as $item) {
+                $deleted = $this->db->run('DELETE FROM ' . DB_PREFIX . 'user WHERE user_id = ?', [$item])->rowCount();
+
+                if ($deleted) {
+                    $this->db->run('DELETE FROM ' . DB_PREFIX . 'user_meta WHERE user_id = ?', [$item]);
+                }
+            }
+        }
+    }
+
     // Form
     // ================================================
 }

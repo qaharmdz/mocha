@@ -1,8 +1,9 @@
-<div class="page-top">
-    <div uk-grid>
-        <div class="uk-width-expand">
-            <h1 class="uk-margin-remove">Users</h1>
-        </div>
+<div class="page-top uk-child-width-1-2" uk-grid>
+    <div>
+        <h1 class="page-title">{{ mocha.i18n.get('page_title') }}</h1>
+    </div>
+    <div class="uk-text-right uk-padding-mini-top">
+        <button class="uk-button uk-button-primary" style="padding-left:15px; margin-top:-10px;"><i data-feather="plus" width="22px" height="22px"></i> Insert</button>
     </div>
 </div>
 
@@ -11,19 +12,19 @@
     <table id="user-record" class="uk-table uk-table-striped uk-table-hover">
         <thead>
             <tr>
-                <th style="width:30px;">
+                <td style="width:30px;padding:5px 3px;">
                     <div class="uk-inline">
-                        <button class="uk-button uk-button-default uk-button-mini" type="button">W</i></button>
-                        <div class="uk-dropdown-mini" uk-dropdown="pos:bottom-left">
+                        <a class="uk-button uk-button-default uk-button-mini"><i data-feather="menu" width="16px" height="16px"></i></a>
+                        <div class="uk-dropdown-mini" uk-dropdown="mode:click;offset:5;pos:bottom-left;" uk-toggle>
                             <ul class="uk-nav uk-dropdown-nav">
-                                <li><a class="js-action-bulk" data-dci-bulk='{"type":"enabled"}'><i class="fa fa-check fa-fw"></i> enabled</a></li>
-                                <li><a class="js-action-bulk" data-dci-bulk='{"type":"disabled"}'><i class="fa fa-times fa-fw"></i> disabled</a></li>
-                                <li><a class="js-action-bulk" data-dci-bulk='{"type":"trash"}'><i class="fa fa-trash-o fa-fw"></i> trash</a></li>
-                                <li><a class="js-action-bulk" data-dci-bulk='{"type":"delete"}'><i class="fa fa-trash fa-fw"></i> delete</a></li>
+                                <li><a data-mc-bulkAction='{"type":"enabled"}'><i class="fa fa-check fa-fw"></i> {{ mocha.i18n.get('enabled') }}</a></li>
+                                <li><a data-mc-bulkAction='{"type":"disabled"}'><i class="fa fa-times fa-fw"></i> {{ mocha.i18n.get('disabled') }}</a></li>
+                                <li><a data-mc-bulkAction='{"type":"trash"}'><i class="fa fa-trash-o fa-fw"></i> {{ mocha.i18n.get('trash') }}</a></li>
+                                <li><a data-mc-bulkAction='{"type":"delete"}'><i class="fa fa-trash fa-fw"></i> {{ mocha.i18n.get('delete') }}</a></li>
                             </ul>
                         </div>
                     </div>
-                </th>
+                </td>
                 <th style="width:50px;">ID</th>
                 <th style="min-width:200px">Name</th>
                 <th style="width:200px;">Email</th>
@@ -35,7 +36,7 @@
             </tr>
             <tr>
                 <td class="uk-text-center">
-                    <input type="checkbox" class="uk-checkbox" data-dc-checkbox='{"target":"bulk-checkbox"}'>
+                    <input type="checkbox" class="uk-checkbox" data-mc-checkboxWatch>
                 </td>
                 <td style="width:50px;"></td>
                 <td></td>
@@ -45,7 +46,7 @@
                 <td></td>
                 <td></td>
                 <td class="uk-text-center">
-                    <a class="uk-button uk-button-warning uk-button-mini" data-dtClearFilter>{{ mocha.i18n.get('reset_filter') }}</a>
+                    <a class="uk-label uk-background-gray filter_clear" data-dtClearFilter>{{ mocha.i18n.get('reset_filter') }}</a>
                 </td>
             </tr>
         </thead>
@@ -57,6 +58,7 @@
     </table>
 
 </div>
+
 <script>
 $(document).ready(function() {
 var tableId     = '#user-record',
@@ -75,10 +77,10 @@ var tableId     = '#user-record',
         { type : 'date-range' },
         { type : 'date-range' },
         { type : 'select', values: [
-            { value : '!=trash',   label : '{{ mocha.i18n.get('all') }}' },
-            { value : 'enabled',   label : '{{ mocha.i18n.get('enabled') }}' },
-            { value : 'disabled',  label : '{{ mocha.i18n.get('disabled') }}' },
-            { value : 'trash',     label : '{{ mocha.i18n.get('trash') }}' }
+            { value : '!=trash',   label : '{{ mocha.i18n.get("all") }}' },
+            { value : 'enabled',   label : '{{ mocha.i18n.get("enabled") }}' },
+            { value : 'disabled',  label : '{{ mocha.i18n.get("disabled") }}' },
+            { value : 'trash',     label : '{{ mocha.i18n.get("trash") }}' }
         ], selected : '!=trash' },
         null
     ];
@@ -87,8 +89,8 @@ var dtTable = $(tableId).DataTable({
         ajax : $.fn.dataTable.pipeline({
             url : mocha.setting.url_base + 'account/user/records',
             data : function(d) {
-                d['params']     = { 'search' : filterParam };
-                d['csrf-token'] = '{{ mocha.tool_secure.csrfToken() }}';
+                d.params     = { 'search' : filterParam };
+                d.csrf_token = '{{ mocha.tool_secure.csrfToken() }}';
             }
         }),
         sorting : sortingCol,
@@ -115,7 +117,7 @@ var dtTable = $(tableId).DataTable({
         columns : [
             { data : 'user_id',
                 render : function(data, type, full) {
-                    return  '<input type="checkbox" class="uk-checkbox bulk-checkbox" name="bulk_action[]" value="' + data + '" />';
+                    return  '<input type="checkbox" class="uk-checkbox checkboxWatch" name="bulk_action[]" value="' + data + '" />';
                 }
             },
             { data : 'user_id' },
@@ -136,10 +138,10 @@ var dtTable = $(tableId).DataTable({
                 render : function(data, type, full) {
                     output  = data;
                     if (full.raw.status === 'disabled') {
-                        output  = '<div class="uk-badge uk-badge-warning">' + data + '</div>';
+                        output  = '<div class="uk-label uk-label-warning">' + data + '</div>';
                     }
                     if (full.raw.status === 'trash') {
-                        output  = '<div class="uk-badge uk-badge-danger">' + data + '</div>';
+                        output  = '<div class=""uk-label uk-label-danger">' + data + '</div>';
                     }
 
                     return output;
@@ -147,22 +149,22 @@ var dtTable = $(tableId).DataTable({
             },
             { data : 'user_id',
                 render : function(data, type, full) {
-                    output  = '<a href="' + full.url_edit + '" uk-tooltip title="{{ mocha.i18n.get('edit') }}"><i data-feather="edit-3" width="18px" height="18px"></i></span></a>';
+                    output  = '<a href="' + full.url_edit + '" uk-tooltip title="{{ mocha.i18n.get("edit") }}"><i data-feather="edit-3" width="18px" height="18px"></i></span></a>';
                     output += '<div class="uk-inline uk-margin-mini-left">';
                     output += '    <a class="uk-button uk-button-default uk-button-mini" style="margin-top:-5px"><i data-feather="menu" width="16px" height="16px"></i></a>';
-                    output += '    <div class="uk-dropdown-mini" uk-dropdown="mode:click;offset:5;pos:bottom-right;">';
+                    output += '    <div class="uk-dropdown-mini" uk-dropdown="mode:click;offset:5;pos:bottom-right;" uk-toggle>';
                     output += '        <ul class="uk-nav uk-dropdown-nav">';
                     if (full.raw.status === 'trash') {
-                        output += '       <li><a class="js-action-bulk" data-dci-bulk=\'{"type":"disabled", "item":"' + full.user_id + '", "message":{{ mocha.i18n.get('success_restore') }}"}\'><i class="fa fa-undo fa-fw"></i> {{ mocha.i18n.get('restore') }}</a></li>';
-                        output += '       <li><a class="js-action-bulk" data-dci-bulk=\'{"type":"delete", "item":"' + full.user_id + '"}\'><span uk-icon="icon:trash"></span> {{ mocha.i18n.get('delete') }}</a></li>';
+                        output += '       <li><a data-mc-bulkAction=\'{"type":"disabled", "item":"' + full.user_id + '", "message":"{{ mocha.i18n.get("success_restore") }}"}\'>{{ mocha.i18n.get("restore") }}</a></li>';
+                        output += '       <li><a data-mc-bulkAction=\'{"type":"delete", "item":"' + full.user_id + '"}\'> {{ mocha.i18n.get("delete") }}</a></li>';
                     } else {
                         if (full.raw.status !== 'enabled') {
-                            output += '   <li><a class="js-action-bulk" data-dci-bulk=\'{"type":"enabled", "item":"' + full.user_id + '"}\'><i class="fa fa-check fa-fw"></i>{{ mocha.i18n.get('enabled') }}</a></li>';
+                            output += '   <li><a data-mc-bulkAction=\'{"type":"enabled", "item":"' + full.user_id + '"}\'>{{ mocha.i18n.get("enabled") }}</a></li>';
                         }
                         if (full.raw.status !== 'disabled') {
-                            output += '   <li><a class="js-action-bulk" data-dci-bulk=\'{"type":"disabled", "item":"' + full.user_id + '"}\'>{{ mocha.i18n.get('disabled') }}</a></li>';
+                            output += '   <li><a data-mc-bulkAction=\'{"type":"disabled", "item":"' + full.user_id + '"}\'>{{ mocha.i18n.get("disabled") }}</a></li>';
                         }
-                        output += '       <li><a class="js-action-bulk" data-dci-bulk=\'{"type":"trash", "item":"' + full.user_id + '"}\'><i class="fa fa-trash-o fa-fw"></i> {{ mocha.i18n.get('trash') }}</a></li>';
+                        output += '       <li><a data-mc-bulkAction=\'{"type":"trash", "item":"' + full.user_id + '"}\'>{{ mocha.i18n.get("trash") }}</a></li>';
                     }
                     output += '        </ul>';
                     output += '    </div>';
@@ -172,12 +174,11 @@ var dtTable = $(tableId).DataTable({
                 }
             },
         ],
-        drawCallback: function(settings) {
+        drawCallback : function(settings) {
             feather.replace();
         }
-    });
-
-var dtObject = $(tableId).dataTable().columnFilter(dtFilterOptions(filterParam));
+    }),
+    dtObject = $(tableId).dataTable().columnFilter(dtFilterOptions(filterParam));
 
     // console.log(dtTable);
 
@@ -190,13 +191,40 @@ var dtObject = $(tableId).dataTable().columnFilter(dtFilterOptions(filterParam))
     });
 
     // Refresh record results
-    $('.page-content').on('click', '[data-dtRefreshRecord]', function() {
+    $('.page-content').on('click', '[data-mc-dtRefreshRecord]', function() {
         dtTable.clearPipeline().draw();
     });
 
     // Clear all filter + order
     $('[data-dtClearFilter]').on('click', function() {
         dtTable.order(sortingCol).clearSearch().draw();
+    });
+
+    // Checkbox bulk action
+    $('.page-content').on('click', '[data-mc-bulkAction]', function(e) {
+        e.preventDefault();
+
+        var data = $(this).data('mcBulkaction');
+        data.csrf_token = '{{ mocha.tool_secure.csrfToken() }}';
+
+        $.fn.mocha.bulkAction({
+            url      : mocha.setting.url_base + 'account/user/bulkAction',
+            data     : data,
+            validate : function(bulkActionProceed) {
+                if (data.type === 'delete') {
+                    $.fn.mocha.confirm({
+                        title       : '{{ mocha.i18n.get("are_you_sure") }}',
+                        message     : '{{ mocha.i18n.get("confirm_delete") }}',
+                        onConfirm   : function() { bulkActionProceed(); }
+                    });
+                } else {
+                    bulkActionProceed();
+                }
+            },
+            onSuccess : function() {
+                dtTable.clearPipeline().draw();
+            }
+        });
     });
 });
 </script>

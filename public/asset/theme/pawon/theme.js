@@ -25,10 +25,12 @@
  * # Plugins
  *   - $.fn.mocha.notify()
  *   - $.fn.mocha.confirm()
+ *   - $.fn.mocha.bulkAction()
  *
  * # IIDE (Immediate Invoked Data Expressions)
  *   - data-mc-form-monitor
  *   - data-mc-select2
+ *   - data-mc-checkboxWatch
  *
  * # Function
  *   - fullEncodeURIComponent
@@ -191,7 +193,7 @@ if (jQuery().datepicker) {
      */
     $.fn.mocha.confirm = function(options) {
         var opt     = $.extend({}, $.fn.mocha.confirm.defaults, options),
-              content = (opt.title ? '<h2 class="uk-modal-title">' + opt.title + '</h2>' : '') + '<div>' + opt.message + '</div>';
+            content = (opt.title ? '<h2 class="uk-modal-title">' + opt.title + '</h2>' : '') + '<div>' + opt.message + '</div>';
 
         UIkit.notification.closeAll();
         UIkit.modal.confirm(content, {
@@ -214,6 +216,110 @@ if (jQuery().datepicker) {
         onCancel    : function() {}
     };
 
+    /**
+     * Bulk action AJAX processing (designed for dataTables)
+     *
+     * # Usage
+     * # Override global setter
+     * $.extend($.fn.dcBulkAction.defaults, {
+     *     msgValidate : 'Select min 1 item to continue!',
+     *     msgBefore   : 'Processing..',
+     *     msgSuccess  : 'Successfully executed!',
+     *     msgError    : 'Error occured, try again later!',
+     * });
+     */
+
+    $.fn.mocha.bulkAction = function(options) {
+        var opt = $.extend({}, $.fn.mocha.bulkAction.defaults, options);
+
+        if (!opt.url) { return; }
+        console.log(opt.data.item);
+        if (!opt.data.item) {
+            opt.data.item = $('input:checkbox[name="' + opt.target + '"]:checked').map(function() {
+                if ($(this).is(':checked')) {
+                    return $(this).val();
+                }
+            }).get().join(',');
+        }
+        console.log(opt);
+
+        // Check items
+        if (!opt.data.item) {
+            $.fn.mocha.notify({
+                message : opt.msgValidate,
+                icon    : '<span uk-icon=\'icon:warning;ratio:1.5\'></span>',
+                status  : 'warning'
+            });
+            return false;
+        }
+
+        opt.validate(bulkActionProceed);
+
+        function bulkActionProceed() {
+            $.ajax({
+                type    : 'POST',
+                url     : opt.url,
+                data    : opt.data,
+                dataType: 'json',
+                beforeSend: function() {
+                    $.fn.mocha.notify({
+                        message : opt.msgBefore,
+                        icon    : '<span uk-spinner></span>',
+                        timeout : 120000 // 2 minute
+                    });
+                },
+                success: function(data) {
+                    $.fn.mocha.notify({
+                        message : data.message ? data.message : opt.msgSuccess,
+                        icon    : '<span uk-icon=\'icon:check;ratio:1.5\'></span>',
+                        status  : 'success'
+                    });
+
+                    opt.onSuccess(this, data);
+
+                    // changed row glow effect
+                    if (opt.glow) {
+                        setTimeout(function() {
+                            $.each(data.items, function(i) {
+                                $('.dt-row-' + data.items[i]).addClass(opt.glowClass);
+                                setTimeout(function () {
+                                    $('.dt-row-' + data.items[i]).removeClass(opt.glowClass);
+                                }, 1000);
+                            });
+                        }, 750);
+                    }
+
+                    // reset
+                    opt.data.item = '';
+                },
+                error: function(xhr) {
+                    $.fn.mocha.notify({
+                        message : xhr.responseJSON.message ? xhr.responseJSON.message : opt.msgError,
+                        icon    : '<span uk-icon=\'icon:warning;ratio:1.5\'></span>',
+                        status  : 'danger'
+                    });
+                }
+            });
+        }
+
+        // reset
+        opt.data.item = '';
+    };
+
+    $.fn.mocha.bulkAction.defaults = {
+        url         : '',
+        data        : [],
+        target      : 'bulk_action[]', // input:checkbox name
+        msgValidate : mocha.i18n.select_min_one,
+        msgBefore   : mocha.i18n.processing,
+        msgSuccess  : mocha.i18n.success_update,
+        msgError    : mocha.i18n.error_general,
+        glow        : true,
+        glowClass   : 'uk-active',
+        validate    : function(bulkActionProceed) { bulkActionProceed(); },
+        onSuccess   : function() {}
+    };
+
 })(jQuery);
 
 
@@ -230,7 +336,7 @@ $(document).ready(function()
 {
     $(document).trigger('IIDE.init');
 
-    // Autoupdate textarea
+    // Autoupdate CKEditor textarea
     if(typeof CKEDITOR !== 'undefined') {
         CKEDITOR.on('instanceReady', function(e) {
             e.editor.on('change', function(e) {
@@ -254,7 +360,7 @@ $(document).on('IIDE.init IIDE.form_monitor', function(event)
         var element = this,
             opt     = $.extend({
                 target : 'input, select, textarea',
-            }, $(element).data('mc-form-monitor'));
+            }, $(element).data('mcFormmonitor'));
 
         $(element).on('input change paste', opt.target, function() {
             mocha.formChanged = true;
@@ -282,6 +388,41 @@ $(document).on('IIDE.init IIDE.select2', function(event)
             tags            : opt.tags,
             tokenSeparators : opt.tags ? [','] : [],
             closeOnSelect   : opt.tags ? false : true
+        });
+    });
+});
+
+$(document).on('IIDE.init IIDE.checkboxWatch', function(event)
+{
+    /**
+     * Checkbox parent-child toggle watcher
+     *
+     * @usage <input type="checkbox" data-mc-checkboxWatch='{"target":"bulk-checkbox"}'>
+     */
+    $('[data-mc-checkboxWatch]').each(function() {
+        var elParent = this,
+            opt = $.extend({
+                childs : 'checkboxWatch',
+        }, $(elParent).data('mcCheckboxwatch'));
+
+        // Parent change affecting child
+        $(elParent).on('change', function(e) {
+            $('.' + opt.childs).prop('checked', this.checked);
+        });
+
+        // Child change affecting parent
+        $('body').on('change', '.' + opt.childs, function(e) {
+            var total   = $('.' + opt.childs).length,
+                checked = $('.' + opt.childs + ':checked').length;
+
+            $(elParent).prop('indeterminate', false);
+            if (!checked) {
+                $(elParent).prop('checked', false);
+            } else if (total == checked) {
+                $(elParent).prop('checked', true);
+            } else {
+                $(elParent).prop('indeterminate', true);
+            }
         });
     });
 });

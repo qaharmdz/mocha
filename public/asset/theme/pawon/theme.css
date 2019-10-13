@@ -115,7 +115,7 @@ body {
 
 .uk-button-mini {
     padding: 0px 3px 0;
-    line-height: 16px;
+    line-height: 15px;
     font-size: 12.4px;
 }
 .uk-margin-mini-left {
@@ -125,14 +125,17 @@ body {
 .uk-dropdown {
     text-align: left;
 }
+.uk-dropdown-nav {
+    font-size: 13.4px;
+}
 .uk-dropdown-mini {
-    min-width: 120px;
+    min-width: 125px;
     padding: 4px;
 }
 .uk-dropdown-mini .uk-dropdown-nav>li>a {
     font-size: 12.4px;
+    line-height: 15px;
     padding: 4px 6px 5px;
-    line-height: 14px;
 }
 
 .uk-form-controls  {
@@ -143,7 +146,6 @@ body {
         margin-top: 0;
     }
 }
-
 
 /* Specific Page
 ======================================================================== */

@@ -81,7 +81,7 @@ class Init extends Controller
          *
          * @return \Mocha\System\Engine\Response $component
          */
-        // TODO: middleware "kernel.controller_arguments" to auto check view permission; change the component to error and pass new args
+        // TODO: middleware "kernel.controller_arguments" to auto check view permission; change the component to error
         $component = $this->event->trigger('init.component.response', [], $this->dispatcher->handle($this->request))->getOutput();
 
         if ($component->hasOutput()) {

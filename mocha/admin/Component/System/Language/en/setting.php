@@ -24,6 +24,6 @@ return [
 'nav_mtc_error'         => 'Error Logs',
 
 // Notification
-'success_save_setting'  => 'Successfully modified setting!',
+'success_save'              => 'Successfully modified setting!',
 
 ];

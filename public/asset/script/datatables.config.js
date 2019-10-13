@@ -62,7 +62,7 @@ $.extend($.fn.dataTable.defaults, {
         info                : mocha.i18n.show_x_data,
         infoEmpty           : mocha.i18n.no_data,
         infoFiltered        : mocha.i18n.filter_x_data,
-        infoPostFix         : '<a data-dtRefreshRecord uk-tooltip title="' + mocha.i18n.reload_data + '"><i data-feather="refresh-cw" width="12px" height="12px"></i></a>',
+        infoPostFix         : '<a data-mc-dtRefreshRecord uk-tooltip title="' + mocha.i18n.reload_data + '"><i data-feather="refresh-cw" width="12px" height="12px"></i></a>',
         thousands           : ',',
         lengthMenu          : '_MENU_',
         loadingRecords      : mocha.i18n.loading,

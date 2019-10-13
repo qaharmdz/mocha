@@ -36,8 +36,8 @@ class User extends Controller
         //=== Content
         $data['content'] = $this->language->get('message');
 
-        $this->tool->abstractor('role', new Component\Account\Abstractor\Role());
-        $data['roles'] = $this->tool->abstractor('role.getRoles');
+        $this->tool->abstractor('account/role', new Component\Account\Abstractor\Role());
+        $data['roles'] = $this->tool->abstractor('account/role.getRoles');
 
 
         // === Presenter
@@ -47,16 +47,21 @@ class User extends Controller
         ));
     }
 
+    /**
+     * User records
+     *
+     * @return string   JSON
+     */
     public function records()
     {
         if (!$this->request->is(['ajax', 'post'])) {
             return $this->tool->errorAjax($this->language->get('error_ajax_post'), 412);
         }
 
-        $this->tool->abstractor('user', new Component\Account\Abstractor\User());
+        $this->tool->abstractor('account/user', new Component\Account\Abstractor\User());
 
         $post = $this->request->post->all();
-        $records = $this->tool->abstractor('user.getRecords', [$post]);
+        $records = $this->tool->abstractor('account/user.getRecords', [$post]);
 
         $data  = [];
         $count = count($records);
@@ -69,8 +74,8 @@ class User extends Controller
             ];
 
             $data[$i]['status']     = $this->language->get($data[$i]['status']);
-            $data[$i]['created']    = $this->date->shift($data[$i]['created'], ['diff_human' => true]);
-            $data[$i]['last_login'] = $this->date->shift($data[$i]['last_login'], ['diff_human' => true]);
+            $data[$i]['created']    = $this->date->shift($data[$i]['created'], ['diff_human' => $this->user->get('date_diff_human', true)]);
+            $data[$i]['last_login'] = $this->date->shift($data[$i]['last_login'], ['diff_human' => $this->user->get('date_diff_human', true)]);
             $data[$i]['url_edit']   = $this->router->url('account/userForm/edit', ['user_id' => $data[$i]['user_id']]);
         }
 
@@ -78,8 +83,54 @@ class User extends Controller
             'draw'            => (int)$post['draw'],
             'data'            => $data,
             'recordsFiltered' => count($data),
-            'recordsTotal'    => $this->tool->abstractor('user.getTotalRecords')
+            'recordsTotal'    => $this->tool->abstractor('account/user.getTotalRecords')
         ];
+
+        return $this->response->jsonOutput($output);
+    }
+
+    /**
+     * Quick action for user/record
+     *
+     * @return string   JSON
+     */
+    public function bulkAction()
+    {
+        $post   = $this->request->post->all();
+        $types  = ['enabled', 'disabled', 'trash', 'delete'];
+        $items  = explode(',', $post['item']);
+        $output = [
+            'items'     => $items,
+            'message'   => '',
+            'updated'   => []
+        ];
+
+        $this->language->load('Component/Account/user');
+
+        // === Validate
+        if (!$this->request->is(['ajax', 'post'])) {
+            return $this->tool->errorAjax($this->language->get('error_ajax_post'), 412);
+        }
+
+        if (!$this->user->hasPermission('edit', 'account/user')) {
+            return $this->tool->errorAjax($this->language->get('error_permission_edit'), 403);
+        }
+
+        if ($post['type'] == 'delete' && !$this->user->hasPermission('delete', 'account/user')) {
+            return $this->tool->errorAjax($this->language->get('error_permission_delete'), 403);
+        }
+
+        if (empty($items) || !in_array($post['type'], $types)) {
+            return $this->tool->errorAjax($this->language->get('error_412'), 412);
+        }
+
+        if (in_array($this->user->get('user_id'), $items)) {
+            return $this->tool->errorAjax(sprintf($this->language->get('error_own_accunt'), $post['type']), 422);
+        }
+
+        // === Proceed
+        $this->tool->abstractor('account/user', new Component\Account\Abstractor\User());
+        $this->tool->abstractor('account/user.actionRecord', [$post['type'], $items]);
 
         return $this->response->jsonOutput($output);
     }

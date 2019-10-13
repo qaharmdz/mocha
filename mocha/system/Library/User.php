@@ -179,7 +179,7 @@ class User
         $utc = new \DateTime('now', new \DateTimeZone('UTC'));
 
         return $this->db->run(
-            'UPDATE ' . DB_PREFIX . 'user SET last_login = ? WHERE user_id = ?',
+            'UPDATE ' . DB_PREFIX . 'user SET `last_login` = ? WHERE user_id = ?',
             [$utc->format('Y-m-d H:i:s'), $id]
         )->rowCount();
     }

@@ -327,6 +327,14 @@
 .dataTables-content .filter_date_range .uk-width-1-1 {
     width: 85px;
 }
+.dataTables-content thead .filter_clear {
+    color: #fff;
+    background: #aaa;
+    text-decoration: none;
+}
+.dataTables-content thead .filter_clear:hover {
+    background: #9e9e9e;
+}
 
 /* === Datatables Bottom & processing  */
 

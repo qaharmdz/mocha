@@ -45,7 +45,7 @@ class Setting extends Controller
         $this->language->load('Component/System/setting');
         $this->language->load('Component/System/' . $page);
 
-        $this->tool->abstractor('setting', new Component\System\Abstractor\Setting());
+        $this->tool->abstractor('system/setting', new Component\System\Abstractor\Setting());
 
         //=== Document
         $this->document->setTitle($this->language->get('page_title'));
@@ -72,12 +72,12 @@ class Setting extends Controller
     {
         //=== Content
         $data['form_action']    = $this->router->url('system/setting/save');
-        $data['form']           = $this->tool->abstractor('setting.getSettings', ['setting', $page]);
+        $data['form']           = $this->tool->abstractor('system/setting.getSettings', ['setting', $page]);
 
         if ($page === 'site') {
-            $this->tool->abstractor('role', new Component\Account\Abstractor\Role());
+            $this->tool->abstractor('account/role', new Component\Account\Abstractor\Role());
 
-            $data['roles'] = $this->tool->abstractor('role.getRoles');
+            $data['roles'] = $this->tool->abstractor('account/role.getRoles');
 
             // TODO: check themes status at db extension
             $data['admin_themes'] = [];
@@ -141,10 +141,10 @@ class Setting extends Controller
         // === Proceed
         $data = [
             'type'    => $post['setting_type'],
-            'message' => sprintf($this->language->get('success_save_setting'))
+            'message' => sprintf($this->language->get('success_save'))
         ];
 
-        $this->tool->abstractor('setting', new Component\System\Abstractor\Setting());
+        $this->tool->abstractor('system/setting', new Component\System\Abstractor\Setting());
 
         unset($post['setting_type']);
 
@@ -176,7 +176,7 @@ class Setting extends Controller
             $post['datetime_format_js']  = $this->date->tojQueryUIFormat($post['datetime_format']);
         }
 
-        $this->tool->abstractor('setting.update', ['setting', $data['type'], $post]);
+        $this->tool->abstractor('system/setting.update', ['setting', $data['type'], $post]);
 
         return $this->response->jsonOutput($data);
     }
