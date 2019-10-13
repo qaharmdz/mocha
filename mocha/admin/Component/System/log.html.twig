@@ -10,9 +10,9 @@
             <div>
                 <h1 class="page-title">{{ mocha.i18n.get('page_title') }}</h1>
             </div>
-            <div class="uk-text-right uk-padding-mini-top">
+            <div class="uk-text-right">
                 <a href="{{ mocha.router.url('system/log/download') }}" class="uk-button uk-button-primary"><i class="fa fa-download fa-fw"></i> {{ mocha.i18n.get('download') }}</a>
-                <button id="js-action-clear" class="uk-button uk-button-danger uk-margin-small-left"><i class="fa fa-eraser fa-fw"></i> {{ mocha.i18n.get('clear') }}</button>
+                <button class="uk-button uk-button-danger uk-margin-small-left" data-mc-clearLog><i class="fa fa-eraser fa-fw"></i> {{ mocha.i18n.get('clear') }}</button>
             </div>
         </div>
 
@@ -27,7 +27,7 @@
 <script>
 $(document).ready(function()
 {
-    $('#js-action-clear').on('click', function() {
+    $('[data-mc-clearLog]').on('click', function() {
         $.fn.mocha.confirm({
             title       : '{{ mocha.i18n.get("are_you_sure") }}',
             message     : '{{ mocha.i18n.get("confirm_clear") }}',
