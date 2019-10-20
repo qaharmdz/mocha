@@ -115,23 +115,25 @@ class Init extends Controller
 
         // === Presenter
         $template = $this->document->getNode('template_base', 'index');
+        $render   = $this->event->trigger('init.component.render', [$template, $data], $this->tool->render($template, $data, 'init.' . $template))->getOutput();
+
         $response = $this->response
                         ->setStatusCode($component->getStatusCode())
-                        ->setContent($this->tool->render(
-                            $template,
-                            $data,
-                            'init.' . $template
-                        ));
+                        ->setContent($render);
 
         /**
          * @return \Mocha\System\Engine\Response $response
          */
-        $response = $this->event->trigger('init.omega', [], $response)->getOutput();
+        $response = $this->event->trigger('init.component.output', [], $response)->getOutput();
 
         if (!$this->config->get('setting.server.debug') && $this->config->get('setting.server.compression', 4)) {
             $response = $this->tool->compress($response);
         }
 
+        /**
+         * @return \Mocha\System\Engine\Response $response
+         */
+        $response = $this->event->trigger('init.omega', [], $response)->getOutput();
 
         return $response;
     }
@@ -159,39 +161,38 @@ class Init extends Controller
             $this->config->set('setting.server.login_session', ($this->config->get('setting.server.login_session') * 6));
         }
 
-        switch (true) {
-            case !$this->user->isLogged():
-                $this->session->flash->set('alert_login', true);
-                return $this->logout();
-                break;
+        if (!$this->user->isLogged()) {
+            $this->session->flash->set('alert_login', true);
 
-            // All $_POST must have csrf
-            case $this->request->is('post') && !$this->tool_secure->csrfValidate():
-                if ($this->request->is('ajax')) {
-                    return $this->tool->errorAjax($this->language->get('error_csrf'), 403);
-                }
-
-                $this->document->addNode('alerts', [
-                    ['warning', $this->language->get('error_csrf')],
-                ]);
-
-                return $this->response->redirect($this->session->get('last_route', $this->router->url('home')), 403);
-
-            // Force logout if last activity more than 'x' minute
-            case (time() - $this->session->get('user_activity')) > (60 * $this->config->get('setting.server.login_session')):
-                $this->session->flash->set('alert_inactivity', true);
-                return $this->logout();
-                break;
-
-            default:
-                // Prevent session fixation. Renew session id per 30 minute
-                if ((time() - $this->session->get('user_activity')) > (60 * 30)) {
-                    $this->session->migrate();
-                }
-
-                $this->session->set('user_activity', time());
-                break;
+            return $this->logout();
         }
+
+        // All $_POST must have csrf
+        if ($this->request->is('post') && !$this->tool_secure->csrfValidate()) {
+            if ($this->request->is('ajax')) {
+                return $this->tool->errorAjax($this->language->get('error_csrf'), 403);
+            }
+
+            $this->document->addNode('alerts', [
+                ['warning', $this->language->get('error_csrf')],
+            ]);
+
+            return $this->response->redirect($this->session->get('last_route', $this->router->url('home')), 403);
+        }
+
+        // Force logout if last activity more than 'x' minute
+        if ((time() - $this->session->get('user_activity')) > (60 * $this->config->get('setting.server.login_session'))) {
+            $this->session->flash->set('alert_inactivity', true);
+
+            return $this->logout();
+        }
+
+        // Prevent session fixation. Renew session id per 30 minute
+        if ((time() - $this->session->get('user_activity')) > (60 * 30)) {
+            $this->session->migrate();
+        }
+
+        $this->session->set('user_activity', time());
     }
 
     private function registerAsset()

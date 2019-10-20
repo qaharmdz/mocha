@@ -181,7 +181,7 @@ class Framework
 
         // TODO: Update languages list
 
-        // ====== TODO: Update serviceProvider, eventSubscriber, routeCollection list with plugins
+        // ====== TODO: Update config serviceProvider, eventSubscriber, routeCollection list with plugins
         /*
         type: eventSubscriber
         key: plugin_x (x is plugin_id)
